@@ -3,5 +3,7 @@ project(SysProg)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES
+        main.cpp Automat.cpp Automat.h LinkedList.cpp LinkedList.h)
+
 add_executable(SysProg ${SOURCE_FILES})
