@@ -5,13 +5,14 @@
 #include "LinkedList.h"
 
 LinkedList::LinkedList() {
+    head = nullptr;
 
 }
 
 LinkedList::~LinkedList() {
 
-    //TO FIX
-  /*
+
+
         Symbol *next = head;
         while (next) {
 
@@ -19,10 +20,11 @@ LinkedList::~LinkedList() {
             next = next->next;
             delete deleteSymbol;
         }
-    */
+
 }
 
 void LinkedList::addSymbol(char c) {
+    countSymbol++;
     Symbol *s = new Symbol();
     s->c = c;
     s->next = head;
@@ -31,14 +33,26 @@ void LinkedList::addSymbol(char c) {
 
 }
 
+//Fix else
 char LinkedList::popSymbol() {
+    if (countSymbol > 0) {
 
-    Symbol *s = head;
-    char c = s->c;
+        countSymbol--;
 
-    head = head->next;
-    delete s;
+        Symbol *s = head;
+        char c = s->c;
 
-    return c;
+        head = head->next;
+        delete s;
+
+        return c;
+    }
+    return 'a';
+
+}
+
+bool LinkedList::isEmpty() {
+return countSymbol <= 0;
+
 
 }

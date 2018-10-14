@@ -27,7 +27,10 @@ public:
     void addSymbol(char c);
 
     char popSymbol();
+
+    bool isEmpty();
 private:
     Symbol *head;
+    int countSymbol = 0;
 
 };

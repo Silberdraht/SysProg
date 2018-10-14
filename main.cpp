@@ -5,7 +5,7 @@ int main() {
 
     LinkedList list;
 
-    list.addSymbol('x');
+
     list.addSymbol('x');
     list.addSymbol('t');
     list.addSymbol('s');
@@ -17,12 +17,15 @@ int main() {
 
 
 
-
-
+    std::cout << std::boolalpha;
+    std::cout << list.isEmpty() << std::endl;
     std::cout << list.popSymbol() << std::endl;
     std::cout << list.popSymbol() << std::endl;
     std::cout << list.popSymbol() << std::endl;
     std::cout << list.popSymbol() << std::endl;
+    std::cout << list.popSymbol() << std::endl;
+    std::cout << list.popSymbol() << std::endl;
+    std::cout << list.isEmpty() << std::endl;
 
     list.~LinkedList();
 

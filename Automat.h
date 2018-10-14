@@ -70,16 +70,17 @@ public:
 
     void checkSymbol(char c) {
 
-        list.addSymbol(c);
+        if (c != '\n' && c != ' ' && c != '/t') {
 
-        char symbol = c;
+            //List is empty
 
-        if (1) {
+
+
+            //list.addSymbol(c);
 
 
 
         }
-
 
     }
 
