@@ -1,11 +1,22 @@
 #include <iostream>
-#include "LinkedList.h"
+
+#include "Automat.h"
 
 int main() {
 
-    LinkedList list;
+    //LinkedList list;
 
-    list.addSymbol('x');
+    Automat automat;
+
+    automat.checkSymbol('5');
+    automat.checkSymbol('6');
+    automat.checkSymbol('7');
+    automat.checkSymbol('x');
+
+
+
+    /*
+
     list.addSymbol('x');
     list.addSymbol('t');
     list.addSymbol('s');
@@ -17,14 +28,20 @@ int main() {
 
 
 
+    std::cout << std::boolalpha;
+    std::cout << list.isEmpty() << std::endl;
+    std::cout << list.popSymbol() << std::endl;
+    std::cout << list.popSymbol() << std::endl;
+    std::cout << list.popSymbol() << std::endl;
+    std::cout << list.popSymbol() << std::endl;
+    std::cout << list.popSymbol() << std::endl;
+    std::cout << list.popSymbol() << std::endl;
+    std::cout << list.isEmpty() << std::endl;
+     */
 
+    //list.~LinkedList();
 
-    std::cout << list.popSymbol() << std::endl;
-    std::cout << list.popSymbol() << std::endl;
-    std::cout << list.popSymbol() << std::endl;
-    std::cout << list.popSymbol() << std::endl;
-
-    list.~LinkedList();
+    //automat.~Automat();
 
     std::cout << "Hello, World!" << std::endl;
     return 0;
