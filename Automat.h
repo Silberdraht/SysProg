@@ -2,22 +2,44 @@
 // Created by Silberdraht on 09.10.2018.
 //
 
+
 #ifndef SYSPROG_AUTOMATA_H
 #define SYSPROG_AUTOMATA_H
 
 #endif //SYSPROG_AUTOMATA_H
 
+#include <iostream>
 #include "LinkedList.h"
 
 
 class Automat {
 
-private:
+
+public:
+    Automat();
+    ~Automat();
+
+    //LinkedList list;
+
+    void checkSymbol(char c);
+
+    struct tokenDigit {
+
+        int line;
+        int column;
+        int value;
+
+
+    };
+
+
+
+
     enum state {
         init,
         final,
         error,
-        intstate,
+        digistate,
         idstate,
         ifstate,
         whilestate,
@@ -26,14 +48,7 @@ private:
 
     };
 
-    struct tokenInt {
 
-        int line;
-        int column;
-        int value;
-
-
-    };
 
     struct tokenIdent {
 
@@ -61,82 +76,17 @@ private:
     int currentLine = 1;
     int currentColumn = 0;
 
-    state activState = init;
 
 
-public:
-    Automat();
+    state stateActive = init;
 
-
-    void checkSymbol(char c) {
-
-        if (c != '\n' && c != ' ' && c != '/t') {
-
-            //List is empty
+    void createTokenDigit();
 
 
 
-            //list.addSymbol(c);
+    bool isDigit(char c);
 
-
-
-        }
-
-    }
-
-private:
-    LinkedList list;
-
-
-/**
-    struct tokenPlus {
-
-        int line;
-        int column;
-    };
-
-    struct tokenMinus {
-
-        int line;
-        int column;
-    };
-
-    struct tokenColon {
-
-        int line;
-        int column;
-    };
-
-    struct tokenStar {
-
-        int line;
-        int column;
-
-    };
-
-    struct tokenLessSign {
-
-        int line;
-        int column;
-
-    };
-
-    struct tokenMoreSign {
-
-        int line;
-        int column;
-
-    };
-
-    struct tokenSemic {
-
-        int line;
-        int column;
-
-    };
-*/
-
-
+   int convertChartoInt(char c);
 
 
 

@@ -56,3 +56,8 @@ return countSymbol <= 0;
 
 
 }
+
+int LinkedList::listLength() {
+
+    return countSymbol;
+}

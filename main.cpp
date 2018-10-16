@@ -1,10 +1,21 @@
 #include <iostream>
-#include "LinkedList.h"
+
+#include "Automat.h"
 
 int main() {
 
-    LinkedList list;
+    //LinkedList list;
 
+    Automat automat;
+
+    automat.checkSymbol('5');
+    automat.checkSymbol('6');
+    automat.checkSymbol('7');
+    automat.checkSymbol('x');
+
+
+
+    /*
 
     list.addSymbol('x');
     list.addSymbol('t');
@@ -26,8 +37,11 @@ int main() {
     std::cout << list.popSymbol() << std::endl;
     std::cout << list.popSymbol() << std::endl;
     std::cout << list.isEmpty() << std::endl;
+     */
 
-    list.~LinkedList();
+    //list.~LinkedList();
+
+    //automat.~Automat();
 
     std::cout << "Hello, World!" << std::endl;
     return 0;
