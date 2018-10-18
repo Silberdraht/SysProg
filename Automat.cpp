@@ -5,7 +5,7 @@
 
 #include "Automat.h"
 
-LinkedList list;
+LinkedList listAutomat;
 
 
 Automat::Automat() {
@@ -24,35 +24,108 @@ void Automat::checkSymbol(char c) {
         case init:
             if (isDigit(c)) {
                 stateActive = digistate;
-                list.addSymbol(c);
+                listAutomat.addSymbol(c);
+            }
+
+            if (isSign(c)) {
+                listAutomat.addSymbol(c);
+                createTokenSign();
+
+
+            }
+
+            if (isSignEqual(c)) {
+                stateActive = qualstate;
+                listAutomat.addSymbol(c);
+
+            }
+
+            if(isSignAnd(c)) {
+                stateActive = andstate;
+                listAutomat.addSymbol(c);
+
+
+            }
+
+            if(isSignColon(c)) {
+                stateActive = colonstate;
+                listAutomat.addSymbol(c);
+
             }
             break;
 
         case digistate:
             if (isDigit(c)) {
 
-                list.addSymbol(c);
+                listAutomat.addSymbol(c);
             } else {
-                stateActive = error;
+                //wenn char kein Digit, gehe wieder in
+                // initzustand baue ein DigitToken und rufe checkSymbol mit c neu auf.
+
+
                 //create int token
                 createTokenDigit();
-                list.addSymbol(c);
+
+                stateActive = init;
+                //listAutomat.addSymbol(c);
+                checkSymbol(c);
             }
             break;
 
+        case signstate:
+            if (isSign(c)) {
 
+
+
+            } else {
+                createTokenSign();
+                stateActive = init;
+                checkSymbol(c);
+
+            }
+            break;
+
+        //Erstes char in der LL ist ein '='
+        case qualstate:
+            if (isSignEqual(c)) {
+                listAutomat.addSymbol(c);
+                createTokenSign();
+                stateActive = init;
+            } else {
+                createTokenSign();
+                stateActive = init;
+                checkSymbol(c);
+
+            }
+
+            break;
+        //TO Fix was passiert wenn ein Doppelpunkt geschrieben wird.
+        case andstate:
+
+            if (isSignColon(c)) {
+
+
+            } else {
+
+                createTokenSign();
+                stateActive = init;
+                checkSymbol(c);
+            }
+
+            break;
     }
 }
 
+//TO FIX return value and token creation
     void Automat::createTokenDigit() {
         tokenDigit test;
-        int ca[list.listLength()];
-        int counter = list.listLength();
+        int ca[listAutomat.listLength()];
+        int counter = listAutomat.listLength();
         int counter2 = counter;
-        while (!list.isEmpty()) {
+        while (!listAutomat.isEmpty()) {
 
             //Fügt Inhalte der Verkettenen Liste in ein Char Array
-            ca[counter-1] = convertChartoInt(list.popSymbol());
+            ca[counter-1] = convertCharToInt(listAutomat.popSymbol());
 
             //std::cout << ca[counter] << std::endl;
 
@@ -84,7 +157,22 @@ void Automat::checkSymbol(char c) {
         std::cout << "Int value of Token: " << std::endl;
         std::cout << digitValue << std::endl;
 
+        tokenDigit token;
+        token.value = digitValue;
 
+
+    }
+//Fix return and test
+    void Automat::createTokenSign() {
+
+
+        tokenSign token;
+
+        token.type[listAutomat.listLength()];
+
+        for (int i = listAutomat.listLength(); i > -1; i--) {
+            token.type[i-1] = listAutomat.popSymbol();
+        }
 
 
     }
@@ -121,7 +209,60 @@ void Automat::checkSymbol(char c) {
 
     }
 
-int Automat::convertChartoInt(char c) {
+bool Automat::isSign(char c) {
+
+    switch(c) {
+
+        case '+':
+            return true;
+        case '-':
+            return true;
+        case '*':
+            return true;
+        case '<':
+            return true;
+        case '>':
+            return true;
+        case '!':
+            return true;
+        case ';':
+            return true;
+        case '(':
+            return true;
+        case ')':
+            return true;
+        case '{':
+            return true;
+        case '}':
+            return true;
+        case '[':
+            return true;
+        case ']':
+            return true;
+
+        default:
+            return false;
+
+    }
+
+}
+
+bool Automat::isSignAnd(char c) {
+    return c == '&';
+
+}
+
+bool Automat::isSignColon(char c) {
+    return c == ':';
+
+}
+
+bool Automat::isSignEqual(char c) {
+    return c == '=';
+}
+
+
+int Automat::convertCharToInt(char c) {
 
     switch(c) {
 

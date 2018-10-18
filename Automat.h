@@ -23,14 +23,7 @@ public:
 
     void checkSymbol(char c);
 
-    struct tokenDigit {
 
-        int line;
-        int column;
-        int value;
-
-
-    };
 
 
 
@@ -44,10 +37,20 @@ public:
         ifstate,
         whilestate,
         signstate,
+        qualstate,
+        colonstate,
+        andstate,
         mixedstate
 
     };
+    struct tokenDigit {
 
+        int line;
+        int column;
+        int value;
+
+
+    };
 
 
     struct tokenIdent {
@@ -82,11 +85,24 @@ public:
 
     void createTokenDigit();
 
+    void createTokenSign();
+
 
 
     bool isDigit(char c);
 
-   int convertChartoInt(char c);
+    bool isSign(char c);
+
+    bool isSignAnd(char c);
+
+    bool isSignEqual(char c);
+
+    bool isSignColon(char c);
+
+
+   int convertCharToInt(char c);
+
+
 
 
 
