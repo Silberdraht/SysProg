@@ -16,78 +16,135 @@ Automat::~Automat() {
 }
 
 
-
+//To Fix count line und column
 void Automat::checkSymbol(char c) {
 
 
     switch (stateActive) {
         case init:
+            //std::cout << "Init: " << std::endl;
             if (isDigit(c)) {
                 stateActive = digistate;
                 listAutomat.addSymbol(c);
-            }
 
+                //Speichert den Anfang des Tokens
+                startColumn = currentColumn;
+                startLine = currentLine;
+                //Zählt die Postion weiter
+                currentColumn++;
+            }
+            //Alle Sign ausser =, & und :
             if (isSign(c)) {
                 listAutomat.addSymbol(c);
+                startColumn = currentColumn;
+                startLine = currentLine;
                 createTokenSign();
+                currentColumn++;
 
 
             }
 
             if (isSignEqual(c)) {
-                stateActive = qualstate;
+                stateActive = equalstate;
+
+                //Speichert den Anfang des Tokens
+                startColumn = currentColumn;
+                startLine = currentLine;
                 listAutomat.addSymbol(c);
+                currentColumn++;
 
             }
 
             if(isSignAnd(c)) {
                 stateActive = andstate;
+                //Speichert den Anfang des Tokens
+                startColumn = currentColumn;
+                startLine = currentLine;
                 listAutomat.addSymbol(c);
+                currentColumn++;
 
 
             }
 
             if(isSignColon(c)) {
                 stateActive = colonstate;
+                //Speichert den Anfang des Tokens
+                startColumn = currentColumn;
+                startLine = currentLine;
                 listAutomat.addSymbol(c);
+                currentColumn++;
+
+            }
+
+            if (isLetter(c)) {
+
+                stateActive = letterstate;
+                //Speichert den Anfang des Tokens
+                startColumn = currentColumn;
+                startLine = currentLine;
+                listAutomat.addSymbol(c);
+                currentColumn++;
+
+            }
+
+            if (isBlank(c)) {
+                currentColumn++;
+
+
+            }
+
+            if (isNewLine(c)) {
+                currentColumn = 1;
+                currentLine++;
+
 
             }
             break;
 
+
+
         case digistate:
+            //std::cout << "digit: " << std::endl;
             if (isDigit(c)) {
 
                 listAutomat.addSymbol(c);
+                currentColumn++;
             } else {
                 //wenn char kein Digit, gehe wieder in
                 // initzustand baue ein DigitToken und rufe checkSymbol mit c neu auf.
 
 
-                //create int token
                 createTokenDigit();
 
                 stateActive = init;
-                //listAutomat.addSymbol(c);
+
                 checkSymbol(c);
             }
             break;
 
         case signstate:
-            if (isSign(c)) {
+            std::cout << "This should never happen! " << std::endl;
 
-
-
-            } else {
-                createTokenSign();
-                stateActive = init;
-                checkSymbol(c);
-
-            }
             break;
 
-        //Erstes char in der LL ist ein '='
-        case qualstate:
-            if (isSignEqual(c)) {
+        case letterstate:
+            //std::cout << "Letterstate: " << std::endl;
+            if(isLetter(c) || (isDigit(c))) {
+                listAutomat.addSymbol(c);
+
+            } else {
+
+                createTokenLetter();
+                stateActive = init;
+                checkSymbol(c);
+            }
+
+            break;
+
+        //Erstes char in der LL ist ein '&'
+        case andstate:
+            //std::cout << "Andstate: " << std::endl;
+            if (isSignAnd(c)) {
                 listAutomat.addSymbol(c);
                 createTokenSign();
                 stateActive = init;
@@ -100,16 +157,56 @@ void Automat::checkSymbol(char c) {
 
             break;
         //TO Fix was passiert wenn ein Doppelpunkt geschrieben wird.
-        case andstate:
-
+        case equalstate:
+            //std::cout << "equalstate: " << std::endl;
             if (isSignColon(c)) {
 
+                listAutomat.addSymbol(c);
+                stateActive = equalcolonstate;
 
             } else {
 
                 createTokenSign();
                 stateActive = init;
                 checkSymbol(c);
+            }
+
+            break;
+
+        case colonstate:
+            //std::cout << "colonstate: " << std::endl;
+            if (isSignEqual(c)) {
+
+
+                listAutomat.addSymbol(c);
+                createTokenSign();
+
+                stateActive = init;
+            } else {
+                createTokenSign();
+                stateActive = init;
+                checkSymbol(c);
+
+            }
+
+            break;
+            //In der Liste steht '=' ':'
+        case equalcolonstate:
+            //std::cout << "equalstate: " << std::endl;
+            if (isSignEqual(c)) {
+                listAutomat.addSymbol(c);
+                createTokenSign();
+                stateActive = init;
+
+            } else {
+                //Erzeugt ein Token '=' und ein Token ':'
+                char temp = listAutomat.popSymbol();
+                createTokenSign();
+                listAutomat.addSymbol(temp);
+                createTokenSign();
+                stateActive = init;
+                checkSymbol(c);
+
             }
 
             break;
@@ -127,17 +224,12 @@ void Automat::checkSymbol(char c) {
             //Fügt Inhalte der Verkettenen Liste in ein Char Array
             ca[counter-1] = convertCharToInt(listAutomat.popSymbol());
 
-            //std::cout << ca[counter] << std::endl;
 
             counter--;
 
 
         }
-        //std::cout << "Anzahl Counter nach while: " << std::endl;
-        //std::cout << counter2 << std::endl;
-        //std::cout << ca[0] << std::endl;
-        //std::cout << ca[1] << std::endl;
-        //std::cout << ca[2] << std::endl;
+
 
 
         int digitValue = 0;
@@ -163,6 +255,7 @@ void Automat::checkSymbol(char c) {
 
     }
 //Fix return and test
+//Wie passe ich die länge von Type an?
     void Automat::createTokenSign() {
 
 
@@ -171,11 +264,29 @@ void Automat::checkSymbol(char c) {
         token.type[listAutomat.listLength()];
 
         for (int i = listAutomat.listLength(); i > -1; i--) {
-            token.type[i-1] = listAutomat.popSymbol();
+            //token.type[i-1] = listAutomat.popSymbol();
+
+            std::cout << listAutomat.popSymbol() << std::endl;
+
         }
 
 
     }
+//To fix set length of lexem
+void Automat::createTokenLetter() {
+
+    tokenIdent token;
+
+    token.lexem[listAutomat.listLength()];
+
+    for (int i = listAutomat.listLength(); i > -1; i--) {
+        //token.lexem[i-1] = listAutomat.popSymbol();
+
+        std::cout << listAutomat.popSymbol() << std::endl;
+    }
+
+
+}
 
     bool Automat::isDigit(char c) {
 
@@ -252,6 +363,18 @@ bool Automat::isSignAnd(char c) {
 
 }
 
+bool Automat::isBlank(char c) {
+
+    return c == ' ' || c == '\t';
+}
+
+bool Automat::isNewLine(char c) {
+
+    return c == '\n';
+}
+
+
+
 bool Automat::isSignColon(char c) {
     return c == ':';
 
@@ -259,6 +382,13 @@ bool Automat::isSignColon(char c) {
 
 bool Automat::isSignEqual(char c) {
     return c == '=';
+}
+
+
+bool Automat::isLetter(char c) {
+
+
+    return (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z');
 }
 
 

@@ -37,9 +37,11 @@ public:
         ifstate,
         whilestate,
         signstate,
-        qualstate,
+        equalstate,
         colonstate,
         andstate,
+        equalcolonstate,
+        letterstate,
         mixedstate
 
     };
@@ -77,7 +79,9 @@ public:
     };
 
     int currentLine = 1;
-    int currentColumn = 0;
+    int currentColumn = 1;
+    int startColumn;
+    int startLine;
 
 
 
@@ -87,7 +91,9 @@ public:
 
     void createTokenSign();
 
+    void createTokenLetter();
 
+    bool isLetter(char c);
 
     bool isDigit(char c);
 
@@ -98,6 +104,10 @@ public:
     bool isSignEqual(char c);
 
     bool isSignColon(char c);
+
+    bool isBlank(char c);
+
+    bool isNewLine(char c);
 
 
    int convertCharToInt(char c);
