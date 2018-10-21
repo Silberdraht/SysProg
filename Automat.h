@@ -33,7 +33,6 @@ public:
         final,
         error,
         digistate,
-        idstate,
         ifstate,
         whilestate,
         signstate,
@@ -41,8 +40,8 @@ public:
         colonstate,
         andstate,
         equalcolonstate,
-        letterstate,
-        mixedstate
+        letterstate
+
 
     };
     struct tokenDigit {
@@ -55,7 +54,7 @@ public:
     };
 
 
-    struct tokenIdent {
+    struct tokenIdentifier {
 
         int line;
         int column;
@@ -79,7 +78,7 @@ public:
     };
 
     int currentLine = 1;
-    int currentColumn = 1;
+    int currentColumn = 0;
     int startColumn;
     int startLine;
 
@@ -87,11 +86,11 @@ public:
 
     state stateActive = init;
 
-    void createTokenDigit();
+    tokenDigit createTokenDigit();
 
-    void createTokenSign();
+    tokenSign createTokenSign();
 
-    void createTokenLetter();
+    tokenIdentifier createTokenLetter();
 
     bool isLetter(char c);
 
@@ -108,6 +107,9 @@ public:
     bool isBlank(char c);
 
     bool isNewLine(char c);
+
+    int getLine();
+    int getColumn();
 
 
    int convertCharToInt(char c);
