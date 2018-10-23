@@ -44,6 +44,32 @@ public:
 
 
     };
+
+    enum TokenType {
+        SignToken,
+        DigitToken,
+        IdentifierToken,
+        ErrorToken,
+        IfToken,
+        ElseToken
+
+    };
+
+    struct Token {
+        unsigned int line, column;
+        TokenType tokenType;
+        union Storage {
+            long number;
+            //Insert Key für Hash
+            char error;
+
+
+        } storage;
+
+
+
+
+    };
     struct tokenDigit {
 
         int line;
@@ -77,20 +103,23 @@ public:
         int column;
     };
 
-    int currentLine = 1;
-    int currentColumn = 0;
-    int startColumn;
-    int startLine;
+    unsigned int currentLine = 1;
+    unsigned int currentColumn = 0;
+    unsigned int startColumn;
+    unsigned int startLine;
+    long number;
 
 
 
     state stateActive = init;
 
-    tokenDigit createTokenDigit();
+    Token createToken(TokenType tokenType);
 
-    tokenSign createTokenSign();
+    Token createTokenDigit();
 
-    tokenIdentifier createTokenLetter();
+    Token createTokenSign();
+
+    Token createTokenLetter();
 
     bool isLetter(char c);
 
@@ -108,8 +137,15 @@ public:
 
     bool isNewLine(char c);
 
-    int getLine();
-    int getColumn();
+    unsigned int getLine();
+
+    unsigned int getColumn();
+
+    unsigned int getStartLine();
+
+    unsigned int getStartColumn();
+
+    long getNumber();
 
 
    int convertCharToInt(char c);

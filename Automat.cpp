@@ -218,8 +218,46 @@ void Automat::checkSymbol(char c) {
     }
 }
 
+Automat::Token Automat::createToken(TokenType tokenType) {
+
+    Token token;
+    token.line = getStartLine();
+    token.column = getStartColumn();
+    token.tokenType = tokenType;
+
+    switch (tokenType) {
+        case IdentifierToken:
+
+            break;
+
+        case DigitToken:
+
+            break;
+
+        case ErrorToken:
+
+            break;
+
+        case SignToken:
+
+            break;
+
+        case IfToken:
+
+            break;
+
+        case ElseToken:
+
+            break;
+
+    }
+
+
+    return token;
+}
+
 //TO FIX return value and token creation
-    Automat::tokenDigit Automat::createTokenDigit() {
+    Automat::Token Automat::createTokenDigit() {
 
         int ca[listAutomat.listLength()];
         int counter = listAutomat.listLength();
@@ -249,21 +287,23 @@ void Automat::checkSymbol(char c) {
             counter2--;
         }
 
-
+        this->number = digitValue;
 
         std::cout << "Int value of Token: " << std::endl;
         std::cout << digitValue << std::endl;
 
-        tokenDigit token;
+
+        //Token token = Automat::createToken(DigitToken);
+    /*
         token.value = digitValue;
         token.column = startColumn;
         token.line = startLine;
-
-return token;
+*/
+return Automat::createToken(DigitToken);
     }
 //Fix return and test
 //Wie passe ich die länge von Type an?
-    Automat::tokenSign Automat::createTokenSign() {
+    Automat::Token Automat::createTokenSign() {
 
 
         tokenSign token;
@@ -279,10 +319,10 @@ return token;
 
         }
 
-return token;
+return createToken(SignToken);
     }
 //To fix set length of lexem
-Automat::tokenIdentifier Automat::createTokenLetter() {
+Automat::Token Automat::createTokenLetter() {
 
     tokenIdentifier token;
     token.column = startColumn;
@@ -296,7 +336,7 @@ Automat::tokenIdentifier Automat::createTokenLetter() {
         std::cout << listAutomat.popSymbol() << std::endl;
     }
 
-return token;
+return createToken(IdentifierToken);
 }
 
     bool Automat::isDigit(char c) {
@@ -433,15 +473,31 @@ int Automat::convertCharToInt(char c) {
 
 }
 
-int Automat::getLine() {
+unsigned int Automat::getLine() {
 
     return this->currentLine;
 
 }
 
-int Automat::getColumn() {
+unsigned int Automat::getColumn() {
     return this->currentColumn;
 }
+
+unsigned int Automat::getStartColumn() {
+
+    return this->startColumn;
+}
+
+unsigned int Automat::getStartLine() {
+
+    return this->startLine;
+}
+
+long Automat::getNumber() {
+
+    return this->number;
+}
+
 
 
 
