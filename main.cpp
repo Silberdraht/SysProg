@@ -7,6 +7,7 @@ int main() {
 
     Automat automat;
 
+
     automat.checkSymbol('5');
     automat.checkSymbol('6');
     automat.checkSymbol('7');
@@ -15,6 +16,7 @@ int main() {
     automat.checkSymbol(' ');
     automat.checkSymbol('a');
     automat.checkSymbol('b');
+    automat.checkSymbol('=');
     automat.checkSymbol('c');
     automat.checkSymbol('7');
     automat.checkSymbol('\n');
@@ -22,6 +24,7 @@ int main() {
     automat.checkSymbol('5');
     automat.checkSymbol('6');
     automat.checkSymbol('7');
+    automat.checkSymbol('x');
     //automat.checkSymbol('=');
 
 

@@ -23,7 +23,10 @@ void Automat::checkSymbol(char c) {
     switch (stateActive) {
         case init:
             //std::cout << "Init: " << std::endl;
+
+
             if (isDigit(c)) {
+                currentColumn++;
                 stateActive = digistate;
                 listAutomat.addSymbol(c);
 
@@ -31,69 +34,75 @@ void Automat::checkSymbol(char c) {
                 startColumn = currentColumn;
                 startLine = currentLine;
                 //Zählt die Postion weiter
-                currentColumn++;
+
             }
             //Alle Sign ausser =, & und :
             if (isSign(c)) {
+                currentColumn++;
                 listAutomat.addSymbol(c);
                 startColumn = currentColumn;
                 startLine = currentLine;
+
                 createTokenSign();
-                currentColumn++;
+
 
 
             }
 
             if (isSignEqual(c)) {
                 stateActive = equalstate;
-
+                currentColumn++;
                 //Speichert den Anfang des Tokens
                 startColumn = currentColumn;
                 startLine = currentLine;
                 listAutomat.addSymbol(c);
-                currentColumn++;
+
 
             }
 
             if(isSignAnd(c)) {
                 stateActive = andstate;
+                currentColumn++;
                 //Speichert den Anfang des Tokens
                 startColumn = currentColumn;
                 startLine = currentLine;
                 listAutomat.addSymbol(c);
-                currentColumn++;
+
 
 
             }
 
-            if(isSignColon(c)) {
+            if (isSignColon(c)) {
                 stateActive = colonstate;
+                currentColumn++;
                 //Speichert den Anfang des Tokens
                 startColumn = currentColumn;
                 startLine = currentLine;
                 listAutomat.addSymbol(c);
-                currentColumn++;
+
 
             }
 
             if (isLetter(c)) {
 
                 stateActive = letterstate;
+                currentColumn++;
                 //Speichert den Anfang des Tokens
                 startColumn = currentColumn;
                 startLine = currentLine;
                 listAutomat.addSymbol(c);
-                currentColumn++;
+
 
             }
 
             if (isBlank(c)) {
                 currentColumn++;
-
+                //std::cout << "IsBlank " << std::endl;
 
             }
 
             if (isNewLine(c)) {
+                //std::cout << "isNewLine " << std::endl;
                 currentColumn = 0;
                 currentLine++;
 
@@ -136,6 +145,8 @@ void Automat::checkSymbol(char c) {
             } else {
 
                 createTokenLetter();
+
+                std::cout << "Else im Letterstate" << std::endl;
                 stateActive = init;
                 checkSymbol(c);
             }
@@ -231,7 +242,7 @@ Automat::Token Automat::createToken(TokenType tokenType) {
             break;
 
         case DigitToken:
-
+            token.storage.number = this->number;
             break;
 
         case ErrorToken:
@@ -324,11 +335,6 @@ return createToken(SignToken);
 //To fix set length of lexem
 Automat::Token Automat::createTokenLetter() {
 
-    tokenIdentifier token;
-    token.column = startColumn;
-    token.line = startLine;
-
-    token.lexem[listAutomat.listLength()];
 
     for (int i = listAutomat.listLength(); i > -1; i--) {
         //token.lexem[i-1] = listAutomat.popSymbol();
