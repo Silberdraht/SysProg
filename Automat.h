@@ -40,7 +40,9 @@ public:
         colonstate,
         andstate,
         equalcolonstate,
-        letterstate
+        letterstate,
+        commentstate,
+        commentstate2
 
 
     };
@@ -51,7 +53,7 @@ public:
         IdentifierToken,
         ErrorToken,
         IfToken,
-        ElseToken
+        WhileToken
 
     };
 
@@ -70,44 +72,14 @@ public:
 
 
     };
-    struct tokenDigit {
 
-        int line;
-        int column;
-        int value;
-
-
-    };
-
-
-    struct tokenIdentifier {
-
-        int line;
-        int column;
-        char lexem[];
-
-
-    };
-
-    struct tokenError {
-        int line;
-        int column;
-
-    };
-
-
-    struct tokenSign {
-
-        char type[];
-        int line;
-        int column;
-    };
 
     unsigned int currentLine = 1;
     unsigned int currentColumn = 0;
     unsigned int startColumn;
     unsigned int startLine;
     long number;
+
 
 
 
@@ -120,6 +92,12 @@ public:
     Token createTokenSign();
 
     Token createTokenLetter();
+
+    Token createTokenError();
+
+    Token createTokenIf();
+
+    Token createTokenWhile();
 
     bool isLetter(char c);
 
@@ -137,6 +115,13 @@ public:
 
     bool isNewLine(char c);
 
+    bool isStar(char c);
+
+    bool isError(char c);
+
+
+    bool isArrayEqual(char ar1[], char ar2[], int length);
+
     unsigned int getLine();
 
     unsigned int getColumn();
@@ -149,6 +134,7 @@ public:
 
 
    int convertCharToInt(char c);
+
 
 
 

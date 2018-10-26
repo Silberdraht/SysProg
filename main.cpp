@@ -1,6 +1,9 @@
 #include <iostream>
 
 #include "Automat.h"
+#include "TestAutomat.h"
+
+#include <fstream>      // std::ifstream
 
 int main() {
 
@@ -8,36 +11,26 @@ int main() {
     Automat automat;
 
 
-    automat.checkSymbol('5');
-    automat.checkSymbol('6');
-    automat.checkSymbol('7');
-    automat.checkSymbol('x');
+    std::ifstream is("C:\\Users\\Silberdraht\\Desktop\\beispiel.txt");   // open file
 
-    automat.checkSymbol(' ');
-    automat.checkSymbol('a');
-    automat.checkSymbol('b');
-    automat.checkSymbol('=');
-    automat.checkSymbol('c');
-    automat.checkSymbol('7');
-    automat.checkSymbol('\n');
+    char c;
+    while (is.get(c))                  // loop getting single characters
+       automat.checkSymbol(c);
+    std::cout << c << std::endl;
 
-    automat.checkSymbol('5');
-    automat.checkSymbol('6');
-    automat.checkSymbol('7');
-    automat.checkSymbol('x');
-    //automat.checkSymbol('=');
+    if (is.eof())                      // check for EOF
+        std::cout << "[EoF reached]\n";
+    else
+        std::cout << "[error reading]\n";
+
+    is.close();
 
 
 
-    std::cout << "Line: " << std::endl;
-
-    std::cout << automat.currentLine << std::endl;
-
-    std::cout << "Column: " << std::endl;
-
-    std::cout << automat.currentColumn << std::endl;
 
 
     std::cout << "Hello, World!" << std::endl;
+
+
     return 0;
 }
