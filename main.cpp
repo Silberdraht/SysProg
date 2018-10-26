@@ -25,6 +25,7 @@ int main() {
 
     is.close();
 
+    automat.endAutomat();
 
 
 

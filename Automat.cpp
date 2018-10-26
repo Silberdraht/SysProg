@@ -647,6 +647,10 @@ std::cout << "should create if token" << std::endl;
 
         return true;
     }
+//Beendet den Automaten
+    void Automat::endAutomat() {
+    checkSymbol(' ');
+    }
 
 
 

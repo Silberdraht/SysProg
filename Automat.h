@@ -23,6 +23,8 @@ public:
 
     void checkSymbol(char c);
 
+    void endAutomat();
+
 
 
 
