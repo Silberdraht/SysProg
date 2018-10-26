@@ -47,7 +47,7 @@ char LinkedList::popSymbol() {
 
         return c;
     }
-    return 'a';
+    return ' ';
 
 }
 

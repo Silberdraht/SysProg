@@ -23,6 +23,8 @@ public:
 
     void checkSymbol(char c);
 
+    void endAutomat();
+
 
 
 
@@ -33,61 +35,73 @@ public:
         final,
         error,
         digistate,
-        idstate,
         ifstate,
         whilestate,
         signstate,
-        qualstate,
+        equalstate,
         colonstate,
         andstate,
-        mixedstate
-
-    };
-    struct tokenDigit {
-
-        int line;
-        int column;
-        int value;
+        equalcolonstate,
+        letterstate,
+        commentstate,
+        commentstate2
 
 
     };
 
+    enum TokenType {
+        SignToken,
+        DigitToken,
+        IdentifierToken,
+        ErrorToken,
+        IfToken,
+        WhileToken
 
-    struct tokenIdent {
+    };
 
-        int line;
-        int column;
-        char lexem[];
+    struct Token {
+        unsigned int line, column;
+        TokenType tokenType;
+        union Storage {
+            long number;
+            //Insert Key für Hash
+            char error;
+
+
+        } storage;
+
+
 
 
     };
 
-    struct tokenError {
-        int line;
-        int column;
 
-    };
+    unsigned int currentLine = 1;
+    unsigned int currentColumn = 0;
+    unsigned int startColumn;
+    unsigned int startLine;
+    long number;
 
-
-    struct tokenSign {
-
-        char type[];
-        int line;
-        int column;
-    };
-
-    int currentLine = 1;
-    int currentColumn = 0;
 
 
 
     state stateActive = init;
 
-    void createTokenDigit();
+    Token createToken(TokenType tokenType);
 
-    void createTokenSign();
+    Token createTokenDigit();
 
+    Token createTokenSign();
 
+    Token createTokenLetter();
+
+    Token createTokenError();
+
+    Token createTokenIf();
+
+    Token createTokenWhile();
+
+    bool isLetter(char c);
 
     bool isDigit(char c);
 
@@ -99,8 +113,30 @@ public:
 
     bool isSignColon(char c);
 
+    bool isBlank(char c);
+
+    bool isNewLine(char c);
+
+    bool isStar(char c);
+
+    bool isError(char c);
+
+
+    bool isArrayEqual(char ar1[], char ar2[], int length);
+
+    unsigned int getLine();
+
+    unsigned int getColumn();
+
+    unsigned int getStartLine();
+
+    unsigned int getStartColumn();
+
+    long getNumber();
+
 
    int convertCharToInt(char c);
+
 
 
 
