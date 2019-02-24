@@ -235,6 +235,7 @@
                 }
 
                 break;
+
                 //In der Liste steht '=' ':'
             case equalcolonstate:
                 //std::cout << "equalstate: " << std::endl;
@@ -498,8 +499,7 @@ std::cout << "should create if token" << std::endl;
                 return true;
             case '-':
                 return true;
-            case '–':
-                return true;
+
             case '*':
                 return true;
             case '<':
