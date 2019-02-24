@@ -8,8 +8,10 @@
 int main() {
 
 
-    TestAutomat testAutomat;
-    testAutomat.test();
+
+
+    //TestAutomat testAutomat;
+    //testAutomat.test();
 
 
 
