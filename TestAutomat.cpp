@@ -22,7 +22,7 @@ void TestAutomat::test() {
     Automat automat;
 
 
-    std::ifstream is("C:\\Users\\Silberdraht\\Desktop\\beispiel.txt");   // open file
+    std::ifstream is("C:\\Users\\Silberdraht\\Desktop\\beispieltest.txt");   // open file
 
     char c;
     while (is.get(c))                  // loop getting single characters
