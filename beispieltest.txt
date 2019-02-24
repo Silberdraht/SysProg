@@ -1,0 +1,10 @@
+?X:=3+4;
+hallo ei ifo
+a IF WHILE if while
+:* eine einfache Aufgabe !! *:
+?y := 7 = := X : (X - 4);
+Z := ((3 + 4 - 6);
+Resultat := : X y %
+WHILE while if IF
+EIFbdC2 ifasd
+a
