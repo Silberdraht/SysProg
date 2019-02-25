@@ -111,12 +111,6 @@
 
                 }
 
-                if (isStar(c)) {
-
-                    currentColumn++;
-                    stateActive = commentstate;
-
-                }
 
                 if (isError(c)) {
 
