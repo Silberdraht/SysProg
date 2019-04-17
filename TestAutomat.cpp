@@ -26,7 +26,7 @@ void TestAutomat::test() {
 
     char c = ' ';
     int count = 0;
-    while (&c != nullptr) {                 // loop getting single characters
+    while (c != '\0') {                 // loop getting single characters
         c = buffer.getChar();
         automat.checkSymbol(c);
         count++;

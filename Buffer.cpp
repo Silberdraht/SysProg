@@ -36,7 +36,7 @@ char Buffer::getChar() {
         }
         else if (current == &buffer2[buffer_size]) {
             //delete_buffer(&buffer1);
-            clear_buffer(&buffer1);
+            clear_buffer(&buffer1); //removeable?
             load(&buffer1);
             current = buffer1;
             next = buffer1;
@@ -52,11 +52,16 @@ char Buffer::getChar() {
 
 void Buffer::load(char **buffer) {
     //clear_buffer(buffer);
-    if (*buffer != NULL) {
-        realloc(*buffer, buffer_size + 1);
-    } else {
-        *buffer = (char *) malloc(buffer_size + 1);//new char[buffer_size+1];
+//    if (*buffer != NULL) {
+//        realloc(*buffer, buffer_size + 1);
+//    } else {
+//        *buffer = (char *) malloc(buffer_size + 1);//new char[buffer_size+1];
+//    }
+    if (*buffer != nullptr) {
+        delete []*buffer;
     }
+    *buffer = (char *) malloc(buffer_size + 1);//new char[buffer_size+1];
+
     //*buffer = 0x00;
     std::fstream stream;
     stream.open(file);
@@ -69,7 +74,7 @@ void Buffer::load(char **buffer) {
         (*buffer)[index] = c;
         index++;
     }
-    buffer[buffer_size] = '\0';
+    (*buffer)[buffer_size] = '\0';
     stream.close();
     amount_read += index;
 
@@ -83,7 +88,7 @@ void Buffer::delete_buffer(char **buffer) {
 }
 
 void Buffer::clear_buffer(char **buffer) {
-    if (*buffer != 0) {
+    if (*buffer != nullptr) {
         int counter = (int) (buffer_size - 1);
         while (counter >= 0) {
             (*buffer)[counter] = '\0';

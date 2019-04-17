@@ -12,15 +12,14 @@
 class Buffer {
 
 private:
-    char *current;
-    char *next;
-    char *buffer1 = NULL;
-    char *buffer2 = NULL;
+    char *current = nullptr;
+    char *next = nullptr;
+    char *buffer1 = nullptr;
+    char *buffer2 = nullptr;
     int amount_read = 0;
 
     size_t buffer_size = 16;
-    char *file = (char *) "F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\beispieltest.txt";
-    //char *file = (char *) ".\\beispieltest.txt";
+    char *file = (char *) R"(../beispieltest.txt)";
     void clear_buffer(char **buffer);
     void load(char **buffer);
 
