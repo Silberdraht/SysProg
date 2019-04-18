@@ -443,34 +443,28 @@
         }
 
 
-        //char *identifier = new char[listAutomat.listLength()];
-//        for (int i = 0; i <= listAutomat.listLength(); i++) { //for (int i = listAutomat.listLength(); i > -1; i--) {
-//           //identifier[i] = listAutomat.popSymbol();
-//           std::cout << listAutomat.popSymbol() << std::endl; //std::cout << listAutomat.popSymbol() << std::endl; //TODO
-//        }
+        int amount = listAutomat.listLength();
+        char *string = new char[amount + 1];
 
-
-//        if (identifier != NULL) {
-//            realloc(identifier, (size_t) (listAutomat.listLength() + 1));
-//        } else {
-//
-//            identifier = (char *) malloc((size_t) (listAutomat.listLength() + 1));
-//        }
-
-        identifier = new char[listAutomat.listLength()+1];
-        for (int i = listAutomat.listLength(); i >= 0; i--) {
+        for (int i = amount; i >= 0; i--) {
             //token.lexem[i-1] = listAutomat.popSymbol();
-
-            std::cout << listAutomat.popSymbol() << std::endl;
+            char symbol = listAutomat.popSymbol();
+            if (symbol == ' ' && i == 0) {
+                string++;
+            }
+            else {
+                string[i] = symbol;
+            }
         }
+        string[amount] = '\0';
+        std::cout << string << std::endl; //TODO remove
+        identifier = string;
+        delete []string;
     }
 
 
     /** Hilfsfunktionen **/
 
-    void Automat::clearIdentifier() {
-
-    }
 
     bool Automat::isDigit(char c) {
 

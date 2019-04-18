@@ -23,8 +23,7 @@ public:
 
     void endAutomat();
 
-    char *identifier;
-    void clearIdentifier();
+    char *identifier = nullptr;
 
     enum state {
         init,
