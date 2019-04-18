@@ -8,7 +8,7 @@
 #ifndef SYMTABLE_H_
 #define SYMTABLE_H_
 
-#endif /* SYMTABLE_H_ */
+
 
 #include "InformationLinkedList.h"
 #include "StringTable.h"
@@ -35,3 +35,4 @@ public:
 };
 
 
+#endif /* SYMTABLE_H_ */

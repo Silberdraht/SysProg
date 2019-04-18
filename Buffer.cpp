@@ -3,8 +3,10 @@
 //
 
 #include <malloc.h>
-#include "Buffer.h"
 #include <fstream>
+#include <cstring>
+#include <iostream>
+#include "Buffer.h"
 
 Buffer::Buffer() {
 
@@ -16,11 +18,10 @@ Buffer::Buffer() {
 
 Buffer::~Buffer() {
 
-    delete_buffer(&buffer1);
-    delete_buffer(&buffer2);
-    free(current);
-    free(next);
-
+    delete(current);
+    delete(next);
+    delete(buffer1);
+    delete(buffer2);
 }
 
 char Buffer::getChar() {
@@ -28,21 +29,19 @@ char Buffer::getChar() {
     current = next;
     if (*current == '\0') {
         if (current == &buffer1[buffer_size]) {
-            //delete_buffer(&buffer2);
             clear_buffer(&buffer2);
             load(&buffer2);
             current = buffer2;
             next = buffer2;
         }
         else if (current == &buffer2[buffer_size]) {
-            //delete_buffer(&buffer1);
             clear_buffer(&buffer1);
             load(&buffer1);
             current = buffer1;
             next = buffer1;
         }
         else {
-            return ' '; //end of lexical analysis
+            return '\0'; //end of lexical analysis
         }
     }
     next++;
@@ -52,12 +51,16 @@ char Buffer::getChar() {
 
 void Buffer::load(char **buffer) {
     //clear_buffer(buffer);
-    if (*buffer != NULL) {
-        realloc(*buffer, buffer_size + 1);
-    } else {
-        *buffer = (char *) malloc(buffer_size + 1);//new char[buffer_size+1];
+//    if (*buffer != NULL) {
+//        realloc(*buffer, buffer_size + 1);
+//    } else {
+//        *buffer = (char *) malloc(buffer_size + 1);//new char[buffer_size+1];
+//    }
+    if (*buffer != nullptr) {
+        delete []*buffer;
     }
-    //*buffer = 0x00;
+    *buffer = (char *) malloc(buffer_size + 1);//new char[buffer_size+1];
+
     std::fstream stream;
     stream.open(file);
     stream.seekg(amount_read);
@@ -69,7 +72,7 @@ void Buffer::load(char **buffer) {
         (*buffer)[index] = c;
         index++;
     }
-    buffer[buffer_size] = '\0';
+    (*buffer)[buffer_size] = '\0';
     stream.close();
     amount_read += index;
 
@@ -83,7 +86,7 @@ void Buffer::delete_buffer(char **buffer) {
 }
 
 void Buffer::clear_buffer(char **buffer) {
-    if (*buffer != 0) {
+    if (*buffer != nullptr) {
         int counter = (int) (buffer_size - 1);
         while (counter >= 0) {
             (*buffer)[counter] = '\0';

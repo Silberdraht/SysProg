@@ -12,7 +12,7 @@
 
 
 
-#endif /* STRINGTABLE_H_ */
+
 
 class StringTable{
 	char* freeP;
@@ -25,3 +25,5 @@ public:
 	~StringTable();
 	char* insert(char*lexem ,int size);
 };
+
+#endif /* STRINGTABLE_H_ */

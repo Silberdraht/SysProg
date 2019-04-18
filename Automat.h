@@ -6,8 +6,6 @@
 #ifndef SYSPROG_AUTOMATA_H
 #define SYSPROG_AUTOMATA_H
 
-#endif //SYSPROG_AUTOMATA_H
-
 #include <iostream>
 #include "LinkedList.h"
 
@@ -25,10 +23,8 @@ public:
 
     void endAutomat();
 
-
-
-
-
+    char *identifier;
+    void clearIdentifier();
 
     enum state {
         init,
@@ -64,7 +60,8 @@ public:
         TokenType tokenType;
         union Storage {
             long number;
-            //Insert Key für Hash
+            //Key key; //Insert Key für Hash
+            char* tempIdentifier;
             char error;
 
 
@@ -138,8 +135,8 @@ public:
    int convertCharToInt(char c);
 
 
-
-
-
+    Token createToken(TokenType type, char *identifier);
 
 };
+
+#endif //SYSPROG_AUTOMATA_H
