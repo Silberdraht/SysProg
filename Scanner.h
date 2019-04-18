@@ -7,6 +7,7 @@
 
 #include "Buffer.h"
 #include "Automat.h"
+#include "Symtable.h"
 
 
 class Scanner {
@@ -14,6 +15,7 @@ class Scanner {
 private:
     Buffer buffer;
     Automat automat;
+    Symtable symtable;
 
 public:
     Scanner();

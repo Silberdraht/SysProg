@@ -13,7 +13,6 @@
 #include "InformationLinkedList.h"
 #include "StringTable.h"
 
-
 struct Key{
 	int key;
 	int KeyNr;
@@ -21,11 +20,15 @@ struct Key{
 
 class Symtable {
 
+
+
 	int prime = 997;
 	StringTable table;
 	InformationLinkedList Listptrs[997];
 	int calculateKey(char* lexem);
+
 public:
+
 	Symtable();
 	~Symtable();
 	Key insert(char* lexem);

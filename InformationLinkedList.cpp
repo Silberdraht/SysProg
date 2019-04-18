@@ -81,16 +81,16 @@ bool InformationLinkedList::containsInfo(char* lexem) {
 Information InformationLinkedList::getInfo(int KeyNr) {
 	int count = KeyNr;
 	if (countSymbol > 0) {
-	    	InfStruct *current = head;
-	    	while(current != nullptr && KeyNr < countSymbol) {
-	    		current = current->next;
-	    		count++;
+		InfStruct *current = head;
+		while(current != nullptr && KeyNr < countSymbol) {
+			current = current->next;
+			count++;
 
-	    	}
-	        Information toReturn = current->contains;
-	        return toReturn;
-	    }
-	    return head->contains;
-
+		}
+		Information toReturn = current->contains;
+		return toReturn;
 	}
+	return head->contains;
+
+}
 

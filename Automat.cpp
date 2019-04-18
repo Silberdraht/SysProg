@@ -680,6 +680,15 @@
         checkSymbol(' ');
     }
 
+    void Automat::clearIdentifier() {
+        int i = 0;
+        while (identifier[i] != '\0') {
+            identifier[i] = '\0';
+            i++;
+        }
+
+    }
+
 
 
 

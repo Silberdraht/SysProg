@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "LinkedList.h"
+#include "Symtable.h"
 
 
 class Automat {
@@ -24,6 +25,8 @@ public:
     void endAutomat();
 
     char *identifier = nullptr;
+
+    void clearIdentifier();
 
     enum state {
         init,
@@ -59,7 +62,7 @@ public:
         TokenType tokenType;
         union Storage {
             long number;
-            //Key key; //Insert Key für Hash
+            Key key; //Insert Key für Hash
             char* tempIdentifier;
             char error;
 
