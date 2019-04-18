@@ -4,8 +4,6 @@
 
 #include <malloc.h>
 #include <fstream>
-#include <cstring>
-#include <iostream>
 #include "Buffer.h"
 
 Buffer::Buffer() {
