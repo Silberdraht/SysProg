@@ -20,7 +20,7 @@
 void memcpy(char* dest,char* lexem, int size) {
 	int i;
 	for (i = 0;i < size; i++) {
-		*(dest + i) = *lexem + i;
+		*(dest + i) = *(lexem + i);
 	}
 }
 
