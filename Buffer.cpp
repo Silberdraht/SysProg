@@ -65,7 +65,7 @@ void Buffer::load(char **buffer) {
         (*buffer)[index] = c;
         index++;
     }
-    (*buffer)[buffer_size] = '\0';
+    (*buffer)[index] = '\0';
     stream.close();
     amount_read += index;
 
