@@ -28,6 +28,8 @@ public:
 
     void addSymbol(char c);
 
+    void addSymbolAsLast(char c);
+
     char popSymbol();
 
     bool isEmpty();
@@ -36,5 +38,6 @@ public:
 private:
     Symbol *head;
     int countSymbol = 0;
+
 
 };

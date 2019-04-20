@@ -33,6 +33,25 @@ void LinkedList::addSymbol(char c) {
 
 }
 
+//needed to use as list as "Last In Last Out" (add at end, pop at front)
+void LinkedList::addSymbolAsLast(char c) {
+    if (head == nullptr) {
+        head = new Symbol();
+        head->c = c;
+    }
+    else {
+        Symbol *s = head;
+        while (s->next != nullptr) {
+            s = s->next;
+        }
+        Symbol *toAdd = new Symbol();
+        toAdd->c = c;
+        s->next = toAdd;
+    }
+    countSymbol++;
+
+}
+
 //Fix else
 char LinkedList::popSymbol() {
     if (countSymbol > 0) {

@@ -18,15 +18,25 @@ void Scanner::startScanner() {
 
     char c = ' ';
     while (c != '\0') {
-        if (automat.identifier != nullptr && *(automat.identifier) != '\0') {
-            Automat::Token token = automat.createToken(automat.IdentifierToken, automat.identifier);
-            token.storage.key = symtable.insert(automat.identifier);
-            automat.clearIdentifier();
-            //std::cout << symtable.lookup(token.storage.key).getLexem() << " is Lexem" << std::endl;
-            //std::cout << symtable.lookup(token.storage.key).getName() << " is Name"<< std::endl;
+        while (!automat.tokenQueue.isEmpty()) {
+            int typeNumber = automat.convertCharToInt(automat.tokenQueue.popSymbol());
+            Automat::TokenType tokentype = Automat::TokenType(typeNumber);
+            Automat::Token token = automat.createToken(tokentype);
+            if (automat.identifier != nullptr && *(automat.identifier) != '\0') {
+                token.storage.key = symtable.insert(automat.identifier);
+            }
         }
         c = buffer.getChar();
         automat.checkSymbol(c);
+    }
+
+    if (!automat.tokenQueue.isEmpty()) {
+        int typeNumber = automat.convertCharToInt(automat.tokenQueue.popSymbol());
+        Automat::TokenType tokentype = Automat::TokenType(typeNumber);
+        Automat::Token token = automat.createToken(tokentype);
+        if (automat.identifier != nullptr && *(automat.identifier) != '\0') {
+            token.storage.key = symtable.insert(automat.identifier);
+        }
     }
 
     automat.endAutomat();
