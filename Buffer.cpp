@@ -48,12 +48,7 @@ char Buffer::getChar() {
 }
 
 void Buffer::load(char **buffer) {
-    //clear_buffer(buffer);
-//    if (*buffer != NULL) {
-//        realloc(*buffer, buffer_size + 1);
-//    } else {
-//        *buffer = (char *) malloc(buffer_size + 1);//new char[buffer_size+1];
-//    }
+
     if (*buffer != nullptr) {
         delete []*buffer;
     }
