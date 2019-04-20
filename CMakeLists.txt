@@ -7,7 +7,6 @@ set(SOURCE_FILES
         main.cpp
         Automat.cpp Automat.h
         LinkedList.cpp LinkedList.h
-        TestAutomat.cpp TestAutomat.h
         Buffer.cpp Buffer.h
         Symtable.cpp Symtable.h
         StringTable.cpp StringTable.h
