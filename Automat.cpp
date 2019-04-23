@@ -269,8 +269,8 @@
 
         switch (tokenType) {
             case IdentifierToken:
-                token.storage.lexem = copyChar(identifier);
-                this->clearIdentifier();
+                token.storage.lexem = identifier; //copyChar(identifier);
+                //this->clearIdentifier();
                 std::cout << token.tokenType << " " << token.storage.lexem << std::endl;
                 break;
 
@@ -285,9 +285,9 @@
                 break;
 
             case SignToken:
-                token.storage.sign = copyChar(sign);
+                token.storage.sign = sign; //copyChar(sign);
                 std::cout << token.tokenType << " " << token.storage.sign << std::endl;
-                this->clearSign();
+                //this->clearSign();
                 break;
 
             case IfToken:
@@ -295,11 +295,19 @@
                 break;
 
             case WhileToken:
-                std::cout << token.tokenType << std::endl;
+//                std::cout << token.tokenType << std::endl;
                 break;
 
         }
 
+//        if (tokenType != IdentifierToken) {
+//            token.storage.lexem = new char[1];
+//            token.storage.lexem[0] = '\0';
+//        }
+//        if (tokenType != SignToken) {
+//            token.storage.sign = new char[1];
+//            token.storage.sign[0] = '\0';
+//        }
         return token;
     }
 

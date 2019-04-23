@@ -16,12 +16,14 @@ private:
     Buffer buffer;
     Automat automat;
     Symtable symtable;
+    Automat::Token createToken();
 
 public:
     Scanner();
     ~Scanner();
 
     void startScanner();
+
 
 };
 
