@@ -8,6 +8,7 @@
 #include "Buffer.h"
 #include "Automat.h"
 #include "Symtable.h"
+#include "TokenList.h"
 
 
 class Scanner {
@@ -17,13 +18,15 @@ private:
     Automat automat;
     Symtable symtable;
     Automat::Token createToken();
+    TokenList tokens;
 
 public:
     Scanner();
     ~Scanner();
 
     void startScanner();
-
+    Automat::Token nextToken();
+    int hasTokens();
 
 };
 

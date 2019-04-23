@@ -11,8 +11,6 @@ LinkedList::LinkedList() {
 
 LinkedList::~LinkedList() {
 
-
-
         Symbol *next = head;
         while (next) {
 
@@ -51,6 +49,7 @@ void LinkedList::addSymbolAsLast(char c) {
     countSymbol++;
 
 }
+
 
 //Fix else
 char LinkedList::popSymbol() {

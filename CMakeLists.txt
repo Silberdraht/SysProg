@@ -12,6 +12,6 @@ set(SOURCE_FILES
         StringTable.cpp StringTable.h
         Information.cpp Information.h
         InformationLinkedList.cpp InformationLinkedList.h
-        Scanner.cpp Scanner.h)
+        Scanner.cpp Scanner.h TokenList.cpp TokenList.h)
 
 add_executable(SysProg ${SOURCE_FILES})

@@ -269,29 +269,29 @@
 
         switch (tokenType) {
             case IdentifierToken:
-                token.storage.lexem = identifier; //copyChar(identifier);
-                //this->clearIdentifier();
-                std::cout << token.tokenType << " " << token.storage.lexem << std::endl;
+                token.storage.lexem = copyChar(identifier);
+                this->clearIdentifier();
+//                std::cout << token.tokenType << " " << token.storage.lexem << std::endl;
                 break;
 
             case DigitToken:
                 token.storage.number = this->number;
-                std::cout << token.tokenType << " " << token.storage.number << std::endl;
+//                std::cout << token.tokenType << " " << token.storage.number << std::endl;
                 break;
 
             case ErrorToken:
                 token.storage.error = listAutomat.popSymbol();
-                std::cout << token.tokenType << " " << token.storage.error << std::endl;
+//                std::cout << token.tokenType << " " << token.storage.error << std::endl;
                 break;
 
             case SignToken:
                 token.storage.sign = sign; //copyChar(sign);
-                std::cout << token.tokenType << " " << token.storage.sign << std::endl;
+//                std::cout << token.tokenType << " " << token.storage.sign << std::endl;
                 //this->clearSign();
                 break;
 
             case IfToken:
-                std::cout << token.tokenType << std::endl;
+//                std::cout << token.tokenType << std::endl;
                 break;
 
             case WhileToken:

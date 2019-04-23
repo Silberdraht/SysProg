@@ -19,14 +19,14 @@ void Scanner::startScanner() {
     char c = ' ';
     while (c != '\0') {
         while (!automat.tokenQueue.isEmpty()) {
-            createToken(); //TODO do smth with created token
+            tokens.addToken(createToken());
         }
         c = buffer.getChar();
         automat.checkSymbol(c);
     }
 
     if (!automat.tokenQueue.isEmpty()) {
-        createToken();
+        tokens.addToken(createToken());
     }
 
     automat.endAutomat();
@@ -42,4 +42,13 @@ Automat::Token Scanner::createToken() {
 //        std::cout << symtable.lookup(token.storage.key).getLexem() << std::endl;
     }
     return token;
+}
+
+Automat::Token Scanner::nextToken() {
+
+    return this->tokens.popToken();
+}
+
+int Scanner::hasTokens() {
+    return !this->tokens.isEmpty();
 }
