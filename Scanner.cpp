@@ -23,6 +23,9 @@ void Scanner::startScanner() {
         }
         c = buffer.getChar();
         automat.checkSymbol(c);
+
+        std::ofstream ofs {"out.txt",std::ios_base::app};
+        ofs  << "Token " <<  << " Line: "<< automat.getLine() << " Column: " << automat.getColumn() << std::endl;
     }
 
     if (!automat.tokenQueue.isEmpty()) {
