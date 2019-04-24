@@ -4,7 +4,7 @@
 
 int main() {
 
-    std::ofstream ofs {"out.txt",std::ios_base::binary};
+    //std::ofstream ofs {"out.txt",std::ios_base::binary};
 
     /*
     std::ofstream ofs {"out.txt",std::ios_base::binary};
@@ -16,7 +16,9 @@ int main() {
     scanner.startScanner();
 
     std::fstream stream;
-    stream.open("F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\out.txt");
+    stream.open(R"(../out.txt)");
+    //stream.open("F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\out.txt");
+    //stream.open("C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt");
 
     while (scanner.hasTokens()) {
         Automat::Token token = scanner.nextToken();
