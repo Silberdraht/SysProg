@@ -23,7 +23,6 @@ private:
     char *file = (char *) "F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\beispieltest.txt";
     //char *file = (char *) R"(../beispieltest.txt)";
     void clear_buffer(char **buffer);
-    void delete_buffer(char **buffer);
     void load(char **buffer);
 
 public:

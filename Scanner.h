@@ -16,7 +16,6 @@ class Scanner {
 private:
     Buffer buffer;
     Automat automat;
-    Symtable symtable;
     Automat::Token createToken();
     TokenList tokens;
 
@@ -24,6 +23,7 @@ public:
     Scanner();
     ~Scanner();
 
+    Symtable symtable;
     void startScanner();
     Automat::Token nextToken();
     int hasTokens();
