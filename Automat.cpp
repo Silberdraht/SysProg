@@ -5,7 +5,7 @@
 
     #include "Automat.h"
 
-    LinkedList listAutomat;
+    //LinkedList listAutomat;
 
 
     Automat::Automat() {
@@ -19,12 +19,9 @@
     //To Fix: Kommentare, Errortokens, IF, Else, EoF
     void Automat::checkSymbol(char c) {
 
-
         switch (stateActive) {
             case init:
                 //std::cout << "Init: " << std::endl;
-
-
 
                 if (isDigit(c)) {
                     currentColumn++;
@@ -35,56 +32,46 @@
                     startColumn = currentColumn;
                     startLine = currentLine;
                     //Zählt die Postion weiter
-
                 }
+
                 //Alle Sign ausser =, & und :
-                if (isSign(c)) {
+                else if (isSign(c)) {
                     currentColumn++;
                     listAutomat.addSymbol(c);
                     startColumn = currentColumn;
                     startLine = currentLine;
 
-                    createTokenSign();
-
-
-
+                    prepareTokenSign();
                 }
 
-                if (isSignEqual(c)) {
+                else if (isSignEqual(c)) {
                     stateActive = equalstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
                     startColumn = currentColumn;
                     startLine = currentLine;
                     listAutomat.addSymbol(c);
-
-
                 }
 
-                if(isSignAnd(c)) {
+                else if(isSignAnd(c)) {
                     stateActive = andstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
                     startColumn = currentColumn;
                     startLine = currentLine;
                     listAutomat.addSymbol(c);
-
-
-
                 }
 
-                if (isSignColon(c)) {
+                else if (isSignColon(c)) {
                     stateActive = colonstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
                     startColumn = currentColumn;
                     startLine = currentLine;
                     listAutomat.addSymbol(c);
-
-
                 }
 
-                if (isLetter(c)) {
+                else if (isLetter(c)) {
 
                     stateActive = letterstate;
                     currentColumn++;
@@ -92,36 +79,28 @@
                     startColumn = currentColumn;
                     startLine = currentLine;
                     listAutomat.addSymbol(c);
-
-
-
                 }
 
-                if (isBlank(c)) {
+                else if (isBlank(c)) {
                     currentColumn++;
                     //std::cout << "IsBlank " << std::endl;
-
                 }
 
-                if (isNewLine(c)) {
+                else if (isNewLine(c)) {
                     //std::cout << "isNewLine " << std::endl;
                     currentColumn = 0;
                     currentLine++;
-
-
                 }
 
 
-                if (isError(c)) {
-
+                else if (isError(c)) {
 
                     currentColumn++;
                     startColumn = currentColumn;
                     startLine = currentLine;
 
                     listAutomat.addSymbol(c);
-                    createTokenError();
-
+                    prepareTokenError();
                 }
 
                 break;
@@ -134,15 +113,14 @@
 
                     listAutomat.addSymbol(c);
                     currentColumn++;
-                } else {
+                }
+
+                else {
                     //wenn char kein Digit, gehe wieder in
                     // initzustand baue ein DigitToken und rufe checkSymbol mit c neu auf.
 
-
-                    createTokenDigit();
-
+                    prepareTokenDigit();
                     stateActive = init;
-
                     checkSymbol(c);
                 }
                 break;
@@ -152,16 +130,11 @@
                 //std::cout << "Letterstate: " << std::endl;
                 if(isLetter(c) || (isDigit(c))) {
                     currentColumn++;
-
-
                     listAutomat.addSymbol(c);
+                }
 
-
-
-                } else {
-
-                    createTokenLetter();
-
+                else {
+                    prepareTokenLetter();
                     stateActive = init;
                     checkSymbol(c);
                 }
@@ -174,13 +147,14 @@
                 if (isSignAnd(c)) {
                     currentColumn++;
                     listAutomat.addSymbol(c);
-                    createTokenSign();
+                    prepareTokenSign();
                     stateActive = init;
-                } else {
-                    createTokenSign();
+                }
+
+                else {
+                    prepareTokenSign();
                     stateActive = init;
                     checkSymbol(c);
-
                 }
 
                 break;
@@ -191,10 +165,11 @@
                     currentColumn++;
                     listAutomat.addSymbol(c);
                     stateActive = equalcolonstate;
+                }
 
-                } else {
+                else {
 
-                    createTokenSign();
+                    prepareTokenSign();
                     stateActive = init;
                     checkSymbol(c);
                 }
@@ -207,25 +182,21 @@
 
                     currentColumn++;
                     listAutomat.addSymbol(c);
-                    createTokenSign();
-
+                    prepareTokenSign();
                     stateActive = init;
                 }
 
                 else if (isStar(c)) {
 
-
                     currentColumn++;
                     listAutomat.popSymbol();
                     stateActive = commentstate;
-
                 }
 
                 else {
-                    createTokenSign();
+                    prepareTokenSign();
                     stateActive = init;
                     checkSymbol(c);
-
                 }
 
                 break;
@@ -236,20 +207,20 @@
                 if (isSignEqual(c)) {
                     currentColumn++;
                     listAutomat.addSymbol(c);
-                    createTokenSign();
+                    prepareTokenSign();
                     stateActive = init;
+                }
 
-                } else {
+                else {
                     //Erzeugt ein Token '=' und ein Token ':'
                     char temp = listAutomat.popSymbol();
-                    createTokenSign();
+                    prepareTokenSign();
                     listAutomat.addSymbol(temp);
                     //Passt die Startposition für das zweite Token an.
                     startColumn++;
-                    createTokenSign();
+                    prepareTokenSign();
                     stateActive = init;
                     checkSymbol(c);
-
                 }
 
                 break;
@@ -259,18 +230,14 @@
                     currentColumn++;
 
                     if (c == '*') {
-
                         stateActive = commentstate2;
                     }
+                }
 
-
-
-                } else {
+                else {
 
                     currentColumn = 0;
                     currentLine++;
-
-
                 }
 
                 break;
@@ -295,56 +262,63 @@
 
     Automat::Token Automat::createToken(TokenType tokenType) {
 
-        Token token;
+        Token token{};
         token.line = getStartLine();
         token.column = getStartColumn();
         token.tokenType = tokenType;
 
         switch (tokenType) {
             case IdentifierToken:
-
+                token.storage.lexem = copyChar(identifier);
+                this->clearIdentifier();
+//                std::cout << token.tokenType << " " << token.storage.lexem << std::endl;
                 break;
 
             case DigitToken:
                 token.storage.number = this->number;
+//                std::cout << token.tokenType << " " << token.storage.number << std::endl;
                 break;
 
             case ErrorToken:
                 token.storage.error = listAutomat.popSymbol();
-
+//                std::cout << token.tokenType << " " << token.storage.error << std::endl;
                 break;
 
             case SignToken:
-
+                token.storage.sign = sign; //copyChar(sign);
+//                std::cout << token.tokenType << " " << token.storage.sign << std::endl;
+                //this->clearSign();
                 break;
 
             case IfToken:
-
+//                std::cout << token.tokenType << std::endl;
                 break;
 
             case WhileToken:
-
+//                std::cout << token.tokenType << std::endl;
                 break;
 
         }
 
-
+//        if (tokenType != IdentifierToken) {
+//            token.storage.lexem = new char[1];
+//            token.storage.lexem[0] = '\0';
+//        }
+//        if (tokenType != SignToken) {
+//            token.storage.sign = new char[1];
+//            token.storage.sign[0] = '\0';
+//        }
         return token;
     }
 
-    Automat::Token Automat::createToken(Automat::TokenType type, char* identifier) {
-        Token token = Automat::createToken(type);
-        token.storage.tempIdentifier = identifier; //TODO
-        return token;
-    }
-
-    Automat::Token Automat::createTokenError() {
-
-        return Automat::createToken(ErrorToken);
+    void Automat::prepareTokenError() {
+        tokenQueue.addSymbolAsLast('3'); //Errortoken
+        //tokenReady = ErrorToken;
+        //return Automat::createToken(ErrorToken);
     }
 
     //TO FIX return value and token creation
-    Automat::Token Automat::createTokenDigit() {
+    void Automat::prepareTokenDigit() {
 
         int ca[listAutomat.listLength()];
         int counter = listAutomat.listLength();
@@ -353,14 +327,8 @@
 
             //Fügt Inhalte der Verkettenen Liste in ein Char Array
             ca[counter-1] = convertCharToInt(listAutomat.popSymbol());
-
-
             counter--;
-
-
         }
-
-
 
         int digitValue = 0;
         int power = 1;
@@ -375,28 +343,40 @@
         }
 
         this->number = digitValue;
+        tokenQueue.addSymbolAsLast('1'); //Digittoken
+        //tokenReady = DigitToken;
+        //return createToken(DigitToken);
 
-
-    return Automat::createToken(DigitToken);
 }
     //Fix return and test
 
 
-    Automat::Token Automat::createTokenSign() {
+    void Automat::prepareTokenSign() {
 
-        for (int i = listAutomat.listLength(); i > -1; i--) {
-            //token.type[i-1] = listAutomat.popSymbol();
+        int amount = listAutomat.listLength();
+        char *string = new char[amount + 1];
 
-            std::cout << listAutomat.popSymbol() << std::endl;
-
+        for (int i = amount; i >= 0; i--) {
+            char symbol = listAutomat.popSymbol();
+            if (symbol == ' ' && i == 0) {
+                string++;
+            }
+            else {
+                string[i] = symbol;
+            }
         }
+        string[amount] = '\0';
+        sign = string;
+        delete []string;
 
-        return createToken(SignToken);
+        tokenQueue.addSymbolAsLast('0'); //Signtoken
+        //tokenReady = SignToken;
+        //return createToken(SignToken);
     }
 
 
     //To fix set length of lexem
-    Automat::Token Automat::createTokenLetter() {
+    void Automat::prepareTokenLetter() {
 
         if (listAutomat.listLength() == 2) {
 
@@ -409,15 +389,16 @@
 
             if (Automat::isArrayEqual(arIf, toTest, 2) || Automat::isArrayEqual(arIf2, toTest, 2)) {
 
-                std::cout << "should create if token" << std::endl;
-
-                return createToken(IfToken);
+                tokenQueue.addSymbolAsLast('4'); //Iftoken
+                return;
+                //tokenReady = IfToken;
+                //return createToken(IfToken);
             }
+                listAutomat.addSymbol(toTest[0]);
+                listAutomat.addSymbol(toTest[1]);
+        }
 
-            listAutomat.addSymbol(toTest[0]);
-            listAutomat.addSymbol(toTest[1]);
-
-        } else if (listAutomat.listLength() == 5) {
+        else if (listAutomat.listLength() == 5) {
 
             char toTest[5];
             char arIf[5] = {'w', 'h', 'i', 'l', 'e'};
@@ -431,10 +412,11 @@
 
             if (Automat::isArrayEqual(arIf, toTest, 5) || Automat::isArrayEqual(arIf2, toTest, 5)) {
 
-                std::cout << "should create while token" << std::endl; //TODO: remove
-                return createToken(WhileToken);
+                tokenQueue.addSymbol('5'); //Whiletoken
+                return;
+                //tokenReady = WhileToken;
+                //return createToken(WhileToken);
             }
-
             listAutomat.addSymbol(toTest[0]);
             listAutomat.addSymbol(toTest[1]);
             listAutomat.addSymbol(toTest[2]);
@@ -457,9 +439,11 @@
             }
         }
         string[amount] = '\0';
-        std::cout << string << std::endl; //TODO remove
         identifier = string;
         delete []string;
+        tokenQueue.addSymbolAsLast('2'); //Identifiertoken
+        //this->tokenReady = IdentifierToken;
+
     }
 
 
@@ -554,7 +538,7 @@
 
     bool Automat::isNewLine(char c) {
 
-        return c == '\n';
+        return c == '\r' || c == '\n'; //DOS&Windows: \r\n <=> Linux: \n <=> Mac: \r
     }
 
 
@@ -574,7 +558,7 @@
 
     bool Automat::isLetter(char c) {
 
-        return (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z');
+        return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
     }
 
 
@@ -675,11 +659,6 @@
     }
 
 
-    //Beendet den Automaten
-    void Automat::endAutomat() {
-        checkSymbol(' ');
-    }
-
     void Automat::clearIdentifier() {
         int i = 0;
         while (identifier[i] != '\0') {
@@ -689,7 +668,28 @@
 
     }
 
+    void Automat::clearSign() {
+        int i = 0;
+        while (sign[i] != '\0') {
+            sign[i] = '\0';
+            i++;
+        }
 
+    }
 
+    char* Automat::copyChar(const char *string) {
+        int size = 0;
+        while (string[size] != '\0') {
+            size++;
+        }
+        char *copy = new char[size+1];
+        for (int index = 0; index <= size; index++) {
+            copy[index] = string[index];
+        }
+        return copy;
+    }
 
-
+    //Beendet den Automaten
+    void Automat::endAutomat() {
+        checkSymbol(' ');
+    }

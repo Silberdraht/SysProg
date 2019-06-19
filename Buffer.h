@@ -20,10 +20,10 @@ private:
     int amount_read = 0;
 
     size_t buffer_size = 16;
-    char *file = (char *) "F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\beispieltest.txt";
-   // char *file = (char *) R"(../beispieltest.txt)";
+    //char *file = (char *) "C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt";
+    //char *file = (char *) "F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\beispieltest.txt";
+    char *file = (char *) R"(/beispieltest.txt)";
     void clear_buffer(char **buffer);
-    void delete_buffer(char **buffer);
     void load(char **buffer);
 
 public:

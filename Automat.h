@@ -18,24 +18,30 @@ public:
     Automat();
     ~Automat();
 
-    //LinkedList list;
+    LinkedList listAutomat;
+
+    LinkedList tokenQueue;
 
     void checkSymbol(char c);
 
     void endAutomat();
 
-    char *identifier = nullptr;
+    char *sign = nullptr;
+    void clearSign();
 
+    char *identifier = nullptr;
     void clearIdentifier();
+
+    char* copyChar(const char *string);
 
     enum state {
         init,
-        final,
-        error,
+//        final,
+//        error,
         digistate,
-        ifstate,
-        whilestate,
-        signstate,
+//        ifstate,
+//        whilestate,
+//        signstate,
         equalstate,
         colonstate,
         andstate,
@@ -48,22 +54,22 @@ public:
     };
 
     enum TokenType {
-        SignToken,
-        DigitToken,
-        IdentifierToken,
-        ErrorToken,
-        IfToken,
-        WhileToken
-
+        SignToken = 0,
+        DigitToken = 1,
+        IdentifierToken = 2,
+        ErrorToken = 3,
+        IfToken = 4,
+        WhileToken = 5
     };
 
     struct Token {
         unsigned int line, column;
         TokenType tokenType;
         union Storage {
-            long number;
             Key key; //Insert Key für Hash
-            char* tempIdentifier;
+            long number;
+            char* lexem;
+            char* sign;
             char error;
 
 
@@ -74,6 +80,7 @@ public:
 
     };
 
+    //TokenType tokenReady = NOT_SET;
 
     unsigned int currentLine = 1;
     unsigned int currentColumn = 0;
@@ -82,23 +89,21 @@ public:
     long number;
 
 
-
-
     state stateActive = init;
 
     Token createToken(TokenType tokenType);
 
-    Token createTokenDigit();
+    void prepareTokenDigit();
 
-    Token createTokenSign();
+    void prepareTokenSign();
 
-    Token createTokenLetter();
+    void prepareTokenLetter();
 
-    Token createTokenError();
+    void prepareTokenError();
 
-    Token createTokenIf();
-
-    Token createTokenWhile();
+//    Token createTokenIf();
+//
+//    Token createTokenWhile();
 
     bool isLetter(char c);
 
@@ -135,9 +140,6 @@ public:
 
 
    int convertCharToInt(char c);
-
-
-    Token createToken(TokenType type, char *identifier);
 
 };
 

@@ -3,7 +3,6 @@
 //
 
 
-
 #ifndef SYSPROG_LINKEDLIST_H
 #define SYSPROG_LINKEDLIST_H
 
@@ -16,8 +15,6 @@ class LinkedList {
 
         char c;
         Symbol *next;
-
-
     };
 
 
@@ -28,13 +25,17 @@ public:
 
     void addSymbol(char c);
 
+    void addSymbolAsLast(char c);
+
     char popSymbol();
 
     bool isEmpty();
 
     int listLength();
+
 private:
     Symbol *head;
     int countSymbol = 0;
+
 
 };
