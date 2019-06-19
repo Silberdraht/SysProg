@@ -8,11 +8,10 @@
 #ifndef SYMTABLE_H_
 #define SYMTABLE_H_
 
-#endif /* SYMTABLE_H_ */
+
 
 #include "InformationLinkedList.h"
 #include "StringTable.h"
-
 
 struct Key{
 	int key;
@@ -21,11 +20,15 @@ struct Key{
 
 class Symtable {
 
+
+
 	int prime = 997;
 	StringTable table;
 	InformationLinkedList Listptrs[997];
 	int calculateKey(char* lexem);
+
 public:
+
 	Symtable();
 	~Symtable();
 	Key insert(char* lexem);
@@ -35,3 +38,4 @@ public:
 };
 
 
+#endif /* SYMTABLE_H_ */

@@ -1,16 +1,12 @@
-#include <iostream>
-
-#include "Automat.h"
 #include "TestAutomat.h"
+#include "Scanner.h"
 
-#include <fstream>      // std::ifstream
 
 int main() {
 
 
-    //TestAutomat testAutomat;
-    //testAutomat.test();
-
+    Scanner scanner;
+    scanner.startScanner();
 
     return 0;
 }
