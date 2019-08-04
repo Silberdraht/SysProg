@@ -43,6 +43,7 @@ void Scanner::initializeSymtable() {
     greater = symtable.insert((char *) ">");;
     lesser = symtable.insert((char *) "<");;
     sAnd = symtable.insert((char *) "&");;
+    semicolon = symtable.insert((char *) ";");;
     exclamationMark = symtable.insert((char *) "!");;
     bracketOpen = symtable.insert((char *) "(");;
     bracketClose = symtable.insert((char *) ")");;
@@ -63,6 +64,38 @@ Automat::Token Scanner::createToken() {
     }
     else if (tokentype == Automat::SignToken) {
 
+        switch(*token.storage.sign) {
+
+            case '+':
+                token.storage.key = plus;
+            case '-':
+                token.storage.key = minus;
+            case '*':
+                token.storage.key = star;
+            case '<':
+                token.storage.key = greater;
+            case '>':
+                token.storage.key = lesser;
+            case '&':
+                token.storage.key = sAnd;
+            case '!':
+                token.storage.key = exclamationMark;
+            case ';':
+                token.storage.key = semicolon;
+            case '(':
+                token.storage.key = bracketOpen;
+            case ')':
+                token.storage.key = bracketClose;
+            case '{':
+                token.storage.key = curlyBracketOpen;
+            case '}':
+                token.storage.key = curlyBracketClose;
+            case '[':
+                token.storage.key = squareBracketOpen;
+            case ']':
+                token.storage.key = squareBracketClose;
+
+        }
     }
     return token;
 }
@@ -75,3 +108,5 @@ Automat::Token Scanner::nextToken() {
 int Scanner::hasTokens() {
     return !this->tokens.isEmpty();
 }
+
+

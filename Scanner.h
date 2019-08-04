@@ -29,6 +29,7 @@ public:
     int hasTokens();
 
 
+
     Key plus;
     Key minus;
     Key equals;
@@ -36,6 +37,7 @@ public:
     Key greater;
     Key lesser;
     Key sAnd;
+    Key semicolon;
     Key exclamationMark;
     Key bracketOpen;
     Key bracketClose;

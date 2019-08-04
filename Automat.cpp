@@ -4,6 +4,7 @@
 
 
     #include "Automat.h"
+#include "Scanner.h"
 
     //LinkedList listAutomat;
 
@@ -285,6 +286,7 @@
                 break;
 
             case SignToken:
+                setSignKey(token, sign);
                 token.storage.sign = sign; //copyChar(sign);
 //                std::cout << token.tokenType << " " << token.storage.sign << std::endl;
                 //this->clearSign();
@@ -491,7 +493,6 @@
                 return true;
             case '-':
                 return true;
-
             case '*':
                 return true;
             case '<':
@@ -521,7 +522,6 @@
         }
 
     }
-
 
     bool Automat::isSignAnd(char c) {
 
