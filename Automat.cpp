@@ -286,7 +286,6 @@
                 break;
 
             case SignToken:
-                setSignKey(token, sign);
                 token.storage.sign = sign; //copyChar(sign);
 //                std::cout << token.tokenType << " " << token.storage.sign << std::endl;
                 //this->clearSign();
