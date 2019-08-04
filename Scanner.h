@@ -28,6 +28,24 @@ public:
     Automat::Token nextToken();
     int hasTokens();
 
+
+    Key plus;
+    Key minus;
+    Key equals;
+    Key star;
+    Key greater;
+    Key lesser;
+    Key sAnd;
+    Key exclamationMark;
+    Key bracketOpen;
+    Key bracketClose;
+    Key curlyBracketOpen;
+    Key curlyBracketClose;
+    Key squareBracketOpen;
+    Key squareBracketClose;
+
+
+    void initializeSymtable();
 };
 
 

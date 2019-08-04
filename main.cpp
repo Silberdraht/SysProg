@@ -13,8 +13,8 @@ int main() {
     ofs << "Test lolz3" << std::endl;
 */
     Scanner scanner;
+    scanner.initializeSymtable();
     scanner.startScanner();
-
     std::fstream stream;
     stream.open(R"(../out.txt)");
     //stream.open("F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\out.txt");
