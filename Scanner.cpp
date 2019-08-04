@@ -94,7 +94,6 @@ Automat::Token Scanner::createToken() {
                 token.storage.key = squareBracketOpen;
             case ']':
                 token.storage.key = squareBracketClose;
-
         }
     }
     return token;
