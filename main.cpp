@@ -16,7 +16,7 @@ int main() {
     scanner.startScanner();
 
     std::fstream stream;
-    stream.open(R"(../out.txt)");
+    stream.open("D:\\\\cppeclipse\\\\test\\\\src\\\\out.txt");
     //stream.open("F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\out.txt");
     //stream.open("C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt");
 

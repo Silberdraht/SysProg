@@ -16,10 +16,10 @@ Buffer::Buffer() {
 
 Buffer::~Buffer() {
 
-    delete(current);
-    delete(next);
-    delete(buffer1);
-    delete(buffer2);
+//    delete(current);
+//    delete(next);
+//    delete(buffer1);
+//    delete(buffer2);
 }
 
 

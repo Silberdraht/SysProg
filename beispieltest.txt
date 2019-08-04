@@ -1,4 +1,4 @@
-?X:=3+4;
+X:=3+4;
 hallo ei ifo
 a IF WHILE if while
 :* eine einfache Aufgabe !! *:
