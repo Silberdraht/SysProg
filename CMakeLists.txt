@@ -12,6 +12,10 @@ set(SOURCE_FILES
         StringTable.cpp StringTable.h
         Information.cpp Information.h
         InformationLinkedList.cpp InformationLinkedList.h
-        Scanner.cpp Scanner.h TokenList.cpp TokenList.h)
+        Scanner.cpp Scanner.h TokenList.cpp TokenList.h
+        AST/ASTLinkedList.h AST/ASTLinkedList.cpp
+        AST/ASTNode.h AST/ASTNode.cpp
+        AST/ASTBuild/ASTCreator.h AST/ASTBuild/ASTCreator.cpp
+        AST/ASTBuild/ASTStack.h AST/ASTBuild/ASTStack.cpp)
 
 add_executable(SysProg ${SOURCE_FILES})
