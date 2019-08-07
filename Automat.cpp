@@ -17,7 +17,6 @@
     }
 
 
-    //To Fix: Kommentare, Errortokens, IF, Else, EoF
     void Automat::checkSymbol(char c) {
 
         switch (stateActive) {

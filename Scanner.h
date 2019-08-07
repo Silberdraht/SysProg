@@ -45,6 +45,8 @@ public:
     Key curlyBracketClose;
     Key squareBracketOpen;
     Key squareBracketClose;
+    Key colonEquals;
+    Key colon;
 
 
     void initializeSymtable();
