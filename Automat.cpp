@@ -25,6 +25,7 @@
                 //std::cout << "Init: " << std::endl;
 
                 if (isDigit(c)) {
+                    precedingCR = false;
                     currentColumn++;
                     stateActive = digistate;
                     listAutomat.addSymbol(c);
@@ -37,6 +38,7 @@
 
                 //Alle Sign ausser =, & und :
                 else if (isSign(c)) {
+                    precedingCR = false;
                     currentColumn++;
                     listAutomat.addSymbol(c);
                     startColumn = currentColumn;
@@ -46,6 +48,7 @@
                 }
 
                 else if (isSignEqual(c)) {
+                    precedingCR = false;
                     stateActive = equalstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
@@ -55,6 +58,7 @@
                 }
 
                 else if(isSignAnd(c)) {
+                    precedingCR = false;
                     stateActive = andstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
@@ -64,6 +68,7 @@
                 }
 
                 else if (isSignColon(c)) {
+                    precedingCR = false;
                     stateActive = colonstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
@@ -73,7 +78,7 @@
                 }
 
                 else if (isLetter(c)) {
-
+                    precedingCR = false;
                     stateActive = letterstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
@@ -83,19 +88,22 @@
                 }
 
                 else if (isBlank(c)) {
+                    precedingCR = false;
                     currentColumn++;
                     //std::cout << "IsBlank " << std::endl;
                 }
 
                 else if (isNewLine(c)) {
                     //std::cout << "isNewLine " << std::endl;
-                    currentColumn = 0;
-                    currentLine++;
+                    if (!precedingCR) {
+                        currentColumn = 0;
+                        currentLine++;
+                    }
                 }
 
 
                 else if (isError(c)) {
-
+                    precedingCR = false;
                     currentColumn++;
                     startColumn = currentColumn;
                     startLine = currentLine;
@@ -119,7 +127,6 @@
                 else {
                     //wenn char kein Digit, gehe wieder in
                     // initzustand baue ein DigitToken und rufe checkSymbol mit c neu auf.
-
                     prepareTokenDigit();
                     stateActive = init;
                     checkSymbol(c);
@@ -534,10 +541,18 @@
         return c == ' ' || c == '\t';
     }
 
-
+    //DOS&Windows: \r\n <=> Linux: \n <=> Mac: \r
     bool Automat::isNewLine(char c) {
-
-        return c == '\r' || c == '\n'; //DOS&Windows: \r\n <=> Linux: \n <=> Mac: \r
+        if (c == '\r') {
+            precedingCR = true;
+            return true;
+        }
+        else if (c == '\n') {
+            precedingCR = false;
+            return true;
+        }
+        return false;
+        //return c == '\r' || c == '\n';
     }
 
 

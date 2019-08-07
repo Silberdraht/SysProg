@@ -82,7 +82,7 @@ Information InformationLinkedList::getInfo(int KeyNr) {
 	int count = KeyNr;
 	if (countSymbol > 0) {
 		InfStruct *current = head;
-		while(current != nullptr && KeyNr < countSymbol) {
+		while(current != nullptr && count < countSymbol) {
 			current = current->next;
 			count++;
 

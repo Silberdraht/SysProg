@@ -4,14 +4,6 @@
 
 int main() {
 
-    //std::ofstream ofs {"out.txt",std::ios_base::binary};
-
-    /*
-    std::ofstream ofs {"out.txt",std::ios_base::binary};
-    ofs << "Test lolz" << std::endl;
-    ofs << "Test lolz2" << std::endl;
-    ofs << "Test lolz3" << std::endl;
-*/
     Scanner scanner;
     scanner.initializeSymtable();
     scanner.startScanner();
@@ -19,7 +11,7 @@ int main() {
     stream.open(R"(../out.txt)");
     //stream.open("F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\out.txt");
     //stream.open("C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt");
-
+    bool hasAdditionalInformation;
     while (scanner.hasTokens()) {
         Automat::Token token = scanner.nextToken();
 
@@ -27,26 +19,32 @@ int main() {
         char *tokentype;
         char *additional = nullptr;
         char *additionalHead = nullptr;
+        hasAdditionalInformation = false;
         switch (type) {
             case Automat::IdentifierToken:
                 tokentype = (char *) "Identifier";
                 additionalHead = (char *) "Lexem: ";
-                //additional = scanner.symtable.lookup(token.storage.key).getLexem(); //TODO fix segmentation fault
+                additional = scanner.symtable.lookup(token.storage.key).getLexem(); //TODO fix segmentation fault
+                hasAdditionalInformation = true;
                 break;
             case Automat::SignToken:
                 tokentype = (char *) "Sign      ";
                 additionalHead = (char*) "Operator: ";
-                additional = token.storage.sign;
+                //additional = scanner.symtable.lookup(token.storage.key).getLexem();
+                //additional = token.storage.sign;
+                //hasAdditionalInformation = true;
                 break;
             case Automat::DigitToken:
                 tokentype = (char *) "Digit     ";
                 additionalHead = (char *) "Value: ";
                 additional = (char *) token.storage.number;
+                hasAdditionalInformation = true;
                 break;
             case Automat::ErrorToken:
                 tokentype = (char *) "Error     ";
                 additionalHead = (char *) "String: ";
                 //additional = token.storage.error; //TODO
+                hasAdditionalInformation = true;
                 break;
             case Automat::IfToken:
                 tokentype = (char *) "If        ";
@@ -59,7 +57,7 @@ int main() {
 
         stream << "Token " << tokentype << "\t\t";
         stream << "Line: " << token.line << " Column: " << token.column << "\t\t";
-        if (additional != nullptr) {
+        if (hasAdditionalInformation) {
             //stream << additionalHead << additional;
         }
         stream <<  '\n';

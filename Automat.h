@@ -89,6 +89,7 @@ public:
     unsigned int startLine;
     long number;
 
+    bool precedingCR = false;
 
     state stateActive = init;
 
