@@ -24,8 +24,6 @@ void Scanner::startScanner() {
         c = buffer.getChar();
         automat.checkSymbol(c);
 
-//        std::ofstream ofs {"out.txt",std::ios_base::app};
-//        ofs  << "Token " <<  << " Line: "<< automat.getLine() << " Column: " << automat.getColumn() << std::endl;
     }
 
     if (!automat.tokenQueue.isEmpty()) {
@@ -60,7 +58,6 @@ Automat::Token Scanner::createToken() {
     if (tokentype == Automat::IdentifierToken) {
         char *str = token.storage.lexem;
         token.storage.key = symtable.insert(str);
-//        std::cout << symtable.lookup(token.storage.key).getLexem() << std::endl;
     }
     else if (tokentype == Automat::SignToken) {
 

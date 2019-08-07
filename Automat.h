@@ -86,10 +86,12 @@ public:
     unsigned int currentLine = 1;
     unsigned int currentColumn = 0;
     unsigned int startColumn;
+    unsigned int bufferedStartColumn;
+    bool useBufferedStartColumn;
     unsigned int startLine;
     long number;
 
-    bool precedingCR = false;
+    bool precedingCR = false;  //avoiding duplicate new line count on a windows machine
 
     state stateActive = init;
 

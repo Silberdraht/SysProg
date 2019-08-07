@@ -25,13 +25,17 @@
                 //std::cout << "Init: " << std::endl;
 
                 if (isDigit(c)) {
-                    precedingCR = false;
+                    precedingCR = false; //Carriage Return not followed by a \n;
                     currentColumn++;
                     stateActive = digistate;
                     listAutomat.addSymbol(c);
 
                     //Speichert den Anfang des Tokens
-                    startColumn = currentColumn;
+                    if (useBufferedStartColumn) {
+                        bufferedStartColumn = currentColumn;
+                    } else {
+                        startColumn = currentColumn;
+                    }
                     startLine = currentLine;
                     //Zählt die Postion weiter
                 }
@@ -41,7 +45,11 @@
                     precedingCR = false;
                     currentColumn++;
                     listAutomat.addSymbol(c);
-                    startColumn = currentColumn;
+                    if (useBufferedStartColumn) {
+                        bufferedStartColumn = currentColumn;
+                    } else {
+                        startColumn = currentColumn;
+                    }
                     startLine = currentLine;
 
                     prepareTokenSign();
@@ -52,7 +60,11 @@
                     stateActive = equalstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
-                    startColumn = currentColumn;
+                    if (useBufferedStartColumn) {
+                        bufferedStartColumn = currentColumn;
+                    } else {
+                        startColumn = currentColumn;
+                    }
                     startLine = currentLine;
                     listAutomat.addSymbol(c);
                 }
@@ -62,7 +74,11 @@
                     stateActive = andstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
-                    startColumn = currentColumn;
+                    if (useBufferedStartColumn) {
+                        bufferedStartColumn = currentColumn;
+                    } else {
+                        startColumn = currentColumn;
+                    }
                     startLine = currentLine;
                     listAutomat.addSymbol(c);
                 }
@@ -72,7 +88,11 @@
                     stateActive = colonstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
-                    startColumn = currentColumn;
+                    if (useBufferedStartColumn) {
+                        bufferedStartColumn = currentColumn;
+                    } else {
+                        startColumn = currentColumn;
+                    }
                     startLine = currentLine;
                     listAutomat.addSymbol(c);
                 }
@@ -82,7 +102,11 @@
                     stateActive = letterstate;
                     currentColumn++;
                     //Speichert den Anfang des Tokens
-                    startColumn = currentColumn;
+                    if (useBufferedStartColumn) {
+                        bufferedStartColumn = currentColumn;
+                    } else {
+                        startColumn = currentColumn;
+                    }
                     startLine = currentLine;
                     listAutomat.addSymbol(c);
                 }
@@ -105,7 +129,11 @@
                 else if (isError(c)) {
                     precedingCR = false;
                     currentColumn++;
-                    startColumn = currentColumn;
+                    if (useBufferedStartColumn) {
+                        bufferedStartColumn = currentColumn;
+                    } else {
+                        startColumn = currentColumn;
+                    }
                     startLine = currentLine;
 
                     listAutomat.addSymbol(c);
@@ -129,6 +157,7 @@
                     // initzustand baue ein DigitToken und rufe checkSymbol mit c neu auf.
                     prepareTokenDigit();
                     stateActive = init;
+                    useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
                 break;
@@ -144,6 +173,7 @@
                 else {
                     prepareTokenLetter();
                     stateActive = init;
+                    useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
 
@@ -162,6 +192,7 @@
                 else {
                     prepareTokenSign();
                     stateActive = init;
+                    useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
 
@@ -179,6 +210,7 @@
 
                     prepareTokenSign();
                     stateActive = init;
+                    useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
 
@@ -204,6 +236,7 @@
                 else {
                     prepareTokenSign();
                     stateActive = init;
+                    useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
 
@@ -225,9 +258,10 @@
                     prepareTokenSign();
                     listAutomat.addSymbol(temp);
                     //Passt die Startposition für das zweite Token an.
-                    startColumn++;
+                    currentColumn++; //startColumn++;
                     prepareTokenSign();
                     stateActive = init;
+                    useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
 
@@ -623,7 +657,6 @@
 
 
     unsigned int Automat::getLine() {
-
         return this->currentLine;
 
     }
@@ -637,8 +670,12 @@
 
 
     unsigned int Automat::getStartColumn() {
-
-        return this->startColumn;
+        unsigned int returnValue = startColumn;
+        if (useBufferedStartColumn) {
+            useBufferedStartColumn = false;
+            startColumn = bufferedStartColumn;
+        }
+        return returnValue;
 
     }
 
