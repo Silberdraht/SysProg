@@ -192,6 +192,7 @@
                     prepareTokenSign();
                     stateActive = init;
                     useBufferedStartColumn = true;
+                    useBufferedSign = true;
                     checkSymbol(c);
                 }
 
@@ -255,6 +256,7 @@
                     //Erzeugt ein Token '=' und ein Token ':'
                     char temp = listAutomat.popSymbol();
                     prepareTokenSign();
+                    useBufferedSign = true;
                     listAutomat.addSymbol(temp);
                     //Passt die Startposition für das zweite Token an.
                     currentColumn++; //startColumn++;
@@ -326,7 +328,12 @@
                 break;
 
             case SignToken:
-                token.storage.sign = sign; //copyChar(sign);
+                token.storage.sign = sign;
+                if (useBufferedSign) {
+                    sign = bufferedSign;
+                    useBufferedSign = false;
+                }
+                //token.storage.sign = temp; //copyChar(sign);
 //                std::cout << token.tokenType << " " << token.storage.sign << std::endl;
                 //this->clearSign();
                 break;
@@ -407,7 +414,12 @@
             }
         }
         string[amount] = '\0';
-        sign = string;
+        if (useBufferedSign) {
+            bufferedSign = string;
+        }
+        else {
+            sign = string;
+        }
         delete []string;
 
         tokenQueue.addSymbolAsLast('0'); //Signtoken

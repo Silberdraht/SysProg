@@ -27,6 +27,8 @@ public:
     void endAutomat();
 
     char *sign = nullptr;
+    char *bufferedSign = nullptr;
+    bool useBufferedSign = false;
     void clearSign();
 
     char *identifier = nullptr;
