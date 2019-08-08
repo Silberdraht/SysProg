@@ -49,6 +49,8 @@ void Scanner::initializeSymtable() {
     squareBracketClose = symtable.insert((char *) "]");
     colon = symtable.insert((char *) ":");
     colonEquals = symtable.insert((char *) ":=");
+    equalsColonEquals = symtable.insert((char *) "=:=");
+    andAnd = symtable.insert((char *) "&&");
 }
 
 Automat::Token Scanner::createToken() {
@@ -60,8 +62,7 @@ Automat::Token Scanner::createToken() {
         token.storage.key = symtable.insert(str);
     }
     else if (tokentype == Automat::SignToken) {
-        char *str = token.storage.sign;
-        switch(*str) {
+        switch(*token.storage.sign) {
 
             case '+':
                 token.storage.key = plus;
@@ -79,7 +80,11 @@ Automat::Token Scanner::createToken() {
                 token.storage.key = lesser;
                 break;
             case '&':
-                token.storage.key = sAnd;
+                if (*(token.storage.sign+1) == '&') {
+                    token.storage.key = andAnd;
+                } else {
+                    token.storage.key = sAnd;
+                }
                 break;
             case '!':
                 token.storage.key = exclamationMark;
@@ -106,7 +111,11 @@ Automat::Token Scanner::createToken() {
                 token.storage.key = squareBracketClose;
                 break;
             case '=':
-                token.storage.key = equals;
+                if (*(token.storage.sign+1) == ':' && *(token.storage.sign+2) == '=') {
+                    token.storage.key = equalsColonEquals;
+                } else {
+                    token.storage.key = equals;
+                }
                 break;
             case ':':
                 if (*(token.storage.sign+1) == '=') {
@@ -115,6 +124,11 @@ Automat::Token Scanner::createToken() {
                     token.storage.key = colon;
                 }
                 break;
+            default:
+                //token.tokenType = Automat::TokenType(3);
+                //token.storage.error = (char) token.storage.sign;
+                break;
+
         }
     }
     return token;

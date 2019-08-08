@@ -47,6 +47,8 @@ public:
     Key squareBracketClose;
     Key colonEquals;
     Key colon;
+    Key equalsColonEquals;
+    Key andAnd;
 
 
     void initializeSymtable();
