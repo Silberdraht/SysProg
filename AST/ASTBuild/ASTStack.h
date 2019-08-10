@@ -23,15 +23,18 @@ enum NodeType{
 	OP,
 
 	// terminale zeichen
-	 PLUSSIGN,
-	 MINUSSIGN,
-	 STARSIGN,
-	 POUBLESIGN,
-	 LESSSIGN,
-	 GREATERSIGN,
-	 EQUALSSIGN,
-	 OTHEREQUALSSIGN,
-	 ANDSIGN,
+	 PLUSSIGN, 		//+
+	 MINUSSIGN,		//-
+	 STARSIGN,		//*
+	 DOUBLESIGN,	//:
+	 LESSSIGN,		//<
+	 GREATERSIGN,	//>
+	 EQUALSSIGN,	//=
+	 OTHEREQUALSSIGN,//:=
+	 EQUPEQUSIGN,	//=:=
+	 ANDSIGN,		//&&
+	 COLONSIGN,		//;
+	 EXCLSIGN,		//!
 	// terminale
 	 IFSIGN,
 	 ELSESIGN,
@@ -43,11 +46,11 @@ enum NodeType{
 	 IDENTIFIER,
 	 INTEGER,
 	 // klammern
-	 KL_OPEN,
+	 KL_OPEN,	//(
 	 KL_CLOSE,
-	 EKL_OPEN,
+	 EKL_OPEN,	//[
 	 EKL_CLOSE,
-	 GKL_OPEN,
+	 GKL_OPEN,	//{
 	 GKL_CLOSE
 
 	};

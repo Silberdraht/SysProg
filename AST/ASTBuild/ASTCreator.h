@@ -42,14 +42,16 @@ public:
 	void buildOP_EXP();
 	void buildOP();
 private:
-	ASTStack stack
+	ASTStack stack;
 	ASTNode head;
 	ASTNode current;
 	Automat::TokenType lastType;
 	state state;
 	int roundBracketsCounter;
-	NodeType getTokenType();
-	void buildNode();
+	NodeType getTokenType(Automat::Token token);
+	Automat::Token getToken();
+	int checkForChar(char c);
+	void buildNode(NodeType tpye);
 
 };
 
