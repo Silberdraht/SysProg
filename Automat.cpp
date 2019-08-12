@@ -338,13 +338,13 @@
                 //this->clearSign();
                 break;
 
-            case IfToken:
+//            case IfToken:
 //                std::cout << token.tokenType << std::endl;
-                break;
-
-            case WhileToken:
+//                break;
+//
+//            case WhileToken:
 //                std::cout << token.tokenType << std::endl;
-                break;
+//                break;
 
         }
 
@@ -444,11 +444,55 @@
 
                 tokenQueue.addSymbolAsLast('4'); //Iftoken
                 return;
-                //tokenReady = IfToken;
-                //return createToken(IfToken);
             }
                 listAutomat.addSymbol(toTest[0]);
                 listAutomat.addSymbol(toTest[1]);
+        }
+
+        else if (listAutomat.listLength() == 3) {
+
+            char toTest[3];
+            char arInt[3] = {'i', 'n', 't'};
+
+            toTest[2] = listAutomat.popSymbol();
+            toTest[1] = listAutomat.popSymbol();
+            toTest[0] = listAutomat.popSymbol();
+
+            if (Automat::isArrayEqual(arInt, toTest, 3)) {
+
+                tokenQueue.addSymbolAsLast('7'); //int token
+                return;
+            }
+            listAutomat.addSymbol(toTest[0]);
+            listAutomat.addSymbol(toTest[1]);
+            listAutomat.addSymbol(toTest[2]);
+        }
+
+        else if (listAutomat.listLength() == 4) {
+
+            char toTest[4];
+            char arElse[4] = {'e', 'l', 's', 'e'};
+            char arElse2[4] = {'E', 'L', 'S', 'E'};
+            char arRead[4] = {'r', 'e', 'a', 'd'};
+
+            toTest[3] = listAutomat.popSymbol();
+            toTest[2] = listAutomat.popSymbol();
+            toTest[1] = listAutomat.popSymbol();
+            toTest[0] = listAutomat.popSymbol();
+
+            if (Automat::isArrayEqual(arElse, toTest, 4) || Automat::isArrayEqual(arElse2, toTest, 4)) {
+
+                tokenQueue.addSymbol('6'); //Else Token
+                return;
+            }
+            else if (Automat::isArrayEqual(arRead, toTest, 4)) {
+                tokenQueue.addSymbol('8'); //Read Token
+                return;
+            }
+            listAutomat.addSymbol(toTest[0]);
+            listAutomat.addSymbol(toTest[1]);
+            listAutomat.addSymbol(toTest[2]);
+            listAutomat.addSymbol(toTest[3]);
         }
 
         else if (listAutomat.listLength() == 5) {
@@ -456,6 +500,7 @@
             char toTest[5];
             char arIf[5] = {'w', 'h', 'i', 'l', 'e'};
             char arIf2[5] = {'W', 'H', 'I', 'L', 'E'};
+            char arWrite[5] = {'w', 'r', 'i', 't', 'e'};
 
             toTest[4] = listAutomat.popSymbol();
             toTest[3] = listAutomat.popSymbol();
@@ -467,9 +512,12 @@
 
                 tokenQueue.addSymbol('5'); //Whiletoken
                 return;
-                //tokenReady = WhileToken;
-                //return createToken(WhileToken);
             }
+            else if (Automat::isArrayEqual(arWrite, toTest, 5)) {
+                tokenQueue.addSymbol('9'); //Write Token
+                return;
+            }
+
             listAutomat.addSymbol(toTest[0]);
             listAutomat.addSymbol(toTest[1]);
             listAutomat.addSymbol(toTest[2]);

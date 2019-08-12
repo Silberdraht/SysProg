@@ -51,6 +51,25 @@ int main() {
                        << "Line/Column: " << token.line << "/" << token.column <<  '\n';
                 break;
 
+            case Automat::IntToken:
+                stream << "Token int        " << "\t\t"
+                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                break;
+
+            case Automat::ElseToken:
+                stream << "Token Else       " << "\t\t"
+                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                break;
+
+            case Automat::WriteToken:
+                stream << "Token Write      " << "\t\t"
+                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                break;
+
+            case Automat::ReadToken:
+                stream << "Token Read       " << "\t\t"
+                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                break;
 
             default: break;
         }

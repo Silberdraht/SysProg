@@ -61,7 +61,11 @@ public:
         IdentifierToken = 2,
         ErrorToken = 3,
         IfToken = 4,
-        WhileToken = 5
+        WhileToken = 5,
+        ElseToken = 6,
+        IntToken = 7,
+        ReadToken = 8,
+        WriteToken = 9
     };
 
     struct Token {
