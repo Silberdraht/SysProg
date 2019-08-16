@@ -4,9 +4,6 @@
 
 
     #include "Automat.h"
-#include "Scanner.h"
-
-    //LinkedList listAutomat;
 
 
     Automat::Automat() {
@@ -303,6 +300,7 @@
         }
     }
 
+
     Automat::Token Automat::createToken(TokenType tokenType) {
 
         Token token{};
@@ -314,17 +312,14 @@
             case IdentifierToken:
                 token.storage.lexem = copyChar(identifier);
                 this->clearIdentifier();
-//                std::cout << token.tokenType << " " << token.storage.lexem << std::endl;
                 break;
 
             case DigitToken:
                 token.storage.number = this->number;
-//                std::cout << token.tokenType << " " << token.storage.number << std::endl;
                 break;
 
             case ErrorToken:
                 token.storage.error = listAutomat.popSymbol();
-//                std::cout << token.tokenType << " " << token.storage.error << std::endl;
                 break;
 
             case SignToken:
@@ -334,35 +329,17 @@
                     useBufferedSign = false;
                 }
                 //token.storage.sign = temp; //copyChar(sign);
-//                std::cout << token.tokenType << " " << token.storage.sign << std::endl;
                 //this->clearSign();
                 break;
 
-//            case IfToken:
-//                std::cout << token.tokenType << std::endl;
-//                break;
-//
-//            case WhileToken:
-//                std::cout << token.tokenType << std::endl;
-//                break;
-
         }
 
-//        if (tokenType != IdentifierToken) {
-//            token.storage.lexem = new char[1];
-//            token.storage.lexem[0] = '\0';
-//        }
-//        if (tokenType != SignToken) {
-//            token.storage.sign = new char[1];
-//            token.storage.sign[0] = '\0';
-//        }
         return token;
     }
 
+
     void Automat::prepareTokenError() {
         tokenQueue.addSymbolAsLast('3'); //Errortoken
-        //tokenReady = ErrorToken;
-        //return Automat::createToken(ErrorToken);
     }
 
     //TO FIX return value and token creation
@@ -392,11 +369,8 @@
 
         this->number = digitValue;
         tokenQueue.addSymbolAsLast('1'); //Digittoken
-        //tokenReady = DigitToken;
-        //return createToken(DigitToken);
 
-}
-    //Fix return and test
+    }
 
 
     void Automat::prepareTokenSign() {
@@ -423,8 +397,6 @@
         delete []string;
 
         tokenQueue.addSymbolAsLast('0'); //Signtoken
-        //tokenReady = SignToken;
-        //return createToken(SignToken);
     }
 
 
@@ -543,8 +515,6 @@
         identifier = string;
         delete []string;
         tokenQueue.addSymbolAsLast('2'); //Identifiertoken
-        //this->tokenReady = IdentifierToken;
-
     }
 
 
@@ -580,7 +550,6 @@
                 return false;
 
         }
-
     }
 
 
@@ -619,13 +588,12 @@
                 return false;
 
         }
-
     }
+
 
     bool Automat::isSignAnd(char c) {
 
         return c == '&';
-
     }
 
 
@@ -634,10 +602,10 @@
         return c == ' ' || c == '\t';
     }
 
-    //DOS&Windows: \r\n <=> Linux: \n <=> Mac: \r
+
     bool Automat::isNewLine(char c) {
         if (c == '\r') {
-            precedingCR = true;
+            precedingCR = true;  //DOS&Windows: \r\n <=> Linux: \n <=> Mac: \r
             return true;
         }
         else if (c == '\n') {
@@ -645,21 +613,18 @@
             return true;
         }
         return false;
-        //return c == '\r' || c == '\n';
     }
 
 
     bool Automat::isSignColon(char c) {
 
         return c == ':';
-
     }
 
 
     bool Automat::isSignEqual(char c) {
 
         return c == '=';
-
     }
 
 
@@ -672,7 +637,6 @@
     bool Automat::isStar(char c) {
 
         return (c == '*');
-
     }
 
 
@@ -680,7 +644,6 @@
 
         return (!isStar(c) && (!isNewLine(c)) && (!isBlank(c)) && (!isLetter(c)) && (!isDigit(c))
                 && (!isSignColon(c)) && (!isSignAnd(c)) && (!isSignEqual(c)) && (!isSign(c)));
-
     }
 
 
@@ -711,59 +674,51 @@
 
             default:;
         }
-
     }
 
 
     unsigned int Automat::getLine() {
-        return this->currentLine;
 
+        return this->currentLine;
     }
 
 
     unsigned int Automat::getColumn() {
 
         return this->currentColumn;
-
     }
 
 
     unsigned int Automat::getStartColumn() {
+
         unsigned int returnValue = startColumn;
         if (useBufferedStartColumn) {
             useBufferedStartColumn = false;
             startColumn = bufferedStartColumn;
         }
         return returnValue;
-
     }
 
 
     unsigned int Automat::getStartLine() {
 
         return this->startLine;
-
     }
 
 
     long Automat::getNumber() {
 
         return this->number;
-
     }
+
 
     bool Automat::isArrayEqual(char ar1[], char ar2[], int length) {
 
         for (int i = length -1; i > -1; i--) {
-
             if (ar1[i] != ar2[i]) {
-
                 return false;
-
             }
-
         }
-
 
         return true;
     }
@@ -775,8 +730,8 @@
             identifier[i] = '\0';
             i++;
         }
-
     }
+
 
     void Automat::clearSign() {
         int i = 0;
@@ -784,8 +739,8 @@
             sign[i] = '\0';
             i++;
         }
-
     }
+
 
     char* Automat::copyChar(const char *string) {
         int size = 0;

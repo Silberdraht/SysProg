@@ -8,9 +8,11 @@ Scanner::Scanner() {
 
 }
 
+
 Scanner::~Scanner() {
 
 }
+
 
 void Scanner::startScanner() {
 
@@ -30,6 +32,7 @@ void Scanner::startScanner() {
 
     automat.endAutomat();
 }
+
 
 void Scanner::initializeSymtable() {
     plus = symtable.insert((char *) "+");
@@ -53,10 +56,12 @@ void Scanner::initializeSymtable() {
     andAnd = symtable.insert((char *) "&&");
 }
 
+
 Automat::Token Scanner::createToken() {
     int typeNumber = automat.convertCharToInt(automat.tokenQueue.popSymbol());
     auto tokentype = Automat::TokenType(typeNumber);
     Automat::Token token = automat.createToken(tokentype);
+
     if (tokentype == Automat::IdentifierToken) {
         char *str = token.storage.lexem;
         token.storage.key = symtable.insert(str);
@@ -134,12 +139,15 @@ Automat::Token Scanner::createToken() {
     return token;
 }
 
+
 Automat::Token Scanner::nextToken() {
 
     return this->tokens.popToken();
 }
 
+
 int Scanner::hasTokens() {
+
     return !this->tokens.isEmpty();
 }
 

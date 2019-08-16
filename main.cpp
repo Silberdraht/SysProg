@@ -1,4 +1,4 @@
-#include "TestAutomat.h"
+
 #include "Scanner.h"
 
 
@@ -43,35 +43,36 @@ int main() {
 
             case Automat::IfToken:
                 stream << "Token If        " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                       << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
             case Automat::WhileToken:
                 stream << "Token While     " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                       << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
             case Automat::IntToken:
                 stream << "Token int        " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                       << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
             case Automat::ElseToken:
                 stream << "Token Else       " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                       << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
             case Automat::WriteToken:
                 stream << "Token Write      " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                       << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
             case Automat::ReadToken:
                 stream << "Token Read       " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column <<  '\n';
+                       << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
-            default: break;
+            default:
+                break;
         }
 
     }
@@ -79,14 +80,4 @@ int main() {
     stream.close();
 
     return 0;
-
-
-//    enum TokenType {
-//        SignToken = 0,
-//        DigitToken = 1,
-//        IdentifierToken = 2,
-//        ErrorToken = 3,
-//        IfToken = 4,
-//        WhileToken = 5
-//    };
 }

@@ -10,7 +10,6 @@
 InformationLinkedList::InformationLinkedList() {
     head = nullptr;
     this->countSymbol = 0;
-    InfStruct *head = nullptr;
 }
 
 InformationLinkedList::~InformationLinkedList() {
@@ -56,9 +55,7 @@ Information InformationLinkedList::getInfo(char* lexem) {
 }
 
 bool InformationLinkedList::isEmpty() {
-return countSymbol <= 0;
-
-
+	return countSymbol <= 0;
 }
 
 int InformationLinkedList::listLength() {

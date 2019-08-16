@@ -40,7 +40,6 @@ void TokenList::addToken(Automat::Token token) {
 }
 
 
-//Fix else
 Automat::Token TokenList::popToken() {
     if (countSymbol > 0) {
 

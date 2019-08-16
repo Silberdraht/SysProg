@@ -19,17 +19,6 @@ private:
     Automat::Token createToken();
     TokenList tokens;
 
-public:
-    Scanner();
-    ~Scanner();
-
-    Symtable symtable;
-    void startScanner();
-    Automat::Token nextToken();
-    int hasTokens();
-
-
-
     Key plus;
     Key minus;
     Key equals;
@@ -50,8 +39,17 @@ public:
     Key equalsColonEquals;
     Key andAnd;
 
+public:
+    Scanner();
+    ~Scanner();
 
+    Symtable symtable;
     void initializeSymtable();
+
+    void startScanner();
+    Automat::Token nextToken();
+    int hasTokens();
+
 };
 
 

@@ -70,9 +70,7 @@ char LinkedList::popSymbol() {
 }
 
 bool LinkedList::isEmpty() {
-return countSymbol <= 0;
-
-
+    return countSymbol <= 0;
 }
 
 int LinkedList::listLength() {

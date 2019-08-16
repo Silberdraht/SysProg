@@ -8,13 +8,19 @@
 
 #include "information.h"
 
-bool Information::compareLex(char* lexem) {
-	return 0;
+bool Information::compareLex(char* lexem2) {
+	bool identicalCharacters = true;
+	int index = 0;
+	while (lexem[index] != '\0' || lexem2[index] != '\0') {
+		if (lexem[index] != lexem2[index]) {
+			identicalCharacters = false;
+		}
+		index++;
+	}
+
+	return (identicalCharacters & lexem[index] == '\0' & lexem2[index] == '\0');
 }
-char* Information::getName() {
-	char* test;
-	return test;
-}
+
 char* Information::getLexem() {
 	return this->lexem;
 }

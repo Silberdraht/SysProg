@@ -35,7 +35,7 @@ public:
 
     int listLength();
 private:
-    InfStruct *head;
+    InfStruct *head = nullptr;
     int countSymbol = 0;
 
 };
