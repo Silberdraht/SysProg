@@ -2,12 +2,13 @@
 // Created by Nil on 17.08.2019.
 //
 
-#include <bits/shared_ptr.h>
+
 #include "generateasb.h"
 #include "../TokenList.h"
+#include "../Automat.h"
 
 std::unique_ptr<char> generateasb::generate(std::shared_ptr<TokenList> token) {
-    switch (token->popToken().tokenType) {
+    switch (token.get()->popToken().tokenType) {
         case 0:
             return sign_token();
         case 1:
@@ -17,7 +18,7 @@ std::unique_ptr<char> generateasb::generate(std::shared_ptr<TokenList> token) {
         case 3:
             return error_token();
         case 4:
-            return if_token();
+            return if_token(token.operator*());
         case 5:
             return while_token();
         case 6:
@@ -50,7 +51,26 @@ std::unique_ptr<char> generateasb::error_token() {
     return std::unique_ptr<char>();
 }
 
-std::unique_ptr<char> generateasb::if_token() {
+std::unique_ptr<char> generateasb::if_token(TokenList &token) {
+    std::string test;
+    while (!token.isEmpty()) {
+        Automat::Token actual_token = token.popToken();
+        if (actual_token.tokenType == TokenType::IdentifierToken) {
+            //LA variablenname
+        }else if (actual_token.tokenType == TokenType::DigitToken){
+            //LC konstante hierher
+        }else if (actual_token.tokenType == TokenType::SignToken){
+            if (symtable.lookup(actual_token.storage.key).getLexem()[0] == '>'){
+                //LES
+                //JIN L1
+            }
+            else if (symtable.lookup(actual_token.storage.key).getLexem()[0] == '<'){
+               //LES
+               //NOT
+               //JIN L1
+            }
+        }
+    }
 
     return std::unique_ptr<char>();
 }
@@ -74,3 +94,4 @@ std::unique_ptr<char> generateasb::read_token() {
 std::unique_ptr<char> generateasb::write_token() {
     return std::unique_ptr<char>();
 }
+

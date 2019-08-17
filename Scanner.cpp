@@ -59,14 +59,14 @@ void Scanner::initializeSymtable() {
 
 Automat::Token Scanner::createToken() {
     int typeNumber = automat.convertCharToInt(automat.tokenQueue.popSymbol());
-    auto tokentype = Automat::TokenType(typeNumber);
+    auto tokentype = TokenType(typeNumber);
     Automat::Token token = automat.createToken(tokentype);
 
-    if (tokentype == Automat::IdentifierToken) {
+    if (tokentype == IdentifierToken) {
         char *str = token.storage.lexem;
         token.storage.key = symtable.insert(str);
     }
-    else if (tokentype == Automat::SignToken) {
+    else if (tokentype == SignToken) {
         switch(*token.storage.sign) {
 
             case '+':

@@ -9,7 +9,18 @@
 #include <iostream>
 #include "LinkedList.h"
 #include "Symtable.h"
-
+enum TokenType {
+    SignToken = 0,
+    DigitToken = 1,
+    IdentifierToken = 2,
+    ErrorToken = 3,
+    IfToken = 4,
+    WhileToken = 5,
+    ElseToken = 6,
+    IntToken = 7,
+    ReadToken = 8,
+    WriteToken = 9
+};
 
 class Automat {
 
@@ -55,18 +66,7 @@ public:
 
     };
 
-    enum TokenType {
-        SignToken = 0,
-        DigitToken = 1,
-        IdentifierToken = 2,
-        ErrorToken = 3,
-        IfToken = 4,
-        WhileToken = 5,
-        ElseToken = 6,
-        IntToken = 7,
-        ReadToken = 8,
-        WriteToken = 9
-    };
+
 
     struct Token {
         unsigned int line, column;

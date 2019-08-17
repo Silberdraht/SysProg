@@ -5,13 +5,13 @@
 #ifndef SYSPROG_GENERATEASB_H
 #define SYSPROG_GENERATEASB_H
 
-#include <bits/unique_ptr.h>
+#include <memory>
 #include "Node.h"
 
 class generateasb {
 public:
-    std::unique_ptr<char> generate(std::shared_ptr<Node> node);
-
+    std::unique_ptr<char> generate(std::shared_ptr<TokenList> token);
+    Symtable symtable;
 private:
     enum node_type {
 
@@ -20,7 +20,7 @@ private:
     std::unique_ptr<char>  digit_token();
     std::unique_ptr<char>  identifier_token();
     std::unique_ptr<char>  error_token();
-    std::unique_ptr<char>  if_token();
+    std::unique_ptr<char>  if_token(TokenList &token);
     std::unique_ptr<char>  while_token();
     std::unique_ptr<char>  else_token();
     std::unique_ptr<char>  int_token();

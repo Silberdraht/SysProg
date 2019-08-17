@@ -14,59 +14,59 @@ int main() {
 
     while (scanner.hasTokens()) {
         Automat::Token token = scanner.nextToken();
-        Automat::TokenType type = token.tokenType;
+        TokenType type = token.tokenType;
 
         switch (type) {
-            case Automat::IdentifierToken:
+            case IdentifierToken:
                 stream << "Token Identifier" << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << "\t\t"
                        << "Contains: " << scanner.symtable.lookup(token.storage.key).getLexem() << '\n';
                 break;
 
-            case Automat::SignToken:
+            case SignToken:
                 stream << "Token Sign      " << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << "\t\t"
                        << "Contains: " << scanner.symtable.lookup(token.storage.key).getLexem() << '\n';
                 break;
 
-            case Automat::DigitToken:
+            case DigitToken:
                 stream << "Token Digit     " << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << "\t\t"
                        << "Contains: " << token.storage.number << '\n'; // << additional;
                 break;
 
-            case Automat::ErrorToken:
+            case ErrorToken:
                 stream << "Token Error     " << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << "\t\t"
                        << "Contains: " << token.storage.error << '\n';
                 break;
 
-            case Automat::IfToken:
+            case IfToken:
                 stream << "Token If        " << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
-            case Automat::WhileToken:
+            case WhileToken:
                 stream << "Token While     " << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
-            case Automat::IntToken:
+            case IntToken:
                 stream << "Token int        " << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
-            case Automat::ElseToken:
+            case ElseToken:
                 stream << "Token Else       " << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
-            case Automat::WriteToken:
+            case WriteToken:
                 stream << "Token Write      " << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
 
-            case Automat::ReadToken:
+            case ReadToken:
                 stream << "Token Read       " << "\t\t"
                        << "Line/Column: " << token.line << "/" << token.column << '\n';
                 break;
