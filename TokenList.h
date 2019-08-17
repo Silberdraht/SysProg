@@ -28,7 +28,7 @@ public:
 
     Automat::Token popToken();
 
-    Automat::Token TokenList::getToken(int i);
+    Automat::Token getToken(int i);
 
     bool isEmpty();
 
