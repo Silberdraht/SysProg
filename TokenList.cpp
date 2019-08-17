@@ -55,6 +55,21 @@ Automat::Token TokenList::popToken() {
     }
 }
 
+Automat::Token TokenList::getToken(int index) {
+
+    Automat::Token token;
+    if (countSymbol > index) {
+        Symbol *s = head;
+        for (int i=0; i < index; i++) {
+            s = head->next;
+        }
+
+        token = s->token;
+    }
+
+    return token;
+}
+
 bool TokenList::isEmpty() {
 
     return countSymbol <= 0;

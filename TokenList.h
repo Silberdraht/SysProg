@@ -28,6 +28,8 @@ public:
 
     Automat::Token popToken();
 
+    Automat::Token TokenList::getToken(int i);
+
     bool isEmpty();
 
     int listLength();
