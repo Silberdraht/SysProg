@@ -32,7 +32,7 @@ void TokenList::addToken(Automat::Token token) {
         while (s->next != nullptr) {
             s = s->next;
         }
-        Symbol *toAdd = new Symbol();
+        auto *toAdd = new Symbol();
         toAdd->token = token;
         s->next = toAdd;
     }
@@ -53,7 +53,6 @@ Automat::Token TokenList::popToken() {
 
         return t;
     }
-
 }
 
 bool TokenList::isEmpty() {
