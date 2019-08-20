@@ -12,12 +12,9 @@ set(SOURCE_FILES_AUFGABE_1
         StringTable.cpp StringTable.h
         Information.cpp Information.h
         InformationLinkedList.cpp InformationLinkedList.h
-        Scanner.cpp Scanner.h TokenList.cpp TokenList.h
-        parser/Link_List.cpp parser/Link_List.h)
+        Scanner.cpp Scanner.h TokenList.cpp TokenList.h LinkedList.h)
 set(SOURCE_FILES_AUFGABE_2
-        parser/generateasb.cpp parser/generateasb.h
-        parser/Node.cpp parser/Node.h
-        parser/Link_List.cpp parser/Link_List.h)
+        parser/generateasb.cpp parser/generateasb.h)
 
 add_executable(Aufgabe1 ${SOURCE_FILES_AUFGABE_1})
 add_executable(Aufgabe2 ${SOURCE_FILES_AUFGABE_2})

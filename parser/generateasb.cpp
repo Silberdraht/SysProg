@@ -54,14 +54,14 @@ std::unique_ptr<char> generateasb::error_token() {
 
 std::unique_ptr<char> generateasb::if_token(TokenList &token) {
     std::string result;
-    Automat::Token bufferedToken;
+    Token bufferedToken;
     bool useBufferedToken = 0;
 
     while (!token.isEmpty()) {
 
-        Automat::Token actual_token = token.popToken();
+        Token actual_token = token.popToken();
         if (actual_token.tokenType == TokenType::IdentifierToken) {
-            Automat::Token checkForBracket = token.getToken(0);
+            Token checkForBracket = token.getToken(0);
             if (checkForBracket.tokenType == TokenType::SignToken && symtable.lookup(checkForBracket.storage.key).getLexem()[0] == '[') {
                 token.popToken();
                 long offset = token.popToken().storage.number;
@@ -134,7 +134,7 @@ std::unique_ptr<char> generateasb::write_token() {
 
 /** Hilfsfunktionen **/
 
-std::unique_ptr<char> generateasb::getOperationForSign(Automat::Token token) {
+std::unique_ptr<char> generateasb::getOperationForSign(Token token) {
     std::unique_ptr<char> result;
     char *sign = symtable.lookup(token.storage.key).getLexem();
     if (sign[0] == '+') {

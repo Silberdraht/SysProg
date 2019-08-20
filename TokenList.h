@@ -12,7 +12,7 @@ class TokenList {
 
     struct Symbol {
 
-        Automat::Token token;
+        Token token;
         Symbol *next;
 
     };
@@ -24,11 +24,11 @@ public:
     ~TokenList();
 
 
-    void addToken(Automat::Token token);
+    void addToken(Token token);
 
-    Automat::Token popToken();
+    Token popToken();
 
-    Automat::Token getToken(int i);
+    Token getToken(int i);
 
     bool isEmpty();
 

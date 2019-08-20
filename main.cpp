@@ -13,7 +13,7 @@ int main() {
     //stream.open("C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt");
 
     while (scanner.hasTokens()) {
-        Automat::Token token = scanner.nextToken();
+        Token token = scanner.nextToken();
         TokenType type = token.tokenType;
 
         switch (type) {
