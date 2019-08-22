@@ -14,7 +14,7 @@ set(SOURCE_FILES_AUFGABE_1
         InformationLinkedList.cpp InformationLinkedList.h
         Scanner.cpp Scanner.h TokenList.cpp TokenList.h LinkedList.h)
 set(SOURCE_FILES_AUFGABE_2
-        parser/generateasb.cpp parser/generateasb.h parser/CodeBuilder.h LinkedList.h parser/CodeBuilder.cpp)
+        LinkedList.h parser/CodeBuilder.h parser/CodeBuilder.cpp)
 
 add_executable(Aufgabe1 ${SOURCE_FILES_AUFGABE_1})
 add_executable(Aufgabe2 ${SOURCE_FILES_AUFGABE_2})

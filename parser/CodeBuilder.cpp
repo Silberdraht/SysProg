@@ -2,10 +2,8 @@
 // Created by noahp on 21/08/2019.
 //
 
-#include <memory>
 #include "Link_List.h"
 #include "CodeBuilder.h"
-#include "../Automat.h"
 
 
 char* CodeBuilder::makeCodeDECLS(Link_List tokens) {
@@ -79,10 +77,10 @@ char* CodeBuilder::makeCodeSTATEMENT(Link_List tokens) {
         }
 
         makeCodeEXP(exp);
-        int label1 = labelcounter;
-        labelcounter++;
-        int label2 = labelcounter;
-        labelcounter++;
+        int label1 = label_counter;
+        label_counter++;
+        int label2 = label_counter;
+        label_counter++;
         //JIN #LABEL + label1
         makeCodeSTATEMENT(statement1);
         //JMP #LABEL + label2
@@ -101,10 +99,10 @@ char* CodeBuilder::makeCodeSTATEMENT(Link_List tokens) {
         }
         statement.pop_back();
 
-        int label1 = labelcounter;
-        labelcounter++;
-        int label2 = labelcounter;
-        labelcounter++;
+        int label1 = label_counter;
+        label_counter++;
+        int label2 = label_counter;
+        label_counter++;
         //#LABEL1 NOP
         makeCodeEXP(exp);
         //JIN #LABEL2
@@ -271,7 +269,7 @@ char* CodeBuilder::makeCodeOP(Token token) {
 }
 
 
-Link_List CodeBuilder::getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose) { //iput Link_List "tokens" should be modified in place
+Link_List<Token> CodeBuilder::getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose) { //iput Link_List "tokens" should be modified in place
     Link_List<Token> withinBrackets;
     tokens.pop_front();
     int bracketsOpen = 1;

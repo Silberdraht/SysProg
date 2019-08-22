@@ -18,10 +18,10 @@ public:
 
 private:
     Symtable symtable;
-    int labelcounter = 1;
+    int label_counter = 1;
 
     int size_of(char *identifier);
-    Link_List getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose);
+    Link_List<Token> getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose);
 
     char* makeCodeDECL(Link_List tokens);
     char* makeCodeDECLS(Link_List tokens);
