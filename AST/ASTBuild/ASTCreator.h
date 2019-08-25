@@ -31,16 +31,17 @@ public:
 	int computeToken(Automat::Token token);
 	void init();
 	void buildPROG();
-	void buildDECLS();
+	void buildDECLS(Automat::Token token);
 	void buildDECL();
-	void buildARRAY();
-	void buildSTATEMENTS();
-	void buildSTATEMENT();
+	void buildARRAY(Automat::Token token);
+	void buildSTATEMENTS(Automat::Token token);
+	void buildSTATEMENT(Automat::Token token);
 	void buildEXP();
-	void buildEXP2();
-	void buildINDEX();
-	void buildOP_EXP();
+	void buildEXP2(Automat::Token token);
+	void buildINDEX(Automat::Token token);
+	void buildOP_EXP(Automat::Token token);
 	void buildOP();
+	void hasError();
 private:
 	ASTStack stack;
 	ASTNode head;
@@ -52,6 +53,8 @@ private:
 	Automat::Token getToken();
 	int checkForChar(char c);
 	void buildNode(NodeType tpye);
+	int error;
+	int needsNewToken;
 
 };
 

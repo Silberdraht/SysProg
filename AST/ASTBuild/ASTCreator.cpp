@@ -17,242 +17,394 @@ ASTCreator::~ASTCreator() {
 }
 
 int ASTCreator::computeToken(Automat::Token token) {
-	switch (getTokenType(token)) {
-	case PROG:
-		buildPROG();
-		break;
-	case DECLS:
-		buildDECLS();
-		break;
-	case DECL:
-		buildDECL();
-		break;
-	case ARRAY:
-		buildARRAY();
-		break;
-	case STATEMENTS:
-		buildSTATEMENTS();
-		break;
-	case STATEMENT:
-		buildSTATEMENT();
-		break;
-	case EXP:
-		buildEXP();
-		break;
-	case EXP2:
-		buildEXP2();
-		break;
-	case INDEX:
-		buildINDEX();
-		break;
-	case OP_EXP:
-		buildOP_EXP();
-		break;
-	case OP:
-		buildOP();
-		break;
+	needsNewToken = 1;
+	while (needsNewToken) {
+		NodeType type = getTokenType(token);
+		switch (type) {
+		//Check non-terminals
+		case PROG:
+			stack.addNewLayer();
+			buildPROG();
+			break;
+		case DECLS:
+			stack.addNewLayer();
+			buildDECLS(token);
+			break;
+		case DECL:
+			stack.addNewLayer();
+			buildDECL();
+			break;
+		case ARRAY:
+			stack.addNewLayer();
+			buildARRAY(token);
+			break;
+		case STATEMENTS:
+			stack.addNewLayer();
+			buildSTATEMENTS(token);
+			break;
+		case STATEMENT:
+			stack.addNewLayer();
+			buildSTATEMENT(token);
+			break;
+		case EXP:
+			stack.addNewLayer();
+			buildEXP();
+			break;
+		case EXP2:
+			stack.addNewLayer();
+			buildEXP2(token);
+			break;
+		case INDEX:
+			stack.addNewLayer();
+			buildINDEX(token);
+			break;
+		case OP_EXP:
+			stack.addNewLayer();
+			buildOP_EXP(token);
+			break;
+		case OP:
+			stack.addNewLayer();
+			buildOP();
+			break;
+
+			//TODO Terminale behandeln, die hier sind ALLE falsch, sind nur placeholder
+			//man muss ein token einlesen und bestimmen, ob es dem Terminal entspricht
+		case PLUSSIGN:	//+
+			if(token.storage.lexem == "+") {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
+		case MINUSSIGN:		//-
+			if(token.storage.lexem == "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case STARSIGN:		//*
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case DOUBLESIGN:	//:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case LESSSIGN:		//<
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case GREATERSIGN:	//>
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case EQUALSSIGN:	//=
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case OTHEREQUALSSIGN:	//:=
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case EQUPEQUSIGN:	//=:=
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case ANDSIGN:	//&&
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case COLONSIGN:		//;
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case EXCLSIGN:		//!
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case IFSIGN:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case ELSESIGN:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case WHILESIGN:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case READSIGN:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case WRITESIGN:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case INTSIGN:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case IDENTIFIER:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case INTEGER:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case KL_OPEN:	//(
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case KL_CLOSE:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case EKL_OPEN:	//[
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case EKL_CLOSE:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case GKL_OPEN:	//{
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		case GKL_CLOSE:
+			if(token.storage.lexem = "+") {
+							needsNewToken = 0;
+							break;
+						}
+						error = 1;
+						break;
+		}
+
+		//build new Nodes, set head if nessesairy
+		//TODO: stack level überwachen!!!!!!!!!!!!
+		ASTNode newNode = new ASTNode(type);
+		head.addChild(newNode);
+		if (stack.isTopLevelEmpty()) {
+			while(stack.isTopLevelEmpty()) {
+			stack.removeTopLayer();
+			head = head.getParent();
+			}
+		} else {
+			head = newNode;
+		}
 	}
 }
 
-NodeType ASTCreator getTokenType(Automat::Token token){
-
-};
+NodeType ASTCreator::getTokenType(Automat::Token token) {
+	return stack.pullFromTop();
+}
 
 void ASTCreator::buildPROG() {
 	head = new ASTNode(PROG);
-	stack.addNewSign(DECLS);
-	ASTNode newDecls = new ASTNode(DECLS);
-	head.addChild(newDecls);
-	stack.addNewSign(STATEMENTS);
-	ASTNode newDecls = new ASTNode(DECLS);
-	head.addChild(newDecls);
+	buildNode(DECLS);
+	buildNode(STATEMENTS);
 }
-void ASTCreator::buildDECLS() {
+void ASTCreator::buildDECLS(Automat::Token token) {
 	//Teste, ob zeichen leer sind
-	if () {
-		// epsylon
+	//TODO int einprogrammieren
+	if (token.tokenType ==) {
+		buildNode(DECL);
+		buildNode(COLONSIGN);
+		buildNode(DECLS);
 	} else {
-		ASTNode newDecl = new ASTNode(DECL);
-		head.addChild(newDecl);
-		stack.addNewSign(DECL);
-		ASTNode newNode = new ASTNode(COLONSIGN);
-		head.addChild(newNode);
-
-		stack.addNewSign(DECLS);
-		ASTNode newDecls = new ASTNode(DECLS);
-		head.addChild(newDecls);
 	}
 }
 void ASTCreator::buildDECL() {
 
-	ASTNode newInt = new ASTNode(INTSIGN);
-	head.addChild(newInt);
-	// teste, ob ein ";" hier vorhanden ist!
-	ASTNode newNode = new ASTNode(ARRAY);
-	head.addChild(newNode);
-
-	ASTNode newId = new ASTNode(IDENTIFIER);
-	head.addChild(newId);
+	buildNode(INTSIGN);
+	buildNode(ARRAY);
+	buildNode(IDENTIFIER);
 }
-void ASTCreator::buildARRAY() {
-	if () {
-		ASTNode open = new ASTNode(EKL_OPEN);
-		head.addChild(open);
-
-		ASTNode newInt = new ASTNode(INTEGER);
-		head.addChild(newInt);
-
-		ASTNode close = new ASTNode(EKL_CLOSE);
-		head.addChild(close);
+void ASTCreator::buildARRAY(Automat::Token token) {
+	if (token.storage.lexem == "[") {
+		buildNode(EKL_OPEN);
+		buildNode(INTEGER);
+		buildNode(EKL_CLOSE);
 	} else {
 		//elypson
 	}
 
 }
-void ASTCreator::buildSTATEMENTS() {
+void ASTCreator::buildSTATEMENTS(Automat::Token token) {
 	//Teste, ob zeichen leer sind
-	if () {
+	//TODO wenn zeichenkette leer is tritt dieser Fall ein
+	if (false) {
 
 	} else {
-		stack.addNewSign(STATEMENT);
-		ASTNode open = new ASTNode(STATEMENT);
-		head.addChild(open);
-
-		ASTNode newNode = new ASTNode(COLONSIGN);
-		head.addChild(newNode);
-
-		stack.addNewSign(STATEMENTS);
-		ASTNode open = new ASTNode(STATEMENTS);
-		head.addChild(open);
+		buildNode(STATEMENT);
+		buildNode(COLONSIGN);
+		buildNode(STATEMENTS);
 	}
 
 }
-void ASTCreator::buildSTATEMENT() {
+void ASTCreator::buildSTATEMENT(Automat::Token token) {
 	// hier unterscheiden, wass passiert!
-	if () {
-		ASTNode newNode = new ASTNode(IDENTIFIER);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(INDEX);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(OTHEREQUALSSIGN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(EXP);
-		head.addChild(newNode);
-	} else if () {
-		ASTNode newNode = new ASTNode(WRITESIGN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(KL_OPEN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(EXP);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(KL_CLOSE);
-		head.addChild(newNode);
-	} else if () {
-		ASTNode newNode = new ASTNode(READSIGN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(KL_OPEN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(IDENTIFIER);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(INDEX);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(KL_CLOSE);
-		head.addChild(newNode);
-	} else if () {
-		ASTNode newNode = new ASTNode(GKL_OPEN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(STATEMENTS);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(GKL_CLOSE);
-		head.addChild(newNode);
-	} else if () {
-		ASTNode newNode = new ASTNode(IFSIGN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(KL_OPEN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(EXP);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(KL_CLOSE);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(STATEMENT);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(ELSESIGN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(STATEMENT);
-		head.addChild(newNode);
+	if (token.tokenType == IdentifierToken) {
+		buildNode(IDENTIFIER);
+		buildNode(INDEX);
+		buildNode(OTHEREQUALSSIGN);
+		buildNode(EXP);
+	} else if (token.tokenType ==) {
+		buildNode(WRITESIGN);
+		buildNode(KL_OPEN);
+		buildNode(EXP);
+		buildNode(KL_CLOSE);
+	} else if (token.tokenType ==) {
+		buildNode(READSIGN);
+		buildNode(KL_OPEN);
+		buildNode(IDENTIFIER);
+		buildNode(INDEX);
+		buildNode(KL_CLOSE);
+	} else if (token.storage.lexem == "{") {
+		buildNode(GKL_OPEN);
+		buildNode(STATEMENTS);
+		buildNode(GKL_CLOSE);
+	} else if (token.tokenType == IfToken) {
+		buildNode(IFSIGN);
+		buildNode(KL_OPEN);
+		buildNode(EXP);
+		buildNode(KL_CLOSE);
+		buildNode(STATEMENT);
+		buildNode(ELSESIGN);
+		buildNode(STATEMENT);
 	}
 }
 void ASTCreator::buildEXP() {
-	stack.addNewSign(EXP2);
-	ASTNode newEXP = new ASTNode(EXP2);
-	head.addChild(newEXP);
-	stack.addNewSign(OP_EXP);
-	ASTNode newOp = new ASTNode(OP_EXP);
-	head.addChild(newOp);
+	buildNode(EXP2);
+	buildNode(OP_EXP);
 }
-void ASTCreator::buildEXP2() {
-	if () {
-		ASTNode newNode = new ASTNode(KL_OPEN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(EXP);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(KL_CLOSE);
-		head.addChild(newNode);
-	} else if () {
-		ASTNode newNode = new ASTNode(IDENTIFIER);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(INDEX);
-		head.addChild(newNode);
-	} else if () {
-		ASTNode newNode = new ASTNode(INTEGER);
-		head.addChild(newNode);
-	} else if () {
-		ASTNode newNode = new ASTNode(MINUSSIGN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(EXP2);
-		head.addChild(newNode);
-	} else if () {
-		ASTNode newNode = new ASTNode(EXCLSIGN);
-		head.addChild(newNode);
-		ASTNode newNode = new ASTNode(EXP2);
-		head.addChild(newNode);
+void ASTCreator::buildEXP2(Automat::Token token) {
+	if (token.storage.lexem == "(") {
+		buildNode(KL_OPEN);
+		buildNode(EXP);
+		buildNode(KL_CLOSE);
+	} else if (token.tokenType == IdentifierToken) {
+		buildNode(IDENTIFIER);
+		buildNode(INDEX);
+	} else if (token.tokenType) {
+		buildNode(INTEGER);
+	} else if (token.storage.lexem == "-") {
+		buildNode(MINUSSIGN);
+		buildNode(EXP2);
+	} else if (token.storage.lexem == "!") {
+		buildNode(EXCLSIGN);
+		buildNode(EXP2);
 	}
 	// wenns hier unten ankonnt is was schief gegangen!
 }
-void ASTCreator::buildINDEX() {
+void ASTCreator::buildINDEX(Automat::Token token) {
 	if () {
-		ASTNode open = new ASTNode(EKL_OPEN);
-		head.addChild(open);
+		buildNode(EKL_OPEN);
 
-		ASTNode newInt = new ASTNode(EXP);
-		head.addChild(newInt);
+		buildNode(EXP);
 
-		ASTNode close = new ASTNode(EKL_CLOSE);
-		head.addChild(close);
+		buildNode(EKL_CLOSE);
 
 	}
 }
-void ASTCreator::buildOP_EXP() {
+void ASTCreator::buildOP_EXP(Automat::Token token) {
 	if () {
-		stack.addNewSign(OP);
-		ASTNode newOp = new ASTNode(OP);
-				head.addChild(newOp);
-		stack.addNewSign(EXP);
-		ASTNode newInt = new ASTNode(EXP);
-				head.addChild(newInt);
+		buildNode(OP);
+		buildNode(EXP);
 	}
 }
 void ASTCreator::buildOP() {
 	//TODO add different signs
-	sitch(int)
-					case:
-					case:
-					case:
-					case:
-					case:
-					case:
-					case:
-					case:
-					case:
-					case default:
+	if () {
+	switch(int)
+	case:
+	case:
+	case:
+	case:
+	case:
+	case:
+	case:
+	case:
+	case:
+	case default:
+}
+}
+
+void ASTCreator::buildNode(NodeType tpye) {
+stack.addNewSign(tpye);
+//	ASTNode newOp = new ASTNode(tpye);
+//	head.addChild(newOp);
 }

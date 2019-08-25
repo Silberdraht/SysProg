@@ -62,10 +62,17 @@ public:
 	NodeType getTopSign();
 	int isTopLevelEmpty();
 	NodeType peekTop();
-	int putOnTop();
-	int pullFromTop();
+	NodeType putOnTop();
+	NodeType pullFromTop();
 	void addNewLayer();
+	void removeTopLayer();
 	void addNewSign(NodeType);
+private:
+	int stackSize = 10;
+	int stackDepth = 10;
+	int stack[stackSize][stackDepth];
+	int currentLevel = 0;
+	int currentLevelDepth[stackSize];
 };
 
 #endif /* AST_ASTBUILD_ASTSTACK_H_ */
