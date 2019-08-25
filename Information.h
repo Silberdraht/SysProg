@@ -12,11 +12,12 @@
 
 
 class Information {
-private:
-	char*lexem;
-public:
-	bool compareLex(char* lexem);
-	char* getName();
-	void setLexem(char*lexem);
-	char* getLexem();
+
+	private:
+		char* lexem;
+
+	public:
+		bool compareLex(char* lexem2);
+		void setLexem(char*lexem);
+		char* getLexem();
 };

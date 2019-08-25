@@ -27,6 +27,8 @@ public:
     void endAutomat();
 
     char *sign = nullptr;
+    char *bufferedSign = nullptr;
+    bool useBufferedSign = false;
     void clearSign();
 
     char *identifier = nullptr;
@@ -59,7 +61,11 @@ public:
         IdentifierToken = 2,
         ErrorToken = 3,
         IfToken = 4,
-        WhileToken = 5
+        WhileToken = 5,
+        ElseToken = 6,
+        IntToken = 7,
+        ReadToken = 8,
+        WriteToken = 9
     };
 
     struct Token {
@@ -71,6 +77,7 @@ public:
             char* lexem;
             char* sign;
             char error;
+
 
 
         } storage;
@@ -85,9 +92,12 @@ public:
     unsigned int currentLine = 1;
     unsigned int currentColumn = 0;
     unsigned int startColumn;
+    unsigned int bufferedStartColumn;
+    bool useBufferedStartColumn;
     unsigned int startLine;
     long number;
 
+    bool precedingCR = false;  //avoiding duplicate new line count on a windows machine
 
     state stateActive = init;
 

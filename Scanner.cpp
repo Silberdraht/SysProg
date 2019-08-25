@@ -3,16 +3,16 @@
 //
 
 #include "Scanner.h"
-#include "Symtable.h"
-#include "Automat.h"
 
 Scanner::Scanner() {
 
 }
 
+
 Scanner::~Scanner() {
 
 }
+
 
 void Scanner::startScanner() {
 
@@ -24,8 +24,6 @@ void Scanner::startScanner() {
         c = buffer.getChar();
         automat.checkSymbol(c);
 
-//        std::ofstream ofs {"out.txt",std::ios_base::app};
-//        ofs  << "Token " <<  << " Line: "<< automat.getLine() << " Column: " << automat.getColumn() << std::endl;
     }
 
     if (!automat.tokenQueue.isEmpty()) {
@@ -35,23 +33,122 @@ void Scanner::startScanner() {
     automat.endAutomat();
 }
 
+
+void Scanner::initializeSymtable() {
+    plus = symtable.insert((char *) "+");
+    minus = symtable.insert((char *) "-");
+    equals = symtable.insert((char *) "=");
+    star = symtable.insert((char *) "*");
+    greater = symtable.insert((char *) ">");
+    lesser = symtable.insert((char *) "<");
+    sAnd = symtable.insert((char *) "&");
+    semicolon = symtable.insert((char *) ";");
+    exclamationMark = symtable.insert((char *) "!");
+    bracketOpen = symtable.insert((char *) "(");
+    bracketClose = symtable.insert((char *) ")");
+    curlyBracketOpen = symtable.insert((char *) "{");
+    curlyBracketClose = symtable.insert((char *) "}");
+    squareBracketOpen = symtable.insert((char *) "[");
+    squareBracketClose = symtable.insert((char *) "]");
+    colon = symtable.insert((char *) ":");
+    colonEquals = symtable.insert((char *) ":=");
+    equalsColonEquals = symtable.insert((char *) "=:=");
+    andAnd = symtable.insert((char *) "&&");
+}
+
+
 Automat::Token Scanner::createToken() {
     int typeNumber = automat.convertCharToInt(automat.tokenQueue.popSymbol());
     auto tokentype = Automat::TokenType(typeNumber);
     Automat::Token token = automat.createToken(tokentype);
+
     if (tokentype == Automat::IdentifierToken) {
         char *str = token.storage.lexem;
         token.storage.key = symtable.insert(str);
-//        std::cout << symtable.lookup(token.storage.key).getLexem() << std::endl;
+    }
+    else if (tokentype == Automat::SignToken) {
+        switch(*token.storage.sign) {
+
+            case '+':
+                token.storage.key = plus;
+                break;
+            case '-':
+                token.storage.key = minus;
+                break;
+            case '*':
+                token.storage.key = star;
+                break;
+            case '<':
+                token.storage.key = greater;
+                break;
+            case '>':
+                token.storage.key = lesser;
+                break;
+            case '&':
+                if (*(token.storage.sign+1) == '&') {
+                    token.storage.key = andAnd;
+                } else {
+                    token.storage.key = sAnd;
+                }
+                break;
+            case '!':
+                token.storage.key = exclamationMark;
+                break;
+            case ';':
+                token.storage.key = semicolon;
+                break;
+            case '(':
+                token.storage.key = bracketOpen;
+                break;
+            case ')':
+                token.storage.key = bracketClose;
+                break;
+            case '{':
+                token.storage.key = curlyBracketOpen;
+                break;
+            case '}':
+                token.storage.key = curlyBracketClose;
+                break;
+            case '[':
+                token.storage.key = squareBracketOpen;
+                break;
+            case ']':
+                token.storage.key = squareBracketClose;
+                break;
+            case '=':
+                if (*(token.storage.sign+1) == ':' && *(token.storage.sign+2) == '=') {
+                    token.storage.key = equalsColonEquals;
+                } else {
+                    token.storage.key = equals;
+                }
+                break;
+            case ':':
+                if (*(token.storage.sign+1) == '=') {
+                    token.storage.key = colonEquals;
+                } else {
+                    token.storage.key = colon;
+                }
+                break;
+            default:
+                //token.tokenType = Automat::TokenType(3);
+                //token.storage.error = (char) token.storage.sign;
+                break;
+
+        }
     }
     return token;
 }
+
 
 Automat::Token Scanner::nextToken() {
 
     return this->tokens.popToken();
 }
 
+
 int Scanner::hasTokens() {
+
     return !this->tokens.isEmpty();
 }
+
+

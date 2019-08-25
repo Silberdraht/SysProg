@@ -19,11 +19,33 @@ private:
     Automat::Token createToken();
     TokenList tokens;
 
+    Key plus;
+    Key minus;
+    Key equals;
+    Key star;
+    Key greater;
+    Key lesser;
+    Key sAnd;
+    Key semicolon;
+    Key exclamationMark;
+    Key bracketOpen;
+    Key bracketClose;
+    Key curlyBracketOpen;
+    Key curlyBracketClose;
+    Key squareBracketOpen;
+    Key squareBracketClose;
+    Key colonEquals;
+    Key colon;
+    Key equalsColonEquals;
+    Key andAnd;
+
 public:
     Scanner();
     ~Scanner();
 
     Symtable symtable;
+    void initializeSymtable();
+
     void startScanner();
     Automat::Token nextToken();
     int hasTokens();

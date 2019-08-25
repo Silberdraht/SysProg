@@ -9,21 +9,19 @@
 #define STRINGTABLE_H_
 
 
-
-
-
-
-
 class StringTable{
+
 	char* freeP;
 	int freeSpace;
 	int size = 64*4;
 	char* table; //set to size
 	void resize();
+
 public:
 	StringTable();
 	~StringTable();
 	char* insert(char*lexem ,int size);
+
 };
 
 #endif /* STRINGTABLE_H_ */
