@@ -6,7 +6,6 @@
 
 #define SYSPROG_CODEBUILDER_H
 
-#include "Link_List.h"
 #include "../Symtable.h"
 #include "../Automat.h"
 
@@ -20,17 +19,17 @@ private:
     Symtable symtable;
     int label_counter = 1;
 
-    int size_of(char *identifier);
+    int size_of(const char *identifier);
     Link_List<Token> getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose);
 
-    char* makeCodeDECL(Link_List tokens);
-    char* makeCodeDECLS(Link_List tokens);
-    char* makeCodeSTATEMENTS(Link_List tokens);
-    char* makeCodeSTATEMENT(Link_List tokens);
-    char* makeCodeEXP(Link_List tokens);
-    char* makeCodeEXP2(Link_List tokens);
-    char* makeCodeINDEX(Link_List tokens);
-    char* makeCodeOP_EXP(Link_List tokens);
+    char* makeCodeDECL(Link_List<Token> tokens);
+    char* makeCodeDECLS(Link_List<Token> tokens);
+    char* makeCodeSTATEMENTS(Link_List<Token> tokens);
+    char* makeCodeSTATEMENT(Link_List<Token> tokens);
+    char* makeCodeEXP(Link_List<Token> tokens);
+    char* makeCodeEXP2(Link_List<Token> tokens);
+    char* makeCodeINDEX(Link_List<Token> tokens);
+    char* makeCodeOP_EXP(Link_List<Token> tokens);
     char* makeCodeOP(Token token);
 };
 

@@ -6,7 +6,7 @@
 #include "CodeBuilder.h"
 
 
-char* CodeBuilder::makeCodeDECLS(Link_List tokens) {
+char* CodeBuilder::makeCodeDECLS(Link_List<Token> tokens) {
     if (tokens.empty()) {
         return (char *) "";
     }
@@ -23,7 +23,7 @@ char* CodeBuilder::makeCodeDECLS(Link_List tokens) {
 }
 
 
-char* CodeBuilder::makeCodeDECL(Link_List tokens) {
+char* CodeBuilder::makeCodeDECL(Link_List<Token> tokens) {
     int size = 1;
     char* identifier;
     while (!tokens.empty()) {
@@ -44,7 +44,7 @@ char* CodeBuilder::makeCodeDECL(Link_List tokens) {
     return code;
 }
 
-char *CodeBuilder::makeCodeSTATEMENTS(Link_List tokens) {
+char *CodeBuilder::makeCodeSTATEMENTS(Link_List<Token> tokens) {
     if (tokens.empty()) {
         return (char *) "";
     }
@@ -58,7 +58,7 @@ char *CodeBuilder::makeCodeSTATEMENTS(Link_List tokens) {
     makeCodeSTATEMENTS(tokens);
 }
 
-char* CodeBuilder::makeCodeSTATEMENT(Link_List tokens) {
+char* CodeBuilder::makeCodeSTATEMENT(Link_List<Token> tokens) {
 
     Token token = tokens.pop_front();
     if (token.tokenType == IfToken) {
@@ -154,12 +154,12 @@ char* CodeBuilder::makeCodeSTATEMENT(Link_List tokens) {
 
 
 
-char *CodeBuilder::makeCodeEXP(Link_List tokens) {
+char *CodeBuilder::makeCodeEXP(Link_List<Token> tokens) {
     Link_List<Token> exp2;
     Token token = tokens.pop_front();
     int bracketsOpen = 0;
     int bracketsClose = 0;
-    while (token.tokenType != IdentifierToken || token.tokenType != IntToken || bracketsOpen != bracketsClose) {
+    while ((token.tokenType != IdentifierToken && token.tokenType != IntToken) || bracketsOpen != bracketsClose) {
         if (token.tokenType == SignToken) {
             if (symtable.lookup(token.storage.key).getLexem()[0] == '(') {
                 bracketsOpen++;
@@ -192,7 +192,7 @@ char *CodeBuilder::makeCodeEXP(Link_List tokens) {
     return nullptr;
 }
 
-char* CodeBuilder::makeCodeEXP2(Link_List tokens) {
+char* CodeBuilder::makeCodeEXP2(Link_List<Token> tokens) {
     Token token = tokens.pop_front();
     if (token.tokenType == IdentifierToken) {
         char* identifier = symtable.lookup(token.storage.key).getLexem();
@@ -224,13 +224,13 @@ char* CodeBuilder::makeCodeEXP2(Link_List tokens) {
     return nullptr;
 }
 
-char* CodeBuilder::makeCodeOP_EXP(Link_List tokens) {
+char* CodeBuilder::makeCodeOP_EXP(Link_List<Token> tokens) {
     Token operand = tokens.pop_front();
     makeCodeEXP(tokens);
     makeCodeOP(operand);
 }
 
-char* CodeBuilder::makeCodeINDEX(Link_List tokens) {
+char* CodeBuilder::makeCodeINDEX(Link_List<Token> tokens) {
     tokens.pop_front();
     tokens.pop_back();
     if (!tokens.empty()) {
@@ -290,7 +290,7 @@ Link_List<Token> CodeBuilder::getTokensFromWithinBrackets(Link_List<Token> token
 }
 
 
-int CodeBuilder::size_of(char *identifier) {
+int CodeBuilder::size_of(const char *identifier) {
     int index = 0;
     while (identifier[index] != '\0') {
         index++;
