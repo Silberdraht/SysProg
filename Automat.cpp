@@ -301,7 +301,7 @@
     }
 
 
-    Automat::Token Automat::createToken(TokenType tokenType) {
+    Token Automat::createToken(TokenType tokenType) {
 
         Token token{};
         token.line = getStartLine();

@@ -22,6 +22,25 @@ enum TokenType {
     WriteToken = 9
 };
 
+struct Token {
+    unsigned int line, column;
+    TokenType tokenType;
+    union Storage {
+        Key key; //Insert Key für Hash
+        long number;
+        char* lexem;
+        char* sign;
+        char error;
+
+
+
+    } storage;
+
+
+
+
+};
+
 class Automat {
 
 
@@ -68,24 +87,7 @@ public:
 
 
 
-    struct Token {
-        unsigned int line, column;
-        TokenType tokenType;
-        union Storage {
-            Key key; //Insert Key für Hash
-            long number;
-            char* lexem;
-            char* sign;
-            char error;
 
-
-
-        } storage;
-
-
-
-
-    };
 
     //TokenType tokenReady = NOT_SET;
 

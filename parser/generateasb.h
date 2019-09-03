@@ -6,7 +6,8 @@
 #define SYSPROG_GENERATEASB_H
 
 #include <memory>
-#include "Node.h"
+#include "../Automat.h"
+#include "../TokenList.h"
 
 class generateasb {
 public:
@@ -16,6 +17,8 @@ private:
     enum node_type {
 
     };
+
+    std::unique_ptr<char>  getOperationForSign(Automat::Token token);
     std::unique_ptr<char>  sign_token();
     std::unique_ptr<char>  digit_token();
     std::unique_ptr<char>  identifier_token();

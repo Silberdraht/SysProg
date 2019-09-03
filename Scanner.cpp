@@ -57,10 +57,10 @@ void Scanner::initializeSymtable() {
 }
 
 
-Automat::Token Scanner::createToken() {
+Token Scanner::createToken() {
     int typeNumber = automat.convertCharToInt(automat.tokenQueue.popSymbol());
     auto tokentype = TokenType(typeNumber);
-    Automat::Token token = automat.createToken(tokentype);
+    Token token = automat.createToken(tokentype);
 
     if (tokentype == IdentifierToken) {
         char *str = token.storage.lexem;
@@ -140,7 +140,7 @@ Automat::Token Scanner::createToken() {
 }
 
 
-Automat::Token Scanner::nextToken() {
+Token Scanner::nextToken() {
 
     return this->tokens.popToken();
 }

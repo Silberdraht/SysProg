@@ -7,8 +7,9 @@
 #include "../TokenList.h"
 #include "../Automat.h"
 
+
 std::unique_ptr<char> generateasb::generate(std::shared_ptr<TokenList> token) {
-    switch (token.get()->popToken().tokenType) {
+    switch ((int) token.get()->popToken().tokenType) {
         case 0:
             return sign_token();
         case 1:
@@ -52,23 +53,59 @@ std::unique_ptr<char> generateasb::error_token() {
 }
 
 std::unique_ptr<char> generateasb::if_token(TokenList &token) {
-    std::string test;
+    std::string result;
+    Token bufferedToken;
+    bool useBufferedToken = 0;
+
     while (!token.isEmpty()) {
-        Automat::Token actual_token = token.popToken();
+
+        Token actual_token = token.popToken();
         if (actual_token.tokenType == TokenType::IdentifierToken) {
-            //LA variablenname
-        }else if (actual_token.tokenType == TokenType::DigitToken){
+            Token checkForBracket = token.getToken(0);
+            if (checkForBracket.tokenType == TokenType::SignToken && symtable.lookup(checkForBracket.storage.key).getLexem()[0] == '[') {
+                token.popToken();
+                long offset = token.popToken().storage.number;
+                //"LA $" + varblenname+offset
+            } else {
+                //"LA $" + variablenname
+            }
+
+            if (useBufferedToken && bufferedToken.tokenType == TokenType::SignToken) {
+                useBufferedToken = 0;
+                getOperationForSign(bufferedToken);
+            }
+        }
+
+        else if (actual_token.tokenType == TokenType::DigitToken){
             //LC konstante hierher
-        }else if (actual_token.tokenType == TokenType::SignToken){
-            if (symtable.lookup(actual_token.storage.key).getLexem()[0] == '>'){
+            if (useBufferedToken && bufferedToken.tokenType == TokenType::SignToken) {
+                useBufferedToken = 0;
+                getOperationForSign(bufferedToken);
+            }
+
+        }
+
+        else if (actual_token.tokenType == TokenType::SignToken){
+            char *sign = symtable.lookup(actual_token.storage.key).getLexem();
+            if (sign[0] == '>'){
                 //LES
                 //JIN L1
             }
-            else if (symtable.lookup(actual_token.storage.key).getLexem()[0] == '<'){
+            else if (sign[0] == '<'){
                //LES
                //NOT
                //JIN L1
             }
+            else if (sign[0] == '='){
+                //EQU
+                //NOT
+                //JIN L1
+            }
+            else if (sign[0] == '+' || sign[0] == '-' || sign[0] == '*' || sign[0] == ':') {
+                bufferedToken = actual_token;
+                useBufferedToken = 1;
+            }  //sign ']' can simply be ignored. syntactical correctness should have been checked previously
+
         }
     }
 
@@ -93,5 +130,22 @@ std::unique_ptr<char> generateasb::read_token() {
 
 std::unique_ptr<char> generateasb::write_token() {
     return std::unique_ptr<char>();
+}
+
+/** Hilfsfunktionen **/
+
+std::unique_ptr<char> generateasb::getOperationForSign(Token token) {
+    std::unique_ptr<char> result;
+    char *sign = symtable.lookup(token.storage.key).getLexem();
+    if (sign[0] == '+') {
+        //ADD
+    } else if (sign[0] == '-') {
+        //SUB
+    } else if (sign[0] == '*') {
+        //MUL
+    } else if (sign[0] == ':') {
+        //DIV
+    }
+    return result;
 }
 

@@ -22,7 +22,7 @@ TokenList::~TokenList() {
 
 }
 
-void TokenList::addToken(Automat::Token token) {
+void TokenList::addToken(Token token) {
     if (head == nullptr) {
         head = new Symbol();
         head->token = token;
@@ -40,13 +40,13 @@ void TokenList::addToken(Automat::Token token) {
 }
 
 
-Automat::Token TokenList::popToken() {
+Token TokenList::popToken() {
     if (countSymbol > 0) {
 
         countSymbol--;
 
         Symbol *s = head;
-        Automat::Token t = s->token;
+        Token t = s->token;
 
         head = head->next;
         delete s;
@@ -55,9 +55,9 @@ Automat::Token TokenList::popToken() {
     }
 }
 
-Automat::Token TokenList::getToken(int index) {
+Token TokenList::getToken(int index) {
 
-    Automat::Token token;
+    Token token;
     if (countSymbol > index) {
         Symbol *s = head;
         for (int i=0; i < index; i++) {
