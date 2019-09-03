@@ -9,22 +9,23 @@
 
 #include <malloc.h>
 #include <fstream>
+#include "memory"
 
 class Buffer {
-
 private:
-    char *current = nullptr;
-    char *next = nullptr;
-    char *buffer1 = nullptr;
-    char *buffer2 = nullptr;
-    int amount_read = 0;
-
     size_t buffer_size = 16;
+    std::shared_ptr<char[]> current;
+    std::shared_ptr<char[]> next;
+    std::shared_ptr<char[]> buffer1;
+    std::shared_ptr<char[]> buffer2;
+    int new_current = 0;
+
+    int amount_read = 0;
     //char *file = (char *) "C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt";
     //char *file = (char *) "F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\beispieltest.txt";
     char *file = (char *) R"(/beispieltest.txt)";
-    void clear_buffer(char **buffer);
-    void load(char **buffer);
+    void clear_buffer(std::shared_ptr<char[]> buffer);
+    void load(std::shared_ptr<char[]> buffer);
 
 public:
     Buffer();

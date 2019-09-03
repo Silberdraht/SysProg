@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 project(SysProg)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 set(SOURCE_FILES_AUFGABE_1
         main.cpp

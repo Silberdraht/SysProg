@@ -9,7 +9,7 @@
 #include "Automat.h"
 #include "Symtable.h"
 #include "TokenList.h"
-#include "parser/Link_List.h"
+#include "lib/Link_List.h"
 
 
 class Scanner {
