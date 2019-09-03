@@ -14,24 +14,29 @@ class CodeBuilder {
 
 public:
 
+    CodeBuilder();
+    ~CodeBuilder();
+
+    void makeCode();
 
 
 private:
     Symtable symtable;
     int label_counter = 1;
+    std::fstream stream;
 
     int size_of(const char *identifier);
     Link_List<Token> getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose);
 
-    char* makeCodeDECL(Link_List<Token> tokens);
-    char* makeCodeDECLS(Link_List<Token> tokens);
-    char* makeCodeSTATEMENTS(Link_List<Token> tokens);
-    char* makeCodeSTATEMENT(Link_List<Token> tokens);
-    char* makeCodeEXP(Link_List<Token> tokens);
-    char* makeCodeEXP2(Link_List<Token> tokens);
-    char* makeCodeINDEX(Link_List<Token> tokens);
-    char* makeCodeOP_EXP(Link_List<Token> tokens);
-    char* makeCodeOP(Token token);
+    void makeCodeDECL(Link_List<Token> tokens);
+    void makeCodeDECLS(Link_List<Token> tokens);
+    void makeCodeSTATEMENTS(Link_List<Token> tokens);
+    void makeCodeSTATEMENT(Link_List<Token> tokens);
+    void makeCodeEXP(Link_List<Token> tokens);
+    void makeCodeEXP2(Link_List<Token> tokens);
+    void makeCodeINDEX(Link_List<Token> tokens);
+    void makeCodeOP_EXP(Link_List<Token> tokens);
+    void makeCodeOP(Token token);
 };
 
 

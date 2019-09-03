@@ -9,7 +9,7 @@
 #include "Automat.h"
 #include "Symtable.h"
 #include "TokenList.h"
-#include "parser/Link_List.h"
+#include "lib/Link_List.h"
 
 
 class Scanner {
@@ -18,7 +18,8 @@ private:
     Buffer buffer;
     Automat automat;
     Token createToken();
-    TokenList tokens;
+    //TokenList tokens;
+    Link_List<Token> tokens;
 
     Key plus;
     Key minus;

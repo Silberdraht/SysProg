@@ -2,13 +2,21 @@
 // Created by noahp on 21/08/2019.
 //
 
-#include "Link_List.h"
+#include <fstream>
+#include "../lib/Link_List.h"
 #include "CodeBuilder.h"
 
+CodeBuilder::CodeBuilder(){
+    stream.open(R"(../xxx.code)");
+}
+CodeBuilder::~CodeBuilder() {
+    stream.close();
+}
 
-char* CodeBuilder::makeCodeDECLS(Link_List<Token> tokens) {
+void CodeBuilder::makeCodeDECLS(Link_List<Token> tokens) {
     if (tokens.empty()) {
-        return (char *) "";
+        return;
+        //return (char *) "";
     }
     Token token = tokens.pop_front();
     Link_List<Token> declaration;
@@ -18,12 +26,10 @@ char* CodeBuilder::makeCodeDECLS(Link_List<Token> tokens) {
     }
     makeCodeDECL(declaration);
     makeCodeDECLS(tokens);
-
-    return nullptr;
 }
 
 
-char* CodeBuilder::makeCodeDECL(Link_List<Token> tokens) {
+void CodeBuilder::makeCodeDECL(Link_List<Token> tokens) {
     int size = 1;
     char* identifier;
     while (!tokens.empty()) {
@@ -39,14 +45,14 @@ char* CodeBuilder::makeCodeDECL(Link_List<Token> tokens) {
 
         }
     }
-    char* code = new char[(5+CodeBuilder::size_of(identifier))];
-    //code = "DS " << identifier << " " << size;
-    return code;
+
+    stream << "DS " << identifier << " " << size;
 }
 
-char *CodeBuilder::makeCodeSTATEMENTS(Link_List<Token> tokens) {
+void CodeBuilder::makeCodeSTATEMENTS(Link_List<Token> tokens) {
     if (tokens.empty()) {
-        return (char *) "";
+        return;
+        //return (char *) "";
     }
     Token token = tokens.pop_front();
     Link_List<Token> statement;
@@ -58,7 +64,7 @@ char *CodeBuilder::makeCodeSTATEMENTS(Link_List<Token> tokens) {
     makeCodeSTATEMENTS(tokens);
 }
 
-char* CodeBuilder::makeCodeSTATEMENT(Link_List<Token> tokens) {
+void CodeBuilder::makeCodeSTATEMENT(Link_List<Token> tokens) {
 
     Token token = tokens.pop_front();
     if (token.tokenType == IfToken) {
@@ -82,10 +88,14 @@ char* CodeBuilder::makeCodeSTATEMENT(Link_List<Token> tokens) {
         int label2 = label_counter;
         label_counter++;
         //JIN #LABEL + label1
+        stream << "JIN #LABEL" << label1 << " ";
         makeCodeSTATEMENT(statement1);
+        stream << "JMP #LABEL" << label2 << " ";
+        stream << "#LABEL" << label1 << " NOP ";
         //JMP #LABEL + label2
         //#LABEL + label1 NOP
         makeCodeSTATEMENT(statement2);
+
         //#LABEL + label2 NOP
     }
 
@@ -104,9 +114,13 @@ char* CodeBuilder::makeCodeSTATEMENT(Link_List<Token> tokens) {
         int label2 = label_counter;
         label_counter++;
         //#LABEL1 NOP
+        stream << "#LABEL" << label1 << " NOP ";
         makeCodeEXP(exp);
         //JIN #LABEL2
+        stream << "JIN #LABEL" << label2 << " ";
         makeCodeSTATEMENT(statement);
+        stream << "JMP #LABEL" << label1 << " ";
+        stream << "#LABEL" << label2 << " NOP ";
         //JMP #LABEL1
         //#LABEL2 NOP
     }
@@ -117,6 +131,7 @@ char* CodeBuilder::makeCodeSTATEMENT(Link_List<Token> tokens) {
         tokens.pop_front();
         tokens.pop_back();
         makeCodeEXP(tokens);
+        stream << "PRI ";
         //PRI
     }
 
@@ -124,19 +139,24 @@ char* CodeBuilder::makeCodeSTATEMENT(Link_List<Token> tokens) {
         tokens.pop_front();
         tokens.pop_back();
         //REA
+        stream << "REA ";
         Token identifierToken = tokens.pop_front();
         char* identifier = symtable.lookup(identifierToken.storage.key).getLexem();
         //LA $identifier
+        stream << "LA $" << identifier << " ";
         makeCodeINDEX(tokens);
+        stream << "STR ";
         //STR
     }
 
     else if (token.tokenType == IdentifierToken) {
         char* identifier = symtable.lookup(token.storage.key).getLexem();
         //LA $identifier
+        stream << "LA $" << identifier << " ";
         Link_List<Token> index = getTokensFromWithinBrackets(tokens, '[', ']');
         tokens.pop_front(); //:=
         makeCodeINDEX(tokens);
+        stream << "STR ";
         //STR
     }
 
@@ -149,12 +169,11 @@ char* CodeBuilder::makeCodeSTATEMENT(Link_List<Token> tokens) {
         //NOP oder STP (incorrect syntax)
     }
 
-    return nullptr;
 }
 
 
 
-char *CodeBuilder::makeCodeEXP(Link_List<Token> tokens) {
+void CodeBuilder::makeCodeEXP(Link_List<Token> tokens) {
     Link_List<Token> exp2;
     Token token = tokens.pop_front();
     int bracketsOpen = 0;
@@ -180,6 +199,7 @@ char *CodeBuilder::makeCodeEXP(Link_List<Token> tokens) {
         tokens.push_front(operand);
         makeCodeEXP2(exp2);
         makeCodeOP_EXP(tokens);
+        stream << "NOT ";
         //NOT
     }
     else {
@@ -187,32 +207,34 @@ char *CodeBuilder::makeCodeEXP(Link_List<Token> tokens) {
         makeCodeOP_EXP(tokens);
     }
 
-
-
-    return nullptr;
 }
 
-char* CodeBuilder::makeCodeEXP2(Link_List<Token> tokens) {
+void CodeBuilder::makeCodeEXP2(Link_List<Token> tokens) {
     Token token = tokens.pop_front();
     if (token.tokenType == IdentifierToken) {
         char* identifier = symtable.lookup(token.storage.key).getLexem();
         //LA $identifier
+        stream << "LA $" << identifier << " ";
         makeCodeINDEX(tokens);
+        stream << "LV ";
         //LV
     }
     else if (token.tokenType == IntToken) {
         int integer = (int) token.storage.number;
+        stream << "LC " << integer << " ";
         //LC integer
     }
     else if (token.tokenType == SignToken) {
         char c = symtable.lookup(token.storage.key).getLexem()[0];
         if (c == '-') {
             //LC 0
+            stream << "LC 0 ";
             makeCodeEXP2(tokens);
+            stream << "SUB ";
             //SUB
         }
         else if (c == '!') {
-            makeCodeEXP2(tokens);
+            stream << "NOT ";
             //NOT
         }
         else if (c == '(') {
@@ -221,51 +243,50 @@ char* CodeBuilder::makeCodeEXP2(Link_List<Token> tokens) {
         }
     }
 
-    return nullptr;
 }
 
-char* CodeBuilder::makeCodeOP_EXP(Link_List<Token> tokens) {
+void CodeBuilder::makeCodeOP_EXP(Link_List<Token> tokens) {
     Token operand = tokens.pop_front();
     makeCodeEXP(tokens);
     makeCodeOP(operand);
 }
 
-char* CodeBuilder::makeCodeINDEX(Link_List<Token> tokens) {
+void CodeBuilder::makeCodeINDEX(Link_List<Token> tokens) {
     tokens.pop_front();
     tokens.pop_back();
     if (!tokens.empty()) {
         makeCodeEXP(tokens);
+        stream << "ADD ";
         //ADD
     } else {
-        return (char *) "";
+        //return (char *) "";
     }
 
-    return nullptr;
 }
 
 
-char* CodeBuilder::makeCodeOP(Token token) {
+void CodeBuilder::makeCodeOP(Token token) {
     char* result;
     char *sign = symtable.lookup(token.storage.key).getLexem();
     char c = sign[0];
     if (c == '+') {
-        result = (char *) "ADD";
+        result = (char *) "ADD ";
     } else if (c == '-') {
-        result = (char *) "SUB";
+        result = (char *) "SUB ";
     } else if (c == '*') {
-        result = (char *) "MUL";
+        result = (char *) "MUL ";
     } else if (c == ':') {
-        result = (char *) "DIV";
+        result = (char *) "DIV ";
     } else if (c == '=') {
-        result = (char *) "EQU";
+        result = (char *) "EQU ";
     } else if (c == '<') {
-        result = (char *) "LES";
+        result = (char *) "LES ";
     } else if (c == '&' ) {
-        result = (char *) "AND";
+        result = (char *) "AND ";
     } else {
-        result = (char *) "NOP"; //should never be reached by valid code
+        result = (char *) "NOP "; //should never be reached by valid code
     }
-    return result;
+    stream << result;
 }
 
 
@@ -296,6 +317,10 @@ int CodeBuilder::size_of(const char *identifier) {
         index++;
     }
     return index;
+}
+
+void CodeBuilder::makeCode() {
+
 }
 
 

@@ -19,7 +19,7 @@ void Scanner::startScanner() {
     char c = ' ';
     while (c != '\0') {
         while (!automat.tokenQueue.isEmpty()) {
-            tokens.addToken(createToken());
+            tokens.push_back(createToken());
         }
         c = buffer.getChar();
         automat.checkSymbol(c);
@@ -27,7 +27,7 @@ void Scanner::startScanner() {
     }
 
     if (!automat.tokenQueue.isEmpty()) {
-        tokens.addToken(createToken());
+        tokens.push_back(createToken());
     }
 
     automat.endAutomat();
@@ -142,13 +142,13 @@ Token Scanner::createToken() {
 
 Token Scanner::nextToken() {
 
-    return this->tokens.popToken();
+    return this->tokens.pop_front();
 }
 
 
 int Scanner::hasTokens() {
 
-    return !this->tokens.isEmpty();
+    return !this->tokens.empty();
 }
 
 

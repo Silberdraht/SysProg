@@ -23,7 +23,7 @@ set(SOURCE_FILES_AUFGABE_2
         Information.cpp Information.h
         InformationLinkedList.cpp InformationLinkedList.h
         Scanner.cpp Scanner.h TokenList.cpp TokenList.h
-        parser/CodeBuilder.h
+        parser/CodeBuilder.h parser/CodeBuilder.cpp
         lib/Link_List.h)
 set(SOURCE_FILES_PHILIPPS_TESTS
         lib/Link_List.h tests/Link_List_Test.cpp tests/Link_List_Test.h)
