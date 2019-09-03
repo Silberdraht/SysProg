@@ -28,7 +28,6 @@ private:
 
 public:
     Buffer();
-    ~Buffer();
     char getChar();
 
 };

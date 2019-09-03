@@ -12,16 +12,9 @@ current{std::shared_ptr<char[]> (new char[buffer_size +  1])},
 buffer1{std::shared_ptr<char[]> (new char[buffer_size +  1])},
 buffer2{std::shared_ptr<char[]> (new char[buffer_size +  1])}
 {
-
     load(buffer1);
     current = buffer1;
-
 }
-
-Buffer::~Buffer() {
-}
-
-
 
 char Buffer::getChar() {
     if(current.operator[](next_char) == '\0'){
@@ -45,7 +38,7 @@ char Buffer::getChar() {
             next_char = 0;
         }
         else {
-            return '\0';
+            return '\0'; //end
         }
     }
     next_char++;
@@ -54,11 +47,6 @@ char Buffer::getChar() {
 
 
 void Buffer::load(std::shared_ptr<char[]> buffer) {
-
-   // if (*buffer != nullptr) {
-     //   delete []*buffer;
-    //}
-    //*buffer = (char *) malloc(buffer_size + 1);//new char[buffer_size+1];
 
     std::fstream stream;
     stream.open(file);
@@ -74,7 +62,6 @@ void Buffer::load(std::shared_ptr<char[]> buffer) {
     buffer.operator[](index) = '\0';
     stream.close();
     amount_read += index;
-
 }
 
 
