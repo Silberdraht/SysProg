@@ -8,6 +8,7 @@
 
 #include "../Symtable.h"
 #include "../Automat.h"
+#include "../lib/Link_List.h"
 
 class CodeBuilder {
 

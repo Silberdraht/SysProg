@@ -14,7 +14,16 @@ set(SOURCE_FILES_AUFGABE_1
         InformationLinkedList.cpp InformationLinkedList.h
         Scanner.cpp Scanner.h TokenList.cpp TokenList.h)
 set(SOURCE_FILES_AUFGABE_2
-        parser/generateasb.cpp parser/generateasb.h
+        main.cpp
+        Automat.cpp Automat.h
+        LinkedList.cpp LinkedList.h
+        Buffer.cpp Buffer.h
+        Symtable.cpp Symtable.h
+        StringTable.cpp StringTable.h
+        Information.cpp Information.h
+        InformationLinkedList.cpp InformationLinkedList.h
+        Scanner.cpp Scanner.h TokenList.cpp TokenList.h
+        parser/CodeBuilder.h
         lib/Link_List.h)
 set(SOURCE_FILES_PHILIPPS_TESTS
         lib/Link_List.h tests/Link_List_Test.cpp tests/Link_List_Test.h)
