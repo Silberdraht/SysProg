@@ -50,8 +50,13 @@ int Link_List<T>::size() {
 template<typename T>
 T Link_List<T>::pop_front() {
     T s_first = first.operator*().content;
-    first = first->predessesor;
-    first->successor = nullptr;
+    if(i_size == 1){
+        last = nullptr;
+        first = nullptr;
+    } else{
+        first = first->predessesor;
+        first->successor = nullptr;
+    }
     i_size--;
     return s_first;
 }
@@ -59,8 +64,14 @@ T Link_List<T>::pop_front() {
 template<typename T>
 T Link_List<T>::pop_back() {
     T s_last = last.operator*().content;
-    last  = last->successor;
-    last->predessesor = nullptr;
+    if(i_size == 1) {
+        last = nullptr;
+        first = nullptr;
+    }
+    else {
+        last  = last->successor;
+        last->predessesor = nullptr;
+    }
     i_size--;
     return s_last;
 }
