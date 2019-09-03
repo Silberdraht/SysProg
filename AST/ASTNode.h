@@ -8,25 +8,26 @@
 #ifndef AST_ASTNODE_H_
 #define AST_ASTNODE_H_
 
+#include "ASTBuild/ASTStack.h"
 #include "ASTLinkedList.h"
-#include "ASTStack.h"
-
 
 class ASTNode{
 
-private:
-	ASTLinkedList children;
+
 public:
 	ASTNode();
-	ASTNode(NodeType type);
+	ASTNode(NodeType newtype);
 	virtual ~ASTNode();
-	ASTLinkedList getSubtree();
+	ASTLinkedList<ASTNode> getSubtree();
 	ASTNode getParent();
 	NodeType getType();
-	void setType(NodeType type);
-	void setParent(ASTNode parent);
+	void setType(NodeType newtype);
+	void setParent(ASTNode newparent);
 	void addChild(ASTNode child);
-
+private:
+    ASTNode* parent;
+	ASTLinkedList<ASTNode> children;
+	NodeType type;
 };
 
 #endif /* AST_ASTNODE_H_ */

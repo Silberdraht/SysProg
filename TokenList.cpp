@@ -49,7 +49,7 @@ Automat::Token TokenList::popToken() {
         Automat::Token t = s->token;
 
         head = head->next;
-        delete s;
+        //delete s;
 
         return t;
     }

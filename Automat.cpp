@@ -394,7 +394,7 @@
         else {
             sign = string;
         }
-        delete []string;
+       // delete []string;
 
         tokenQueue.addSymbolAsLast('0'); //Signtoken
     }
@@ -513,7 +513,7 @@
         }
         string[amount] = '\0';
         identifier = string;
-        delete []string;
+        //delete []string;
         tokenQueue.addSymbolAsLast('2'); //Identifiertoken
     }
 

@@ -1,83 +1,110 @@
-
 #include "Scanner.h"
+#include "AST/ASTBuild/ASTCreator.h"
+#include <iostream>
+using namespace std;
 
+
+int testTwo() {
+	Scanner scanner;
+	scanner.initializeSymtable();
+	scanner.startScanner();
+	cout << "scanner hinished";
+	ASTCreator creator;
+	creator.setScanner(scanner);
+	while (scanner.hasTokens()) {
+		Automat::Token token = scanner.nextToken();
+		if(creator.computeToken(token)) {
+			cout << "test failed";
+		}
+	}
+	return 0;
+}
 
 int main() {
+	return testTwo();
+}
 
-    Scanner scanner;
-    scanner.initializeSymtable();
-    scanner.startScanner();
-    std::fstream stream;
-    stream.open(R"(../out.txt)");
-    //stream.open("F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\out.txt");
-    //stream.open("C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt");
 
-    while (scanner.hasTokens()) {
-        Automat::Token token = scanner.nextToken();
-        Automat::TokenType type = token.tokenType;
 
-        switch (type) {
-            case Automat::IdentifierToken:
-                stream << "Token Identifier" << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << "\t\t"
-                       << "Contains: " << scanner.symtable.lookup(token.storage.key).getLexem() << '\n';
-                break;
+int test() {
+	Scanner scanner;
+	scanner.initializeSymtable();
+	scanner.startScanner();
+	std::fstream stream;
+	stream.open(R"(../out.txt)");
+	//stream.open("F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\out.txt");
+	//stream.open("C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt");
 
-            case Automat::SignToken:
-                stream << "Token Sign      " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << "\t\t"
-                       << "Contains: " << scanner.symtable.lookup(token.storage.key).getLexem() << '\n';
-                break;
+	while (scanner.hasTokens()) {
+		Automat::Token token = scanner.nextToken();
+		Automat::TokenType type = token.tokenType;
 
-            case Automat::DigitToken:
-                stream << "Token Digit     " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << "\t\t"
-                       << "Contains: " << token.storage.number << '\n'; // << additional;
-                break;
+		switch (type) {
+		case Automat::IdentifierToken:
+			stream << "Token Identifier" << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << "\t\t"
+					<< "Contains: "
+					<< scanner.symtable.lookup(token.storage.key).getLexem()
+					<< '\n';
+			break;
 
-            case Automat::ErrorToken:
-                stream << "Token Error     " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << "\t\t"
-                       << "Contains: " << token.storage.error << '\n';
-                break;
+		case Automat::SignToken:
+			stream << "Token Sign      " << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << "\t\t"
+					<< "Contains: "
+					<< scanner.symtable.lookup(token.storage.key).getLexem()
+					<< '\n';
+			break;
 
-            case Automat::IfToken:
-                stream << "Token If        " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << '\n';
-                break;
+		case Automat::DigitToken:
+			stream << "Token Digit     " << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << "\t\t"
+					<< "Contains: " << token.storage.number << '\n'; // << additional;
+			break;
 
-            case Automat::WhileToken:
-                stream << "Token While     " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << '\n';
-                break;
+		case Automat::ErrorToken:
+			stream << "Token Error     " << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << "\t\t"
+					<< "Contains: " << token.storage.error << '\n';
+			break;
 
-            case Automat::IntToken:
-                stream << "Token int        " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << '\n';
-                break;
+		case Automat::IfToken:
+			stream << "Token If        " << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << '\n';
+			break;
 
-            case Automat::ElseToken:
-                stream << "Token Else       " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << '\n';
-                break;
+		case Automat::WhileToken:
+			stream << "Token While     " << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << '\n';
+			break;
 
-            case Automat::WriteToken:
-                stream << "Token Write      " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << '\n';
-                break;
+		case Automat::IntToken:
+			stream << "Token int        " << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << '\n';
+			break;
 
-            case Automat::ReadToken:
-                stream << "Token Read       " << "\t\t"
-                       << "Line/Column: " << token.line << "/" << token.column << '\n';
-                break;
+		case Automat::ElseToken:
+			stream << "Token Else       " << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << '\n';
+			break;
 
-            default:
-                break;
-        }
+		case Automat::WriteToken:
+			stream << "Token Write      " << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << '\n';
+			break;
 
-    }
+		case Automat::ReadToken:
+			stream << "Token Read       " << "\t\t" << "Line/Column: "
+					<< token.line << "/" << token.column << '\n';
+			break;
 
-    stream.close();
+		default:
+			break;
+		}
 
-    return 0;
+	}
+
+	stream.close();
+
+	return 0;
 }

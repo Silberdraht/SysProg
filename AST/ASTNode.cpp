@@ -12,7 +12,31 @@ ASTNode::ASTNode() {
 
 }
 
+ASTNode::ASTNode(NodeType newtype){
+    type = newtype;
+}
+
 ASTNode::~ASTNode() {
 	// TODO Auto-generated destructor stub
+}
+
+
+ASTLinkedList<ASTNode> ASTNode::getSubtree() {
+    return children;
+}
+ASTNode ASTNode::getParent() {
+    return *parent;
+}
+NodeType ASTNode::getType(){
+    return type;
+}
+void ASTNode::setType(NodeType newtype){
+    type = newtype;
+}
+void ASTNode::setParent(ASTNode newparent){
+    *parent = newparent;
+}
+void ASTNode::addChild(ASTNode child){
+    children.addNode(child);
 }
 

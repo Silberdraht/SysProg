@@ -7,6 +7,11 @@
 
 #include "ASTCreator.h"
 
+
+int compare(char* lex, char* comp) {
+	return lex == comp;
+}
+
 ASTCreator::ASTCreator() {
 	// TODO Auto-generated constructor stub
 
@@ -19,8 +24,11 @@ ASTCreator::~ASTCreator() {
 int ASTCreator::computeToken(Automat::Token token) {
 	needsNewToken = 1;
 	while (needsNewToken) {
+		if(error == 1) {
+			return 1;
+		}
 		NodeType type = getTokenType(token);
-		switch (type) {
+		switch (stack.pullFromTop()) {
 		//Check non-terminals
 		case PROG:
 			stack.addNewLayer();
@@ -64,208 +72,210 @@ int ASTCreator::computeToken(Automat::Token token) {
 			break;
 		case OP:
 			stack.addNewLayer();
-			buildOP();
+			buildOP(token);
 			break;
 
 			//TODO Terminale behandeln, die hier sind ALLE falsch, sind nur placeholder
 			//man muss ein token einlesen und bestimmen, ob es dem Terminal entspricht
 		case PLUSSIGN:	//+
-			if(token.storage.lexem == "+") {
+			if (compare(token.storage.lexem, table.lookup(scanner.plus).getLexem())) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case MINUSSIGN:		//-
-			if(token.storage.lexem == "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem, table.lookup(scanner.minus).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case STARSIGN:		//*
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem, table.lookup(scanner.star).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case DOUBLESIGN:	//:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.colon).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case LESSSIGN:		//<
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.lesser).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case GREATERSIGN:	//>
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.greater).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case EQUALSSIGN:	//=
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.equals).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case OTHEREQUALSSIGN:	//:=
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.colonEquals).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case EQUPEQUSIGN:	//=:=
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.equalsColonEquals).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case ANDSIGN:	//&&
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.andAnd).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case COLONSIGN:		//;
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.semicolon).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case EXCLSIGN:		//!
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.exclamationMark).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case IFSIGN:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (token.tokenType == 4) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case ELSESIGN:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (token.tokenType == 6) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case WHILESIGN:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (token.tokenType == 5) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case READSIGN:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (token.tokenType == 8) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case WRITESIGN:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (token.tokenType == 9) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case INTSIGN:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (token.tokenType == 7) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case IDENTIFIER:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (token.tokenType == 2) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case INTEGER:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (token.tokenType == 1) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case KL_OPEN:	//(
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.bracketOpen).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case KL_CLOSE:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.bracketClose).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case EKL_OPEN:	//[
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.squareBracketOpen).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case EKL_CLOSE:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem,  table.lookup(scanner.squareBracketClose).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case GKL_OPEN:	//{
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem, table.lookup(scanner.curlyBracketOpen).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
 		case GKL_CLOSE:
-			if(token.storage.lexem = "+") {
-							needsNewToken = 0;
-							break;
-						}
-						error = 1;
-						break;
+			if (compare(token.storage.lexem, table.lookup(scanner.curlyBracketClose).getLexem())) {
+				needsNewToken = 0;
+				break;
+			}
+			error = 1;
+			break;
+		default:
+			error = 1;
 		}
-
 		//build new Nodes, set head if nessesairy
 		//TODO: stack level überwachen!!!!!!!!!!!!
-		ASTNode newNode = new ASTNode(type);
-		head.addChild(newNode);
+		ASTNode *newNode = new ASTNode(type);
+		head.addChild(*newNode);
 		if (stack.isTopLevelEmpty()) {
-			while(stack.isTopLevelEmpty()) {
-			stack.removeTopLayer();
-			head = head.getParent();
+			while (stack.isTopLevelEmpty()) {
+				stack.removeTopLayer();
+				head = head.getParent();
 			}
 		} else {
-			head = newNode;
+			head = *newNode;
 		}
 	}
+	return 0;
 }
 
 NodeType ASTCreator::getTokenType(Automat::Token token) {
@@ -273,14 +283,15 @@ NodeType ASTCreator::getTokenType(Automat::Token token) {
 }
 
 void ASTCreator::buildPROG() {
-	head = new ASTNode(PROG);
+    ASTNode *test =new ASTNode(PROG);
+	head = *test;
 	buildNode(DECLS);
 	buildNode(STATEMENTS);
 }
 void ASTCreator::buildDECLS(Automat::Token token) {
 	//Teste, ob zeichen leer sind
 	//TODO int einprogrammieren
-	if (token.tokenType ==) {
+	if (token.tokenType == 7 /*int*/) {
 		buildNode(DECL);
 		buildNode(COLONSIGN);
 		buildNode(DECLS);
@@ -294,7 +305,7 @@ void ASTCreator::buildDECL() {
 	buildNode(IDENTIFIER);
 }
 void ASTCreator::buildARRAY(Automat::Token token) {
-	if (token.storage.lexem == "[") {
+	if (compare(token.storage.lexem, "[")) {
 		buildNode(EKL_OPEN);
 		buildNode(INTEGER);
 		buildNode(EKL_CLOSE);
@@ -317,27 +328,27 @@ void ASTCreator::buildSTATEMENTS(Automat::Token token) {
 }
 void ASTCreator::buildSTATEMENT(Automat::Token token) {
 	// hier unterscheiden, wass passiert!
-	if (token.tokenType == IdentifierToken) {
+	if (token.tokenType == 2/*IdentifierToken*/) {
 		buildNode(IDENTIFIER);
 		buildNode(INDEX);
 		buildNode(OTHEREQUALSSIGN);
 		buildNode(EXP);
-	} else if (token.tokenType ==) {
+	} else if (token.tokenType == 9 /*writetoken*/) {
 		buildNode(WRITESIGN);
 		buildNode(KL_OPEN);
 		buildNode(EXP);
 		buildNode(KL_CLOSE);
-	} else if (token.tokenType ==) {
+	} else if (token.tokenType == 8/*readToken*/) {
 		buildNode(READSIGN);
 		buildNode(KL_OPEN);
 		buildNode(IDENTIFIER);
 		buildNode(INDEX);
 		buildNode(KL_CLOSE);
-	} else if (token.storage.lexem == "{") {
+	} else if (compare(token.storage.lexem, "{")) {
 		buildNode(GKL_OPEN);
 		buildNode(STATEMENTS);
 		buildNode(GKL_CLOSE);
-	} else if (token.tokenType == IfToken) {
+	} else if (token.tokenType == 4/*IfToken*/) {
 		buildNode(IFSIGN);
 		buildNode(KL_OPEN);
 		buildNode(EXP);
@@ -345,6 +356,8 @@ void ASTCreator::buildSTATEMENT(Automat::Token token) {
 		buildNode(STATEMENT);
 		buildNode(ELSESIGN);
 		buildNode(STATEMENT);
+	} else {
+		error = 1;
 	}
 }
 void ASTCreator::buildEXP() {
@@ -352,59 +365,98 @@ void ASTCreator::buildEXP() {
 	buildNode(OP_EXP);
 }
 void ASTCreator::buildEXP2(Automat::Token token) {
-	if (token.storage.lexem == "(") {
+	if (compare(token.storage.lexem, "(")) {
 		buildNode(KL_OPEN);
 		buildNode(EXP);
 		buildNode(KL_CLOSE);
-	} else if (token.tokenType == IdentifierToken) {
+	} else if (token.tokenType == 2/*IdentifierToken*/) {
 		buildNode(IDENTIFIER);
 		buildNode(INDEX);
 	} else if (token.tokenType) {
 		buildNode(INTEGER);
-	} else if (token.storage.lexem == "-") {
+	} else if (compare(token.storage.lexem, "-")) {
 		buildNode(MINUSSIGN);
 		buildNode(EXP2);
-	} else if (token.storage.lexem == "!") {
+	} else if (compare(token.storage.lexem, "!")) {
 		buildNode(EXCLSIGN);
 		buildNode(EXP2);
-	}
+	} else {
 	// wenns hier unten ankonnt is was schief gegangen!
+	error = 1;
+	}
 }
 void ASTCreator::buildINDEX(Automat::Token token) {
-	if () {
+	if (compare(token.storage.lexem, "[")) {
 		buildNode(EKL_OPEN);
-
 		buildNode(EXP);
-
 		buildNode(EKL_CLOSE);
-
 	}
 }
 void ASTCreator::buildOP_EXP(Automat::Token token) {
-	if () {
-		buildNode(OP);
-		buildNode(EXP);
-	}
+	buildNode(OP);
+	buildNode(EXP);
 }
-void ASTCreator::buildOP() {
+void ASTCreator::buildOP(Automat::Token token) {
 	//TODO add different signs
-	if () {
-	switch(int)
-	case:
-	case:
-	case:
-	case:
-	case:
-	case:
-	case:
-	case:
-	case:
-	case default:
-}
+
+	if (compare(token.storage.lexem, "+")) {
+		buildNode(PLUSSIGN);
+	}
+
+	else if (compare(token.storage.lexem, "-")) {
+		buildNode(MINUSSIGN);
+	}
+
+	else if (compare(token.storage.lexem, "*")) {
+		buildNode(STARSIGN);
+	}
+
+	else if (compare(token.storage.lexem, ":")) {
+		buildNode(DOUBLESIGN);
+	}
+	else if (compare(token.storage.lexem, "<")) {
+		buildNode(LESSSIGN);
+	}
+
+	else if (compare(token.storage.lexem, ">")) {
+		buildNode(GREATERSIGN);
+	}
+
+	else if (compare(token.storage.lexem, "=")) {
+		buildNode(EQUALSSIGN);
+	}
+
+	else if (compare(token.storage.lexem, ":=")) {
+		buildNode(OTHEREQUALSSIGN);
+	}
+
+	else if (compare(token.storage.lexem, "=:=")) {
+		buildNode(EQUPEQUSIGN);
+	}
+
+	else if (compare(token.storage.lexem, "&&")) {
+		buildNode(ANDSIGN);
+	}
+
+	else if (compare(token.storage.lexem, ";")) {
+		buildNode(COLONSIGN);
+	}
+
+	else if (compare(token.storage.lexem, "!")) {
+		buildNode(EXCLSIGN);
+	} else {
+	error = 1;
+	}
+
 }
 
 void ASTCreator::buildNode(NodeType tpye) {
-stack.addNewSign(tpye);
+	stack.addNewSign(tpye);
 //	ASTNode newOp = new ASTNode(tpye);
 //	head.addChild(newOp);
 }
+
+void ASTCreator::setScanner(Scanner newscanner) {
+	scanner = newscanner;
+}
+

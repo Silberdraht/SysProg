@@ -7,9 +7,13 @@
 
 #ifndef AST_ASTCREATOR_H_
 #define AST_ASTCREATOR_H_
-#include"Automat.h"
-#include"ASTNode.h"
+
+
 #include "ASTStack.h"
+#include "../../Scanner.h"
+#include "../../Symtable.h"
+#include "../../Automat.h"
+#include "../ASTNode.h"
 enum state{
 	initStatement,
 	statementExpectingOperand,
@@ -40,13 +44,16 @@ public:
 	void buildEXP2(Automat::Token token);
 	void buildINDEX(Automat::Token token);
 	void buildOP_EXP(Automat::Token token);
-	void buildOP();
+	void buildOP(Automat::Token token);
 	void hasError();
+	void setScanner(Scanner newscanner);
 private:
 	ASTStack stack;
 	ASTNode head;
 	ASTNode current;
 	Automat::TokenType lastType;
+	Scanner scanner;
+	Symtable table;
 	state state;
 	int roundBracketsCounter;
 	NodeType getTokenType(Automat::Token token);
