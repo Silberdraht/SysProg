@@ -2,18 +2,15 @@
 // Created by noahp on 12/04/2019.
 //
 
-#include <malloc.h>
 #include <fstream>
 #include "Buffer.h"
 
-
 Buffer::Buffer() :
-current{std::shared_ptr<char[]> (new char[buffer_size +  1])},
 buffer1{std::shared_ptr<char[]> (new char[buffer_size +  1])},
-buffer2{std::shared_ptr<char[]> (new char[buffer_size +  1])}
+buffer2{std::shared_ptr<char[]> (new char[buffer_size +  1])},
+current{buffer1}
 {
     load(buffer1);
-    current = buffer1;
 }
 
 char Buffer::getChar() {
@@ -22,7 +19,6 @@ char Buffer::getChar() {
             return '\0';
         }
 
-        /// We use buffer 1 right now
         if(current.get() == buffer1.get()){
             //Clear Buffer2
             clear_buffer(buffer2);
@@ -31,7 +27,6 @@ char Buffer::getChar() {
             next_char = 0;
         }
         else if(current.get() == buffer2.get()){
-            //Clear Buffer1
             clear_buffer(buffer1);
             load(buffer1);
             current = buffer1;
@@ -44,7 +39,6 @@ char Buffer::getChar() {
     next_char++;
     return current.operator[](next_char - 1);
 }
-
 
 void Buffer::load(std::shared_ptr<char[]> buffer) {
 
@@ -63,7 +57,6 @@ void Buffer::load(std::shared_ptr<char[]> buffer) {
     stream.close();
     amount_read += index;
 }
-
 
 void Buffer::clear_buffer(std::shared_ptr<char[]> buffer) {
     int i = 0;
