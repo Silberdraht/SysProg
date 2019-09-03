@@ -6,8 +6,8 @@
 #include "Buffer.h"
 
 Buffer::Buffer() :
-buffer1{std::shared_ptr<char[]> (new char[buffer_size +  1])},
-buffer2{std::shared_ptr<char[]> (new char[buffer_size +  1])},
+buffer1{std::shared_ptr<char[]> (new char[buffer_size +  1],  std::default_delete<char[]>())},
+buffer2{std::shared_ptr<char[]> (new char[buffer_size +  1],  std::default_delete<char[]>())},
 current{buffer1}
 {
     load(buffer1);
