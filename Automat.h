@@ -10,40 +10,61 @@
 #include "LinkedList.h"
 #include "Symtable.h"
 
+enum TokenType {
+    SignToken = 0,
+    DigitToken = 1,
+    IdentifierToken = 2,
+    ErrorToken = 3,
+    IfToken = 4,
+    WhileToken = 5,
+    ElseToken = 6,
+    IntToken = 7,
+    ReadToken = 8,
+    WriteToken = 9
+};
+
+struct Token {
+    unsigned int line, column;
+    TokenType tokenType;
+    union Storage {
+        Key key; //Insert Key für Hash
+        long number;
+        char* lexem;
+        char* sign;
+        char error;
+    } storage;
+
+};
 
 class Automat {
 
 
 public:
-    Automat();
-    ~Automat();
 
     LinkedList listAutomat;
-
     LinkedList tokenQueue;
 
     void checkSymbol(char c);
+
+    Token createToken(TokenType tokenType);
 
     void endAutomat();
 
     char *sign = nullptr;
     char *bufferedSign = nullptr;
     bool useBufferedSign = false;
-    void clearSign();
 
     char *identifier = nullptr;
-    void clearIdentifier();
+
 
     char* copyChar(const char *string);
+    int convertCharToInt(char c);
+
+private:
 
     enum state {
         init,
-//        final,
-//        error,
         digistate,
-//        ifstate,
-//        whilestate,
-//        signstate,
         equalstate,
         colonstate,
         andstate,
@@ -51,43 +72,7 @@ public:
         letterstate,
         commentstate,
         commentstate2
-
-
     };
-
-    enum TokenType {
-        SignToken = 0,
-        DigitToken = 1,
-        IdentifierToken = 2,
-        ErrorToken = 3,
-        IfToken = 4,
-        WhileToken = 5,
-        ElseToken = 6,
-        IntToken = 7,
-        ReadToken = 8,
-        WriteToken = 9
-    };
-
-    struct Token {
-        unsigned int line, column;
-        TokenType tokenType;
-        union Storage {
-            Key key; //Insert Key für Hash
-            long number;
-            char* lexem;
-            char* sign;
-            char error;
-
-
-
-        } storage;
-
-
-
-
-    };
-
-    //TokenType tokenReady = NOT_SET;
 
     unsigned int currentLine = 1;
     unsigned int currentColumn = 0;
@@ -101,7 +86,8 @@ public:
 
     state stateActive = init;
 
-    Token createToken(TokenType tokenType);
+    void clearIdentifier();
+    void clearSign();
 
     void prepareTokenDigit();
 
@@ -110,10 +96,6 @@ public:
     void prepareTokenLetter();
 
     void prepareTokenError();
-
-//    Token createTokenIf();
-//
-//    Token createTokenWhile();
 
     bool isLetter(char c);
 
@@ -135,7 +117,6 @@ public:
 
     bool isError(char c);
 
-
     bool isArrayEqual(char ar1[], char ar2[], int length);
 
     unsigned int getLine();
@@ -147,9 +128,6 @@ public:
     unsigned int getStartColumn();
 
     long getNumber();
-
-
-   int convertCharToInt(char c);
 
 };
 
