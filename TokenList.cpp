@@ -17,7 +17,7 @@ TokenList::~TokenList() {
 
         Symbol *deleteSymbol = next;
         next = next->next;
-        delete deleteSymbol;
+//        delete deleteSymbol;
     }
 
 }
@@ -49,7 +49,7 @@ Token TokenList::popToken() {
         Token t = s->token;
 
         head = head->next;
-        delete s;
+        //delete s;
 
         return t;
     }

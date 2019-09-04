@@ -30,7 +30,7 @@ Key Symtable::insert(char* lexem)
 	int size = 0;
 	int result = 0;
 	while(*(lexem + size)) {
-		result ^= (*(lexem + size)) * size;
+		result ^= (*(lexem + size)) * (size+1);
 		size++;
 	}
 	if(size > 0) {

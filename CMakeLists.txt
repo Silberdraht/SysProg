@@ -25,7 +25,11 @@ set(SOURCE_FILES_AUFGABE_2
         InformationLinkedList.cpp InformationLinkedList.h
         Scanner.cpp Scanner.h TokenList.cpp TokenList.h
         parser/CodeBuilder.h parser/CodeBuilder.cpp
-        lib/Link_List.h)
+        lib/Link_List.h
+        AST/ASTLinkedList.h AST/ASTLinkedList.cpp
+        AST/ASTNode.h AST/ASTNode.cpp
+        AST/ASTBuild/ASTCreator.h AST/ASTBuild/ASTCreator.cpp
+        AST/ASTBuild/ASTStack.h AST/ASTBuild/ASTStack.cpp)
 set(SOURCE_FILES_PHILIPPS_TESTS
         lib/Link_List.h tests/Link_List_Test.cpp tests/Link_List_Test.h)
 

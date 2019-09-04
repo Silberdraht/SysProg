@@ -21,10 +21,10 @@ struct Key{
 class Symtable {
 
 
-
-	int prime = 997;
+	//997
+	int prime = 97;
 	StringTable table;
-	InformationLinkedList Listptrs[997];
+	InformationLinkedList Listptrs[97];
 	int calculateKey(char* lexem);
 
 public:
