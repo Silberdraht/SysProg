@@ -19,7 +19,7 @@ void Scanner::startScanner() {
     char c = ' ';
     while (c != '\0') {
         while (!automat.tokenQueue.isEmpty()) {
-            tokens.push_back(createToken());
+            tokens.addToken(createToken());
         }
         c = buffer.getChar();
         automat.checkSymbol(c);
@@ -27,7 +27,7 @@ void Scanner::startScanner() {
     }
 
     if (!automat.tokenQueue.isEmpty()) {
-        tokens.push_back(createToken());
+        tokens.addToken(createToken());
     }
 
     automat.endAutomat();
@@ -57,16 +57,16 @@ void Scanner::initializeSymtable() {
 }
 
 
-Token Scanner::createToken() {
+Automat::Token Scanner::createToken() {
     int typeNumber = automat.convertCharToInt(automat.tokenQueue.popSymbol());
-    auto tokentype = TokenType(typeNumber);
-    Token token = automat.createToken(tokentype);
+    auto tokentype = Automat::TokenType(typeNumber);
+    Automat::Token token = automat.createToken(tokentype);
 
-    if (tokentype == IdentifierToken) {
+    if (tokentype == Automat::IdentifierToken) {
         char *str = token.storage.lexem;
         token.storage.key = symtable.insert(str);
     }
-    else if (tokentype == SignToken) {
+    else if (tokentype == Automat::SignToken) {
         switch(*token.storage.sign) {
 
             case '+':
@@ -140,15 +140,15 @@ Token Scanner::createToken() {
 }
 
 
-Token Scanner::nextToken() {
+Automat::Token Scanner::nextToken() {
 
-    return this->tokens.pop_front();
+    return this->tokens.popToken();
 }
 
 
 int Scanner::hasTokens() {
 
-    return !this->tokens.empty();
+    return !this->tokens.isEmpty();
 }
 
 
