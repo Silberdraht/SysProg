@@ -6,10 +6,20 @@
     #include "Automat.h"
 
 
+    Automat::Automat() {
+
+    }
+    Automat::~Automat() {
+
+    }
+
+
     void Automat::checkSymbol(char c) {
 
         switch (stateActive) {
             case init:
+                //std::cout << "Init: " << std::endl;
+
                 if (isDigit(c)) {
                     precedingCR = false; //Carriage Return not followed by a \n;
                     currentColumn++;
@@ -111,6 +121,7 @@
                     }
                 }
 
+
                 else if (isError(c)) {
                     precedingCR = false;
                     currentColumn++;
@@ -124,15 +135,20 @@
                     listAutomat.addSymbol(c);
                     prepareTokenError();
                 }
+
                 break;
+
 
 
             case digistate:
                 //std::cout << "digit: " << std::endl;
                 if (isDigit(c)) {
+
                     listAutomat.addSymbol(c);
                     currentColumn++;
-                } else {
+                }
+
+                else {
                     //wenn char kein Digit, gehe wieder in
                     // initzustand baue ein DigitToken und rufe checkSymbol mit c neu auf.
                     prepareTokenDigit();
@@ -148,47 +164,59 @@
                 if(isLetter(c) || (isDigit(c))) {
                     currentColumn++;
                     listAutomat.addSymbol(c);
-                } else {
+                }
+
+                else {
                     prepareTokenLetter();
                     stateActive = init;
                     useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
+
                 break;
 
             //Erstes char in der LL ist ein '&'
             case andstate:
+
                 if (isSignAnd(c)) {
                     currentColumn++;
                     listAutomat.addSymbol(c);
                     prepareTokenSign();
                     stateActive = init;
-                } else {
+                }
+
+                else {
                     prepareTokenSign();
                     stateActive = init;
                     useBufferedStartColumn = true;
                     useBufferedSign = true;
                     checkSymbol(c);
                 }
+
                 break;
 
-
             case equalstate:
+
                 if (isSignColon(c)) {
                     currentColumn++;
                     listAutomat.addSymbol(c);
                     stateActive = equalcolonstate;
-                } else {
+                }
+
+                else {
+
                     prepareTokenSign();
                     stateActive = init;
                     useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
+
                 break;
 
-
             case colonstate:
+
                 if (isSignEqual(c)) {
+
                     currentColumn++;
                     listAutomat.addSymbol(c);
                     prepareTokenSign();
@@ -196,6 +224,7 @@
                 }
 
                 else if (isStar(c)) {
+
                     currentColumn++;
                     listAutomat.popSymbol();
                     stateActive = commentstate;
@@ -207,6 +236,7 @@
                     useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
+
                 break;
 
                 //In der Liste steht '=' ':'
@@ -217,7 +247,9 @@
                     listAutomat.addSymbol(c);
                     prepareTokenSign();
                     stateActive = init;
-                } else {
+                }
+
+                else {
                     //Erzeugt ein Token '=' und ein Token ':'
                     char temp = listAutomat.popSymbol();
                     prepareTokenSign();
@@ -230,37 +262,46 @@
                     useBufferedStartColumn = true;
                     checkSymbol(c);
                 }
-                break;
 
+                break;
 
             case commentstate:
                 if (c != '\n') {
                     currentColumn++;
+
                     if (c == '*') {
                         stateActive = commentstate2;
                     }
                 }
+
                 else {
+
                     currentColumn = 0;
                     currentLine++;
                 }
+
                 break;
 
-
             case commentstate2:
+
                 if (c != ':') {
+
                     stateActive = commentstate;
                     checkSymbol(c);
+
                 } else {
                     currentColumn++;
                     stateActive = init;
+
                 }
+
                 break;
+
         }
     }
 
 
-    Token Automat::createToken(TokenType tokenType) {
+    Automat::Token Automat::createToken(TokenType tokenType) {
 
         Token token{};
         token.line = getStartLine();
@@ -291,8 +332,6 @@
                 //this->clearSign();
                 break;
 
-            default:
-                break;
         }
 
         return token;
@@ -310,6 +349,7 @@
         int counter = listAutomat.listLength();
         int counter2 = counter;
         while (!listAutomat.isEmpty()) {
+
             //Fügt Inhalte der Verkettenen Liste in ein Char Array
             ca[counter-1] = convertCharToInt(listAutomat.popSymbol());
             counter--;
@@ -317,14 +357,19 @@
 
         int digitValue = 0;
         int power = 1;
+
         while (counter2 > 0) {
+
             digitValue += ((ca[counter2-1]) * power);
+
+
             power *= 10;
             counter2--;
         }
 
         this->number = digitValue;
         tokenQueue.addSymbolAsLast('1'); //Digittoken
+
     }
 
 
@@ -337,14 +382,16 @@
             char symbol = listAutomat.popSymbol();
             if (symbol == ' ' && i == 0) {
                 string++;
-            } else {
+            }
+            else {
                 string[i] = symbol;
             }
         }
         string[amount] = '\0';
         if (useBufferedSign) {
             bufferedSign = string;
-        } else {
+        }
+        else {
             sign = string;
         }
         delete []string;
@@ -353,7 +400,7 @@
     }
 
 
-
+    //To fix set length of lexem
     void Automat::prepareTokenLetter() {
 
         if (listAutomat.listLength() == 2) {
@@ -475,7 +522,9 @@
 
 
     bool Automat::isDigit(char c) {
+
         switch(c) {
+
             case '0':
                 return true;
             case '1':
@@ -499,12 +548,15 @@
 
             default:
                 return false;
+
         }
     }
 
 
     bool Automat::isSign(char c) {
+
         switch(c) {
+
             case '+':
                 return true;
             case '-':
@@ -534,16 +586,19 @@
 
             default:
                 return false;
+
         }
     }
 
 
     bool Automat::isSignAnd(char c) {
+
         return c == '&';
     }
 
 
     bool Automat::isBlank(char c) {
+
         return c == ' ' || c == '\t';
     }
 
@@ -562,33 +617,40 @@
 
 
     bool Automat::isSignColon(char c) {
+
         return c == ':';
     }
 
 
     bool Automat::isSignEqual(char c) {
+
         return c == '=';
     }
 
 
     bool Automat::isLetter(char c) {
+
         return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
     }
 
 
     bool Automat::isStar(char c) {
+
         return (c == '*');
     }
 
 
     bool Automat::isError(char c) {
+
         return (!isStar(c) && (!isNewLine(c)) && (!isBlank(c)) && (!isLetter(c)) && (!isDigit(c))
-                && (!isSignColon(c)) && (!isSignAnd(c)) && (!isSignEqual(c)) && (!isSign(c)) && c != '\000');
+                && (!isSignColon(c)) && (!isSignAnd(c)) && (!isSignEqual(c)) && (!isSign(c)));
     }
 
 
     int Automat::convertCharToInt(char c) {
+
         switch(c) {
+
             case '0':
                 return 0;
             case '1':
@@ -609,23 +671,26 @@
                 return 8;
             case '9':
                 return 9;
-            default:
-                return 0;
+
+            default:;
         }
     }
 
 
     unsigned int Automat::getLine() {
+
         return this->currentLine;
     }
 
 
     unsigned int Automat::getColumn() {
+
         return this->currentColumn;
     }
 
 
     unsigned int Automat::getStartColumn() {
+
         unsigned int returnValue = startColumn;
         if (useBufferedStartColumn) {
             useBufferedStartColumn = false;
@@ -636,16 +701,19 @@
 
 
     unsigned int Automat::getStartLine() {
+
         return this->startLine;
     }
 
 
     long Automat::getNumber() {
+
         return this->number;
     }
 
 
     bool Automat::isArrayEqual(char ar1[], char ar2[], int length) {
+
         for (int i = length -1; i > -1; i--) {
             if (ar1[i] != ar2[i]) {
                 return false;
