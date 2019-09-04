@@ -12,7 +12,8 @@ set(SOURCE_FILES_AUFGABE_1
         StringTable.cpp StringTable.h
         Information.cpp Information.h
         InformationLinkedList.cpp InformationLinkedList.h
-        Scanner.cpp Scanner.h TokenList.cpp TokenList.h)
+        Scanner.cpp Scanner.h TokenList.cpp TokenList.h
+        tests/ScannerTest.cpp tests/ScannerTest.h)
 set(SOURCE_FILES_AUFGABE_2
         main.cpp
         Automat.cpp Automat.h
