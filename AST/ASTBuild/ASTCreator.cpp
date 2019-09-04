@@ -8,8 +8,8 @@
 #include "ASTCreator.h"
 #include <iostream>
 using namespace std;
-void debugPrint(char* msg,NodeType tpye) {
-	cout <<msg;
+void debugPrint(char* msg, NodeType tpye) {
+	cout << msg;
 	switch (tpye) {
 	// nichtterminale knoten
 	case PROG:
@@ -77,10 +77,10 @@ void debugPrint(char* msg,NodeType tpye) {
 	}
 }
 int compare(Key lex, Key comp) {
-	if(lex.key != comp.key) {
+	if (lex.key != comp.key) {
 		return 0;
 	}
-	if(lex.KeyNr != comp.KeyNr) {
+	if (lex.KeyNr != comp.KeyNr) {
 		return 0;
 	}
 	return 1;
@@ -88,57 +88,45 @@ int compare(Key lex, Key comp) {
 
 int ASTCreator::checkCalcSign(Automat::Token token) {
 	if (compare(token.storage.key, scanner.plus)) {
-			return 1;
-		}
+		return 1;
+	}
 
-		else if (compare(token.storage.key,
-				scanner.minus)) {
-			return 1;
-		}
+	else if (compare(token.storage.key, scanner.minus)) {
+		return 1;
+	}
 
-		else if (compare(token.storage.key,
-				scanner.star)) {
-			return 1;
-		} else if (compare(token.storage.key,
-				scanner.lesser)) {
-			return 1;
-		}
+	else if (compare(token.storage.key, scanner.star)) {
+		return 1;
+	} else if (compare(token.storage.key, scanner.lesser)) {
+		return 1;
+	}
 
-		else if (compare(token.storage.key,
-				scanner.greater)) {
-			return 1;
-		}
+	else if (compare(token.storage.key, scanner.greater)) {
+		return 1;
+	}
 
-		else if (compare(token.storage.key,
-				scanner.equals)) {
-			return 1;
-		}
+	else if (compare(token.storage.key, scanner.equals)) {
+		return 1;
+	}
 
-		else if (compare(token.storage.key,
-				scanner.colonEquals)) {
-			return 1;
-		}
+	else if (compare(token.storage.key, scanner.colonEquals)) {
+		return 1;
+	}
 
-		else if (compare(token.storage.key,
-				scanner.equalsColonEquals)) {
-			return 1;
-		}
+	else if (compare(token.storage.key, scanner.equalsColonEquals)) {
+		return 1;
+	}
 
-		else if (compare(token.storage.key,
-				scanner.andAnd)) {
-			return 1;
-		}
-		return 0;
+	else if (compare(token.storage.key, scanner.andAnd)) {
+		return 1;
+	}
+	return 0;
 }
 
 void ASTCreator::setScanner(Scanner newscanner) {
 	scanner = newscanner;
 	table = scanner.symtable;
 }
-
-
-
-
 
 ASTCreator::ASTCreator() {
 	// TODO Auto-generated constructor stub
@@ -158,7 +146,7 @@ int ASTCreator::computeToken(Automat::Token token) {
 		NodeType type = getTokenType(token);
 //		ASTNode *newNode = new ASTNode(type);
 		ASTNode *newNode;
-		debugPrint("BUILDNODE: ",type);
+		debugPrint("BUILDNODE: ", type);
 		if (type != PROG) {
 //			head->addChild(*newNode);
 //			*newNode->parent = *head;
@@ -225,96 +213,84 @@ int ASTCreator::computeToken(Automat::Token token) {
 			//TODO Terminale behandeln, die hier sind ALLE falsch, sind nur placeholder
 			//man muss ein token einlesen und bestimmen, ob es dem Terminal entspricht
 		case PLUSSIGN:	//+
-			if (compare(token.storage.key,
-					scanner.plus)) {
+			if (compare(token.storage.key, scanner.plus)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case MINUSSIGN:		//-
-			if (compare(token.storage.key,
-					scanner.minus)) {
+			if (compare(token.storage.key, scanner.minus)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case STARSIGN:		//*
-			if (compare(token.storage.key,
-					scanner.star)) {
+			if (compare(token.storage.key, scanner.star)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case DOUBLESIGN:	//:
-			if (compare(token.storage.key,
-					scanner.colon)) {
+			if (compare(token.storage.key, scanner.colon)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case LESSSIGN:		//<
-			if (compare(token.storage.key,
-					scanner.lesser)) {
+			if (compare(token.storage.key, scanner.lesser)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case GREATERSIGN:	//>
-			if (compare(token.storage.key,
-					scanner.greater)) {
+			if (compare(token.storage.key, scanner.greater)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case EQUALSSIGN:	//=
-			if (compare(token.storage.key,
-					scanner.equals)) {
+			if (compare(token.storage.key, scanner.equals)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case OTHEREQUALSSIGN:	//:=
-			if (compare(token.storage.key,
-					scanner.colonEquals)) {
+			if (compare(token.storage.key, scanner.colonEquals)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case EQUPEQUSIGN:	//=:=
-			if (compare(token.storage.key,
-					scanner.equalsColonEquals)) {
+			if (compare(token.storage.key, scanner.equalsColonEquals)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case ANDSIGN:	//&&
-			if (compare(token.storage.key,
-					scanner.andAnd)) {
+			if (compare(token.storage.key, scanner.andAnd)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case COLONSIGN:		//;
-			if (compare(token.storage.key,
-					scanner.semicolon)) {
+			if (compare(token.storage.key, scanner.semicolon)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case EXCLSIGN:		//!
-			if (compare(token.storage.key,
-					scanner.exclamationMark)) {
+			if (compare(token.storage.key, scanner.exclamationMark)) {
 				needsNewToken = 0;
 				break;
 			}
@@ -366,6 +342,7 @@ int ASTCreator::computeToken(Automat::Token token) {
 			if (token.tokenType == 2) {
 				needsNewToken = 0;
 				break;
+				newNode->setKey(token.storage.key);
 			}
 			error = 1;
 			break;
@@ -373,52 +350,47 @@ int ASTCreator::computeToken(Automat::Token token) {
 			if (token.tokenType == 1) {
 				needsNewToken = 0;
 				break;
+				newNode->setDigit(token.storage.number);
 			}
 			error = 1;
 			break;
 		case KL_OPEN:	//(
-			if (compare(token.storage.key,
-					scanner.bracketOpen)) {
+			if (compare(token.storage.key, scanner.bracketOpen)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case KL_CLOSE:
-			if (compare(token.storage.key,
-					scanner.bracketClose)) {
+			if (compare(token.storage.key, scanner.bracketClose)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case EKL_OPEN:	//[
-			if (compare(token.storage.key,
-					scanner.squareBracketOpen)) {
+			if (compare(token.storage.key, scanner.squareBracketOpen)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case EKL_CLOSE:
-			if (compare(token.storage.key,
-					scanner.squareBracketClose)) {
+			if (compare(token.storage.key, scanner.squareBracketClose)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case GKL_OPEN:	//{
-			if (compare(token.storage.key,
-					scanner.curlyBracketOpen)) {
+			if (compare(token.storage.key, scanner.curlyBracketOpen)) {
 				needsNewToken = 0;
 				break;
 			}
 			error = 1;
 			break;
 		case GKL_CLOSE:
-			if (compare(token.storage.key,
-					scanner.curlyBracketClose)) {
+			if (compare(token.storage.key, scanner.curlyBracketClose)) {
 				needsNewToken = 0;
 				break;
 			}
@@ -428,7 +400,7 @@ int ASTCreator::computeToken(Automat::Token token) {
 			error = 1;
 		}
 		if (stack.isTopLevelEmpty()) {
-			if(!stack.hasLayers() && !scanner.hasTokens()) {
+			if (!stack.hasLayers() && !scanner.hasTokens()) {
 				return 0;
 			}
 			while (stack.isTopLevelEmpty()) {
@@ -466,8 +438,7 @@ void ASTCreator::buildDECL() {
 	buildNode(IDENTIFIER);
 }
 void ASTCreator::buildARRAY(Automat::Token token) {
-	if (compare(token.storage.key,
-			scanner.squareBracketClose)) {
+	if (compare(token.storage.key, scanner.squareBracketClose)) {
 		stack.addNewLayer();
 		buildNode(EKL_OPEN);
 		buildNode(INTEGER);
@@ -507,8 +478,7 @@ void ASTCreator::buildSTATEMENT(Automat::Token token) {
 		buildNode(IDENTIFIER);
 		buildNode(INDEX);
 		buildNode(KL_CLOSE);
-	} else if (compare(token.storage.key,
-			scanner.curlyBracketOpen)) {
+	} else if (compare(token.storage.key, scanner.curlyBracketOpen)) {
 		buildNode(GKL_OPEN);
 		buildNode(STATEMENTS);
 		buildNode(GKL_CLOSE);
@@ -529,8 +499,7 @@ void ASTCreator::buildEXP() {
 	buildNode(OP_EXP);
 }
 void ASTCreator::buildEXP2(Automat::Token token) {
-	if (compare(token.storage.key,
-			scanner.bracketOpen)) {
+	if (compare(token.storage.key, scanner.bracketOpen)) {
 		buildNode(KL_OPEN);
 		buildNode(EXP);
 		buildNode(KL_CLOSE);
@@ -539,12 +508,10 @@ void ASTCreator::buildEXP2(Automat::Token token) {
 		buildNode(INDEX);
 	} else if (token.tokenType == 1 /*digitToken*/) {
 		buildNode(INTEGER);
-	} else if (compare(token.storage.key,
-			scanner.minus)) {
+	} else if (compare(token.storage.key, scanner.minus)) {
 		buildNode(MINUSSIGN);
 		buildNode(EXP2);
-	} else if (compare(token.storage.key,
-			scanner.exclamationMark)) {
+	} else if (compare(token.storage.key, scanner.exclamationMark)) {
 		buildNode(EXCLSIGN);
 		buildNode(EXP2);
 	} else {
@@ -553,8 +520,7 @@ void ASTCreator::buildEXP2(Automat::Token token) {
 	}
 }
 void ASTCreator::buildINDEX(Automat::Token token) {
-	if (compare(token.storage.key,
-			scanner.squareBracketOpen)) {
+	if (compare(token.storage.key, scanner.squareBracketOpen)) {
 		stack.addNewLayer();
 		buildNode(EKL_OPEN);
 		buildNode(EXP);
@@ -562,10 +528,10 @@ void ASTCreator::buildINDEX(Automat::Token token) {
 	}
 }
 void ASTCreator::buildOP_EXP(Automat::Token token) {
-	if(checkCalcSign(token)/*OP*/) {
-	stack.addNewLayer();
-	buildNode(OP);
-	buildNode(EXP);
+	if (checkCalcSign(token)/*OP*/) {
+		stack.addNewLayer();
+		buildNode(OP);
+		buildNode(EXP);
 	}
 }
 void ASTCreator::buildOP(Automat::Token token) {
@@ -575,56 +541,45 @@ void ASTCreator::buildOP(Automat::Token token) {
 		buildNode(PLUSSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.minus)) {
+	else if (compare(token.storage.key, scanner.minus)) {
 		buildNode(MINUSSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.star)) {
+	else if (compare(token.storage.key, scanner.star)) {
 		buildNode(STARSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.colon)) {
+	else if (compare(token.storage.key, scanner.colon)) {
 		buildNode(DOUBLESIGN);
-	} else if (compare(token.storage.key,
-			scanner.lesser)) {
+	} else if (compare(token.storage.key, scanner.lesser)) {
 		buildNode(LESSSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.greater)) {
+	else if (compare(token.storage.key, scanner.greater)) {
 		buildNode(GREATERSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.equals)) {
+	else if (compare(token.storage.key, scanner.equals)) {
 		buildNode(EQUALSSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.colonEquals)) {
+	else if (compare(token.storage.key, scanner.colonEquals)) {
 		buildNode(OTHEREQUALSSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.equalsColonEquals)) {
+	else if (compare(token.storage.key, scanner.equalsColonEquals)) {
 		buildNode(EQUPEQUSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.andAnd)) {
+	else if (compare(token.storage.key, scanner.andAnd)) {
 		buildNode(ANDSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.semicolon)) {
+	else if (compare(token.storage.key, scanner.semicolon)) {
 		buildNode(COLONSIGN);
 	}
 
-	else if (compare(token.storage.key,
-			scanner.exclamationMark)) {
+	else if (compare(token.storage.key, scanner.exclamationMark)) {
 		buildNode(EXCLSIGN);
 	} else {
 		error = 1;
@@ -636,5 +591,49 @@ void ASTCreator::buildNode(NodeType tpye) {
 	stack.addNewSign(tpye);
 //	ASTNode newOp = new ASTNode(tpye);
 //	head.addChild(newOp);
-	debugPrint("stack: ",tpye);
+	debugPrint("stack: ", tpye);
+}
+
+void ASTCreator::finish() {
+	while (stack.hasLayers() && error == 0) {
+		Automat::Token *ptoken = new Automat::Token();
+		ptoken ->tokenType = Automat::TokenType::ErrorToken;
+		NodeType type = stack.pullFromTop();
+		Automat::Token token = *ptoken;
+		ASTNode *newNode;
+		debugPrint("BUILDNODE: ", type);
+		newNode = head->fullAddChild(type);
+		switch (type) {
+		case DECLS:
+			head = newNode;
+			buildDECLS(token);
+			break;
+		case ARRAY:
+			head = newNode;
+			buildARRAY(token);
+			break;
+		case STATEMENTS:
+			head = newNode;
+			stack.addNewLayer();
+			buildSTATEMENTS(token);
+			break;
+		case INDEX:
+			head = newNode;
+			buildINDEX(token);
+			break;
+		case OP_EXP:
+			head = newNode;
+			stack.addNewLayer();
+			buildOP_EXP(token);
+			break;
+		default:
+			error = 1;
+			return;
+	}
+	return;
+	}
+
+}
+int ASTCreator::hasError() {
+	return error == 1;
 }

@@ -46,4 +46,16 @@ ASTNode* ASTNode::fullAddChild(NodeType newtype) {
 	newNode ->parent = this;
 	return newNode;
 }
+Key ASTNode::getKey() {
+	return key;
+}
+long ASTNode::getDigit() {
+	return digit;
+}
+void ASTNode::setKey(Key newkey) {
+	key = newkey;
+}
+void ASTNode::setDigit(long newdigit) {
+	digit = newdigit;
+}
 

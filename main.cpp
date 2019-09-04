@@ -22,6 +22,8 @@ int testTwo() {
 			cout << "test failed" << endl;
 		}
 	}
+	creator.finish();
+	creator.hasError();
 	return 0;
 }
 

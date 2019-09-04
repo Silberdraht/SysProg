@@ -45,8 +45,9 @@ public:
 	void buildINDEX(Automat::Token token);
 	void buildOP_EXP(Automat::Token token);
 	void buildOP(Automat::Token token);
-	void hasError();
+	int hasError();
 	void setScanner(Scanner newscanner);
+	void finish();
 private:
 	ASTStack stack;
 	ASTNode *head;

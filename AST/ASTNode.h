@@ -10,6 +10,7 @@
 
 #include "ASTBuild/ASTStack.h"
 #include "ASTLinkedList.h"
+#include "../Symtable.h"
 
 class ASTNode{
 
@@ -21,6 +22,10 @@ public:
 	ASTLinkedList<ASTNode> getSubtree();
 	ASTNode getParent();
 	NodeType getType();
+	Key getKey();
+	long getDigit();
+	void setKey(Key newkey);
+	void setDigit(long newdigit);
 	void setType(NodeType newtype);
 	void setParent(ASTNode* newparent);
 	void addChild(ASTNode child);
@@ -29,6 +34,8 @@ public:
 private:
 	ASTLinkedList<ASTNode> children;
 	NodeType type;
+	Key key;
+	long digit;
 };
 
 #endif /* AST_ASTNODE_H_ */
