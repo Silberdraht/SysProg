@@ -33,10 +33,17 @@ NodeType ASTNode::getType(){
 void ASTNode::setType(NodeType newtype){
     type = newtype;
 }
-void ASTNode::setParent(ASTNode newparent){
-    *parent = newparent;
+void ASTNode::setParent(ASTNode* newparent){
+    parent = newparent;
 }
 void ASTNode::addChild(ASTNode child){
     children.addNode(child);
+}
+
+ASTNode* ASTNode::fullAddChild(NodeType newtype) {
+	ASTNode *newNode = new ASTNode(newtype);
+	children.addNode(*newNode);
+	newNode ->parent = this;
+	return newNode;
 }
 

@@ -66,12 +66,14 @@ public:
 	void addNewLayer();
 	void removeTopLayer();
 	void addNewSign(NodeType);
+	int hasLayers();
 private:
 	const int stackSize = 30;
 	const int stackDepth = 10;
 	int **stack;
 	int currentLevel = 0;
 	int *currentLevelDepth;
+	int *currentLevelDepthfront;
 };
 
 #endif /* AST_ASTBUILD_ASTSTACK_H_ */

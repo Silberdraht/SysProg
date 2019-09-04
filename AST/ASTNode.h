@@ -22,10 +22,11 @@ public:
 	ASTNode getParent();
 	NodeType getType();
 	void setType(NodeType newtype);
-	void setParent(ASTNode newparent);
+	void setParent(ASTNode* newparent);
 	void addChild(ASTNode child);
+	ASTNode* fullAddChild(NodeType newtype);
+	ASTNode* parent;
 private:
-    ASTNode* parent;
 	ASTLinkedList<ASTNode> children;
 	NodeType type;
 };

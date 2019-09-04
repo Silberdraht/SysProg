@@ -17,7 +17,7 @@ TokenList::~TokenList() {
 
         Symbol *deleteSymbol = next;
         next = next->next;
-        delete deleteSymbol;
+//        delete deleteSymbol;
     }
 
 }

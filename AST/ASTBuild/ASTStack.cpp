@@ -10,11 +10,13 @@
 ASTStack::ASTStack() {
 	//stack = new int[stackSize][stackDepth];
 	currentLevelDepth = new int[stackSize];
+	currentLevelDepthfront = new int[stackSize];
 	stack = new int*[stackSize];
 
 	for(int i = 0;i < stackSize;i++) {
     stack[i] = new int[stackDepth];
     currentLevelDepth[0] = 0;
+    currentLevelDepthfront[0] = 0;
     currentLevel = 0;
 	}
 	addNewSign(PROG);
@@ -30,25 +32,29 @@ NodeType ASTStack::getTopSign() {
 	currentLevelDepth[currentLevel]--;
 }
 int ASTStack::isTopLevelEmpty() {
-	return !currentLevelDepth[currentLevel];
+	return currentLevelDepth[currentLevel] <= currentLevelDepthfront[currentLevel];
 }
 NodeType ASTStack::peekTop() {
-	return (NodeType) stack[currentLevel][currentLevelDepth[currentLevel]];
+	return (NodeType) stack[currentLevel][currentLevelDepthfront[currentLevel]];
 }
 
 NodeType ASTStack::pullFromTop() {
-	int depth = currentLevelDepth[currentLevel];
-	NodeType toReturn = (NodeType)stack[currentLevel][depth];
-		currentLevelDepth[currentLevel]--;
+	int depth = currentLevelDepthfront[currentLevel];
+	NodeType toReturn = (NodeType)stack[currentLevel][depth+1];
+		currentLevelDepthfront[currentLevel]++;
 		return toReturn;
 
 }
 void ASTStack::addNewLayer() {
 	currentLevel++;
 	currentLevelDepth[currentLevel] = 0;
+	currentLevelDepthfront[currentLevel] = 0;
 }
 void ASTStack::removeTopLayer() {
 	currentLevel--;
+}
+int ASTStack::hasLayers() {
+	return currentLevel > 0;
 }
 void ASTStack::addNewSign(NodeType add) {
 	currentLevelDepth[currentLevel]++;

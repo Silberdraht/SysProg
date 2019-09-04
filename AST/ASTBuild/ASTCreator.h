@@ -49,7 +49,7 @@ public:
 	void setScanner(Scanner newscanner);
 private:
 	ASTStack stack;
-	ASTNode head;
+	ASTNode *head;
 	ASTNode current;
 	Automat::TokenType lastType;
 	Scanner scanner;
@@ -60,6 +60,7 @@ private:
 	Automat::Token getToken();
 	int checkForChar(char c);
 	void buildNode(NodeType tpye);
+	int checkCalcSign(Automat::Token token);
 	int error;
 	int needsNewToken;
 

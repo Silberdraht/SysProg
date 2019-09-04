@@ -19,7 +19,7 @@ InformationLinkedList::~InformationLinkedList() {
 
         	InfStruct *deleteSymbol = next;
             next = next->next;
-            delete deleteSymbol;
+//            delete deleteSymbol;
         }
 
 }

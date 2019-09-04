@@ -57,7 +57,7 @@ void ASTLinkedList<T>::addNode(T c) {
     countSymbol++;
     Symbol *s = new Symbol();
     s->c = c;
-    if(head != nullptr) {
+    if(countSymbol == 0) {
     s->next = head;
     head -> prev = s;
     head -> prev -> next = s;
@@ -67,6 +67,7 @@ void ASTLinkedList<T>::addNode(T c) {
     	head -> next = s;
     	head -> prev = s;
     }
+    countSymbol++;
 }
 
 //needed to use as list as "Last In Last Out" (add at end, pop at front)

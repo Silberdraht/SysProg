@@ -22,7 +22,7 @@ private:
     size_t buffer_size = 16;
     //char *file = (char *) "C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt";
     //char *file = (char *) "F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\beispieltest.txt";
-    char *file = (char *) "D:\\\\cppeclipse\\\\test\\\\src\\\\beispieltest.txt";
+    char *file = (char *) "D:\\\\cppeclipse\\\\test\\\\beispieltest.txt";
     void clear_buffer(char **buffer);
     void load(char **buffer);
 
