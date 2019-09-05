@@ -8,7 +8,6 @@
 #include "Buffer.h"
 #include "Automat.h"
 #include "Symtable.h"
-#include "TokenList.h"
 #include "lib/Link_List.h"
 
 
@@ -47,7 +46,7 @@ public:
 	void initializeSymtable();
 
 	void startScanner();
-	Automat::Token nextToken();
+	Token nextToken();
 	int hasTokens();
 
 };

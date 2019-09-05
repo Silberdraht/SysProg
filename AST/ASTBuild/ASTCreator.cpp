@@ -86,7 +86,7 @@ int compare(Key lex, Key comp) {
 	return 1;
 }
 
-int ASTCreator::checkCalcSign(Automat::Token token) {
+int ASTCreator::checkCalcSign(Token token) {
 	if (compare(token.storage.key, scanner.plus)) {
 		return 1;
 	}
@@ -137,7 +137,7 @@ ASTCreator::~ASTCreator() {
 	// TODO Auto-generated destructor stub
 }
 
-int ASTCreator::computeToken(Automat::Token token) {
+int ASTCreator::computeToken(Token token) {
 	needsNewToken = 1;
 	while (needsNewToken) {
 		if (error == 1) {
@@ -145,7 +145,7 @@ int ASTCreator::computeToken(Automat::Token token) {
 		}
 		NodeType type = getTokenType(token);
 //		ASTNode *newNode = new ASTNode(type);
-		ASTNode *newNode;
+		ASTNode newNode;
 		debugPrint("BUILDNODE: ", type);
 		if (type != PROG) {
 //			head->addChild(*newNode);
@@ -153,59 +153,59 @@ int ASTCreator::computeToken(Automat::Token token) {
 			newNode = head->fullAddChild(type);
 
 		} else {
-			*head = *newNode;
+			//*head = *newNode; //TODO ???
 		}
 		switch (type) {
 		//Check non-terminals
 		case PROG:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildPROG();
 			break;
 		case DECLS:
-			head = newNode;
+			head = &newNode;
 			buildDECLS(token);
 			break;
 		case DECL:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildDECL();
 			break;
 		case ARRAY:
-			head = newNode;
+			head = &newNode;
 			buildARRAY(token);
 			break;
 		case STATEMENTS:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildSTATEMENTS(token);
 			break;
 		case STATEMENT:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildSTATEMENT(token);
 			break;
 		case EXP:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildEXP();
 			break;
 		case EXP2:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildEXP2(token);
 			break;
 		case INDEX:
-			head = newNode;
+			head = &newNode;
 			buildINDEX(token);
 			break;
 		case OP_EXP:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildOP_EXP(token);
 			break;
 		case OP:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildOP(token);
 			break;
@@ -341,16 +341,16 @@ int ASTCreator::computeToken(Automat::Token token) {
 		case IDENTIFIER:
 			if (token.tokenType == 2) {
 				needsNewToken = 0;
-				break;
-				newNode->setKey(token.storage.key);
+				newNode.setKey(token.storage.key);
+                break;
 			}
 			error = 1;
 			break;
 		case INTEGER:
 			if (token.tokenType == 1) {
 				needsNewToken = 0;
-				break;
-				newNode->setDigit(token.storage.number);
+				newNode.setDigit(token.storage.number);
+                break;
 			}
 			error = 1;
 			break;
@@ -412,7 +412,7 @@ int ASTCreator::computeToken(Automat::Token token) {
 	return 0;
 }
 
-NodeType ASTCreator::getTokenType(Automat::Token token) {
+NodeType ASTCreator::getTokenType(Token token) {
 	return stack.pullFromTop();
 }
 
@@ -420,7 +420,7 @@ void ASTCreator::buildPROG() {
 	buildNode(DECLS);
 	buildNode(STATEMENTS);
 }
-void ASTCreator::buildDECLS(Automat::Token token) {
+void ASTCreator::buildDECLS(Token token) {
 	//Teste, ob zeichen leer sind
 	//TODO int einprogrammieren
 	if (token.tokenType == 7 /*int*/) {
@@ -437,7 +437,7 @@ void ASTCreator::buildDECL() {
 	buildNode(ARRAY);
 	buildNode(IDENTIFIER);
 }
-void ASTCreator::buildARRAY(Automat::Token token) {
+void ASTCreator::buildARRAY(Token token) {
 	if (compare(token.storage.key, scanner.squareBracketClose)) {
 		stack.addNewLayer();
 		buildNode(EKL_OPEN);
@@ -448,7 +448,7 @@ void ASTCreator::buildARRAY(Automat::Token token) {
 	}
 
 }
-void ASTCreator::buildSTATEMENTS(Automat::Token token) {
+void ASTCreator::buildSTATEMENTS(Token token) {
 	//Teste, ob zeichen leer sind
 	//TODO wenn zeichenkette leer is tritt dieser Fall ein
 	if (token.tokenType == 3) {
@@ -460,7 +460,7 @@ void ASTCreator::buildSTATEMENTS(Automat::Token token) {
 	}
 
 }
-void ASTCreator::buildSTATEMENT(Automat::Token token) {
+void ASTCreator::buildSTATEMENT(Token token) {
 	// hier unterscheiden, wass passiert!
 	if (token.tokenType == 2/*IdentifierToken*/) {
 		buildNode(IDENTIFIER);
@@ -498,7 +498,7 @@ void ASTCreator::buildEXP() {
 	buildNode(EXP2);
 	buildNode(OP_EXP);
 }
-void ASTCreator::buildEXP2(Automat::Token token) {
+void ASTCreator::buildEXP2(Token token) {
 	if (compare(token.storage.key, scanner.bracketOpen)) {
 		buildNode(KL_OPEN);
 		buildNode(EXP);
@@ -519,7 +519,7 @@ void ASTCreator::buildEXP2(Automat::Token token) {
 		error = 1;
 	}
 }
-void ASTCreator::buildINDEX(Automat::Token token) {
+void ASTCreator::buildINDEX(Token token) {
 	if (compare(token.storage.key, scanner.squareBracketOpen)) {
 		stack.addNewLayer();
 		buildNode(EKL_OPEN);
@@ -527,14 +527,14 @@ void ASTCreator::buildINDEX(Automat::Token token) {
 		buildNode(EKL_CLOSE);
 	}
 }
-void ASTCreator::buildOP_EXP(Automat::Token token) {
+void ASTCreator::buildOP_EXP(Token token) {
 	if (checkCalcSign(token)/*OP*/) {
 		stack.addNewLayer();
 		buildNode(OP);
 		buildNode(EXP);
 	}
 }
-void ASTCreator::buildOP(Automat::Token token) {
+void ASTCreator::buildOP(Token token) {
 	//TODO add different signs
 
 	if (compare(token.storage.key, scanner.plus)) {
@@ -596,33 +596,33 @@ void ASTCreator::buildNode(NodeType tpye) {
 
 void ASTCreator::finish() {
 	while (stack.hasLayers() && error == 0) {
-		Automat::Token *ptoken = new Automat::Token();
-		ptoken ->tokenType = Automat::TokenType::ErrorToken;
+		Token *ptoken = new Token();
+		ptoken ->tokenType = TokenType::ErrorToken;
 		NodeType type = stack.pullFromTop();
-		Automat::Token token = *ptoken;
-		ASTNode *newNode;
+		Token token = *ptoken;
+		ASTNode newNode;
 		debugPrint("BUILDNODE: ", type);
 		newNode = head->fullAddChild(type);
 		switch (type) {
 		case DECLS:
-			head = newNode;
+			head = &newNode;
 			buildDECLS(token);
 			break;
 		case ARRAY:
-			head = newNode;
+			head = &newNode;
 			buildARRAY(token);
 			break;
 		case STATEMENTS:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildSTATEMENTS(token);
 			break;
 		case INDEX:
-			head = newNode;
+			head = &newNode;
 			buildINDEX(token);
 			break;
 		case OP_EXP:
-			head = newNode;
+			head = &newNode;
 			stack.addNewLayer();
 			buildOP_EXP(token);
 			break;

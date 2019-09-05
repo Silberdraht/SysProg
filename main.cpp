@@ -5,15 +5,16 @@ using namespace std;
 #include "tests/ScannerTest.h"
 
 
-int testTwo(Scanner scanner) {
+int testTwo(Scanner* scanner) {
 	cout << "scanner finished" << endl;
 	ASTCreator creator;
-	creator.setScanner(scanner);
-	while (scanner.hasTokens()) {
-		Automat::Token token = scanner.nextToken();
+	creator.setScanner(*scanner);
+    Token token;
+	while (scanner->hasTokens()) {
+		token = scanner->nextToken();
 		cout <<"neues Token:";
 		if(token.tokenType == 0| token.tokenType == 2) {
-		cout <<"neues Token:" << scanner.symtable.lookup(token.storage.key).getLexem();
+		cout <<"neues Token:" << scanner->symtable.lookup(token.storage.key).getLexem();
 		}
 		cout  <<endl;
 		if(creator.computeToken(token)) {
@@ -22,6 +23,9 @@ int testTwo(Scanner scanner) {
 	}
 	creator.finish();
 	creator.hasError();
+
+
+
 	return 0;
 }
 
@@ -32,9 +36,10 @@ int main() {
 	scanner.startScanner();
 
     //Output to check correctness of generated tokens
-    //ScannerTest test(scanner);
+    ScannerTest test(scanner);
 
-    return testTwo(scanner);
+    testTwo(&scanner);
+    return 0;
 }
 
 

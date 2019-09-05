@@ -21,7 +21,7 @@ ASTNode::~ASTNode() {
 }
 
 
-ASTLinkedList<ASTNode> ASTNode::getSubtree() {
+Link_List<ASTNode> ASTNode::getSubtree() {
     return children;
 }
 ASTNode ASTNode::getParent() {
@@ -37,13 +37,13 @@ void ASTNode::setParent(ASTNode* newparent){
     parent = newparent;
 }
 void ASTNode::addChild(ASTNode child){
-    children.addNode(child);
+    children.push_front(child);
 }
 
-ASTNode* ASTNode::fullAddChild(NodeType newtype) {
-	ASTNode *newNode = new ASTNode(newtype);
-	children.addNode(*newNode);
-	newNode ->parent = this;
+ASTNode ASTNode::fullAddChild(NodeType newtype) {
+	ASTNode newNode = ASTNode(newtype);
+	children.push_front(newNode);
+	newNode.parent = this;
 	return newNode;
 }
 Key ASTNode::getKey() {

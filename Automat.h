@@ -76,9 +76,9 @@ private:
 
     unsigned int currentLine = 1;
     unsigned int currentColumn = 0;
-    unsigned int startColumn;
+    unsigned int startColumn = 0;
     unsigned int bufferedStartColumn;
-    bool useBufferedStartColumn;
+    bool useBufferedStartColumn = false;
     unsigned int startLine;
     long number;
 

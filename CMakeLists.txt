@@ -12,7 +12,7 @@ set(SOURCE_FILES_AUFGABE_1
         StringTable.cpp StringTable.h
         Information.cpp Information.h
         InformationLinkedList.cpp InformationLinkedList.h
-        Scanner.cpp Scanner.h TokenList.cpp TokenList.h
+        Scanner.cpp Scanner.h
         tests/ScannerTest.cpp tests/ScannerTest.h)
 set(SOURCE_FILES_AUFGABE_2
         main.cpp
@@ -23,10 +23,11 @@ set(SOURCE_FILES_AUFGABE_2
         StringTable.cpp StringTable.h
         Information.cpp Information.h
         InformationLinkedList.cpp InformationLinkedList.h
-        Scanner.cpp Scanner.h TokenList.cpp TokenList.h
+        Scanner.cpp Scanner.h
+        tests/ScannerTest.cpp tests/ScannerTest.h
         parser/CodeBuilder.h parser/CodeBuilder.cpp
         lib/Link_List.h
-        AST/ASTLinkedList.h AST/ASTLinkedList.cpp
+        AST/ASTLinkedList.h
         AST/ASTNode.h AST/ASTNode.cpp
         AST/ASTBuild/ASTCreator.h AST/ASTBuild/ASTCreator.cpp
         AST/ASTBuild/ASTStack.h AST/ASTBuild/ASTStack.cpp)
