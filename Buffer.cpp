@@ -21,7 +21,6 @@ char Buffer::getChar() {
         }
 
         if(current.get() == buffer1.get()){
-            //Clear Buffer2
             clear_buffer(buffer2);
             load(buffer2);
             current = buffer2;

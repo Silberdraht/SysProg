@@ -11,7 +11,7 @@ template <typename T>
 class Element {
 public:
     T content;
-    std::shared_ptr<Element<T>> predessesor = nullptr;
+    std::shared_ptr<Element<T>> predecessor = nullptr;
     std::shared_ptr<Element<T>> successor = nullptr;
 };
 
@@ -54,7 +54,7 @@ T Link_List<T>::pop_front() {
         last = nullptr;
         first = nullptr;
     } else{
-        first = first->predessesor;
+        first = first->predecessor;
         first->successor = nullptr;
     }
     i_size--;
@@ -70,7 +70,7 @@ T Link_List<T>::pop_back() {
     }
     else {
         last  = last->successor;
-        last->predessesor = nullptr;
+        last->predecessor = nullptr;
     }
     i_size--;
     return s_last;
@@ -85,7 +85,7 @@ void Link_List<T>::push_front(T add_obj) {
         last = elm;
     } else {
         first->successor = elm;
-        elm->predessesor = first;
+        elm->predecessor = first;
         first = elm;
         elm->successor = nullptr;
     }
@@ -94,17 +94,16 @@ void Link_List<T>::push_front(T add_obj) {
 
 template<typename T>
 void Link_List<T>::push_back(T add_obj) {
-    //auto elm = new Element<T>();
     auto elm = std::make_shared<Element<T>>();
     elm.operator*().content = add_obj;
     if (size() == 0){
         first = elm;
         last = elm;
     } else {
-        last->predessesor = elm;
+        last->predecessor = elm;
         elm->successor = last;
         last = elm;
-        last->predessesor = nullptr;
+        last->predecessor = nullptr;
     }
     i_size++;
 }
