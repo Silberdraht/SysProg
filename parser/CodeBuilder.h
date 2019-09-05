@@ -10,6 +10,7 @@
 #include "../Automat.h"
 #include "../lib/Link_List.h"
 #include "../AST/ASTNode.h"
+#include "../AST/ASTBuild/ASTCreator.h"
 
 class CodeBuilder {
 
@@ -18,17 +19,15 @@ public:
     CodeBuilder();
     ~CodeBuilder();
 
-    void makeCode();
-
+    void makeCode(ASTCreator creator);
 
 private:
     Symtable symtable;
     int label_counter = 1;
     std::fstream stream;
 
-    int size_of(const char *identifier);
-    Link_List<Token> getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose);
 
+    void makeCodePROG(Link_List<ASTNode> nodes);
     void makeCodeDECL(Link_List<ASTNode> nodes);
     void makeCodeDECLS(Link_List<ASTNode> nodes);
     void makeCodeSTATEMENTS(Link_List<ASTNode> tokens);

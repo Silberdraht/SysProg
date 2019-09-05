@@ -13,53 +13,6 @@ CodeBuilder::~CodeBuilder() {
     stream.close();
 }
 
-//enum NodeType{
-//    // nichtterminale knoten
-//            PROG,
-//    DECLS,
-//    DECL,
-//    ARRAY,
-//    STATEMENTS,
-//    STATEMENT,
-//    EXP,
-//    EXP2,
-//    INDEX,
-//    OP_EXP,
-//    OP,
-//
-//    // terminale zeichen
-//            PLUSSIGN, 		//+
-//    MINUSSIGN,		//-
-//    STARSIGN,		//*
-//    DOUBLESIGN,	//:
-//    LESSSIGN,		//<
-//    GREATERSIGN,	//>
-//    EQUALSSIGN,	//=
-//    OTHEREQUALSSIGN,//:=
-//    EQUPEQUSIGN,	//=:=
-//    ANDSIGN,		//&&
-//    COLONSIGN,		//;
-//    EXCLSIGN,		//!
-//    // terminale
-//            IFSIGN,
-//    ELSESIGN,
-//    WHILESIGN,
-//    READSIGN,
-//    WRITESIGN,
-//    INTSIGN,
-//    // konstanten/ bezeichner
-//            IDENTIFIER,
-//    INTEGER,
-//    // klammern
-//            KL_OPEN,	//(
-//    KL_CLOSE,
-//    EKL_OPEN,	//[
-//    EKL_CLOSE,
-//    GKL_OPEN,	//{
-//    GKL_CLOSE
-//
-//};
-
 void CodeBuilder::makeCodeDECLS(Link_List<ASTNode> nodes) {
     if (nodes.empty()) {
         return;
@@ -374,38 +327,17 @@ void CodeBuilder::makeCodeOP(ASTNode node) {
     stream << result;
 }
 
-
-Link_List<Token> CodeBuilder::getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose) { //iput Link_List "tokens" should be modified in place
-    Link_List<Token> withinBrackets;
-    tokens.pop_front();
-    int bracketsOpen = 1;
-    int bracketsClose = 0;
-    while (bracketsOpen > bracketsClose) {
-        Token token = tokens.pop_front();
-        if (token.tokenType == SignToken) {
-            if (symtable.lookup(token.storage.key).getLexem()[0] == bracketOpen) {
-                bracketsOpen++;
-            } else if (symtable.lookup(token.storage.key).getLexem()[0] == bracketClose) {
-                bracketsClose++;
-            }
-        }
-        withinBrackets.push_back(token);
+void CodeBuilder::makeCodePROG(Link_List<ASTNode> nodes) {
+    if (nodes.size() != 2) {
+        return; //ERROR
     }
-    withinBrackets.pop_back();
-    return withinBrackets;
+    makeCodeDECLS(nodes.pop_front().getSubtree());
+    makeCodeSTATEMENTS(nodes.pop_front().getSubtree());
 }
 
-
-int CodeBuilder::size_of(const char *identifier) {
-    int index = 0;
-    while (identifier[index] != '\0') {
-        index++;
-    }
-    return index;
-}
-
-void CodeBuilder::makeCode() {
-
+void CodeBuilder::makeCode(ASTCreator creator) {
+    ASTNode node = creator.getParentNode();
+    makeCodePROG(node.getSubtree());
 }
 
 

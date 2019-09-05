@@ -637,3 +637,8 @@ void ASTCreator::finish() {
 int ASTCreator::hasError() {
 	return error == 1;
 }
+
+ASTNode ASTCreator::getParentNode() {
+    //TODO return top level node (sollte wahrscheinlich vom typ PROG sein)
+    return ASTNode();
+}

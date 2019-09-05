@@ -48,6 +48,9 @@ public:
 	int hasError();
 	void setScanner(Scanner newscanner);
 	void finish();
+
+    ASTNode getParentNode();
+
 private:
 	ASTStack stack;
 	ASTNode *head;
