@@ -26,10 +26,12 @@ private:
     int label_counter = 1;
     std::fstream stream;
 
+    const char *file_out = (char *) R"(../parser/output.code)";
 
     void makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes);
     void makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes);
     void makeCodeDECLS(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeARRAY(Link_List<std::shared_ptr<ASTNode>> nodes);
     void makeCodeSTATEMENTS(Link_List<std::shared_ptr<ASTNode>> tokens);
     void makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes);
     void makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes);

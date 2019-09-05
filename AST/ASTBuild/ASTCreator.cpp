@@ -158,8 +158,7 @@ int ASTCreator::computeToken(Token token) {
 			buildPROG();
 			break;
 		case DECLS:
-			head = newNode;
-			buildDECLS(token);
+			buildDECLS(token, newNode);
 			break;
 		case DECL:
 			head = newNode;
@@ -167,8 +166,7 @@ int ASTCreator::computeToken(Token token) {
 			buildDECL();
 			break;
 		case ARRAY:
-			head = newNode;
-			buildARRAY(token);
+			buildARRAY(token, newNode);
 			break;
 		case STATEMENTS:
 			head = newNode;
@@ -191,13 +189,11 @@ int ASTCreator::computeToken(Token token) {
 			buildEXP2(token);
 			break;
 		case INDEX:
-			head = newNode;
-			buildINDEX(token);
+			buildINDEX(token, newNode);
 			break;
 		case OP_EXP:
-			head = newNode;
 			stack.addNewLayer();
-			buildOP_EXP(token);
+			buildOP_EXP(token, newNode);
 			break;
 		case OP:
 			head = newNode;
@@ -415,34 +411,43 @@ void ASTCreator::buildPROG() {
 	buildNode(DECLS);
 	buildNode(STATEMENTS);
 }
-void ASTCreator::buildDECLS(Token token) {
+void ASTCreator::buildDECLS(Token token, shared_ptr<ASTNode> newNode) {
 	//Teste, ob zeichen leer sind
 	//TODO int einprogrammieren
 	if (token.tokenType == 7 /*int*/) {
+	    head = newNode;
 		stack.addNewLayer();
 		buildNode(DECL);
 		buildNode(COLONSIGN);
 		buildNode(DECLS);
-	} else {
 	}
 }
+
 void ASTCreator::buildDECL() {
 
 	buildNode(INTSIGN);
 	buildNode(ARRAY);
 	buildNode(IDENTIFIER);
 }
-void ASTCreator::buildARRAY(Token token) {
-	if (compare(token.storage.key, scanner.squareBracketClose)) {
+
+void ASTCreator::buildARRAY(Token token, shared_ptr<ASTNode> newNode) {
+	if (compare(token.storage.key, scanner.squareBracketOpen)) {
+        head = newNode;
 		stack.addNewLayer();
 		buildNode(EKL_OPEN);
 		buildNode(INTEGER);
 		buildNode(EKL_CLOSE);
 	} else {
 		//elypson
+
+//		shared_ptr<ASTNode> newHead = head->getParent().getSubtree().back();
+//		if (newHead->getType() != IDENTIFIER) {
+//		    error = 1;
+//		}
 	}
 
 }
+
 void ASTCreator::buildSTATEMENTS(Token token) {
 	//Teste, ob zeichen leer sind
 	//TODO wenn zeichenkette leer is tritt dieser Fall ein
@@ -514,16 +519,18 @@ void ASTCreator::buildEXP2(Token token) {
 		error = 1;
 	}
 }
-void ASTCreator::buildINDEX(Token token) {
+void ASTCreator::buildINDEX(Token token, shared_ptr<ASTNode> newNode) {
 	if (compare(token.storage.key, scanner.squareBracketOpen)) {
+	    head = newNode;
 		stack.addNewLayer();
 		buildNode(EKL_OPEN);
 		buildNode(EXP);
 		buildNode(EKL_CLOSE);
 	}
 }
-void ASTCreator::buildOP_EXP(Token token) {
+void ASTCreator::buildOP_EXP(Token token, shared_ptr<ASTNode> newNode) {
 	if (checkCalcSign(token)/*OP*/) {
+	    head = newNode;
 		stack.addNewLayer();
 		buildNode(OP);
 		buildNode(EXP);
@@ -582,11 +589,11 @@ void ASTCreator::buildOP(Token token) {
 
 }
 
-void ASTCreator::buildNode(NodeType tpye) {
-	stack.addNewSign(tpye);
-//	ASTNode newOp = new ASTNode(tpye);
+void ASTCreator::buildNode(NodeType type) {
+	stack.addNewSign(type);
+//	ASTNode newOp = new ASTNode(type);
 //	head.addChild(newOp);
-	debugPrint("stack: ", tpye);
+	debugPrint("stack: ", type);
 }
 
 void ASTCreator::finish() {
@@ -599,42 +606,36 @@ void ASTCreator::finish() {
         head->addChild(newNode);
 		debugPrint("BUILDNODE: ", type);
 		switch (type) {
-		case DECLS:
-			head = newNode;
-			buildDECLS(token);
-			break;
-		case ARRAY:
-			head = newNode;
-			buildARRAY(token);
-			break;
-		case STATEMENTS:
-			head = newNode;
-			stack.addNewLayer();
-			buildSTATEMENTS(token);
-			break;
-		case INDEX:
-			head = newNode;
-			buildINDEX(token);
-			break;
-		case OP_EXP:
-			head = newNode;
-			stack.addNewLayer();
-			buildOP_EXP(token);
-			break;
-		default:
-			error = 1;
-			return;
+            case DECLS:
+                buildDECLS(token, newNode);
+                break;
+            case ARRAY:
+                buildARRAY(token, head);
+                break;
+            case STATEMENTS:
+                head = newNode;
+                stack.addNewLayer();
+                buildSTATEMENTS(token);
+                break;
+            case INDEX:
+                buildINDEX(token, newNode);
+                break;
+            case OP_EXP:
+                stack.addNewLayer();
+                buildOP_EXP(token, newNode);
+                break;
+            default:
+                error = 1;
+                return;
+        }
+        //return;
 	}
-	return;
-	}
-
 }
 int ASTCreator::hasError() {
 	return error == 1;
 }
 
 shared_ptr<ASTNode> ASTCreator::getParentNode() {
-    //TODO return top level node (sollte wahrscheinlich vom typ PROG sein)
     return buildHead;
 }
 

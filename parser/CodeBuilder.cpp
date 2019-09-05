@@ -7,16 +7,13 @@
 #include "CodeBuilder.h"
 
 CodeBuilder::CodeBuilder(){
-    stream.open(R"(../code.txt)");
+    stream.open(file_out, std::ios_base::out);
 }
 CodeBuilder::~CodeBuilder() {
     stream.close();
 }
 
 void CodeBuilder::makeCodeDECLS(Link_List<std::shared_ptr<ASTNode>> nodes) {
-    if (nodes.empty()) {
-        return;
-    }
     while (!nodes.empty()) {
         std::shared_ptr<ASTNode> node = nodes.pop_front();
         if (node->getType() == DECLS) {
@@ -32,46 +29,33 @@ void CodeBuilder::makeCodeDECLS(Link_List<std::shared_ptr<ASTNode>> nodes) {
 void CodeBuilder::makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes) {
     Link_List<std::shared_ptr<ASTNode>> array;
     char* identifier;
-    int size = -1;
     while(!nodes.empty()) {
         std::shared_ptr<ASTNode> node = nodes.pop_front();
         if (node->getType() == IDENTIFIER) {
             identifier = symtable.lookup(node->getKey()).getLexem();
         } else if (node->getType() == ARRAY) {
-            Link_List<std::shared_ptr<ASTNode>> ARRAY = node->getSubtree();
-            while (!ARRAY.empty()) {
-                std::shared_ptr<ASTNode> arrayNode = ARRAY.pop_front();
-                if (arrayNode->getType() == INTEGER) {
-                    size = arrayNode->getDigit();
-                }
-            }
+            array = node->getSubtree();
         }
     }
-    stream << "DS " << identifier << " " << size;
-//
-//    if (nodes.size() == 4) { //==3
-//        nodes.pop_front();
-//        Link_List<std::shared_ptr<ASTNode>> array = nodes.pop_front()->getSubtree();
-//        int size = -1;
-//        while (!array.empty()) {
-//            std::shared_ptr<ASTNode> child = array.pop_front();
-//            if (child->getType() == INTEGER) {
-//                size = child->getDigit();
-//            }
-//        }
-//        char* identifier = symtable.lookup(nodes.pop_front()->getKey()).getLexem();
-//        stream << "DS " << identifier << " " << size;
-//    }
+    stream << "DS " << identifier << " ";
+    makeCodeARRAY(array);
+}
 
+void CodeBuilder::makeCodeARRAY(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    int size = -1;
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> arrayNode = nodes.pop_front();
+        if (arrayNode->getType() == INTEGER) {
+            size = arrayNode->getDigit();
+        }
+    }
+    if (size != -1) {
+        size = 1;
+    }
+    stream << size << " ";
 }
 
 void CodeBuilder::makeCodeSTATEMENTS(Link_List<std::shared_ptr<ASTNode>> nodes) {
-    if (nodes.empty()) {
-        return;
-    }
-    if (nodes.empty()) {
-        return;
-    }
     while (!nodes.empty()) {
         std::shared_ptr<ASTNode> node = nodes.pop_front();
         if (node->getType() == STATEMENTS) {
@@ -116,7 +100,6 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
         stream << "JMP #LABEL" << label2 << " ";
         stream << "#LABEL" << label1 << " NOP ";
         makeCodeSTATEMENT(statement2);
-
     }
 
     else if (node->getType() == WHILESIGN) {
@@ -175,7 +158,6 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
             makeCodeINDEX(index);
             stream << "STR ";
         }
-
     }
 
     else if (node->getType() == IDENTIFIER) {
@@ -206,11 +188,10 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
         }
         makeCodeSTATEMENTS(stmts);
     }
-
 }
 
 
-void CodeBuilder::makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes) { //TODO check for idiocy
+void CodeBuilder::makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
     std::shared_ptr<ASTNode> exp2;
     std::shared_ptr<ASTNode> op_exp;
     while (!nodes.empty()) {
@@ -309,16 +290,15 @@ void CodeBuilder::makeCodeOP_EXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
 }
 
 void CodeBuilder::makeCodeINDEX(Link_List<std::shared_ptr<ASTNode>> nodes) {
-    nodes.pop_front();
-    nodes.pop_back();
-    if (!nodes.empty()) {
-        makeCodeEXP(nodes);
-        stream << "ADD ";
-        //ADD
-    } else {
-        //return (char *) "";
+    Link_List<std::shared_ptr<ASTNode>> index;
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == INDEX) {
+            index = node->getSubtree();
+        }
     }
-
+    makeCodeEXP(index);
+    stream << "ADD ";
 }
 
 
@@ -365,20 +345,3 @@ void CodeBuilder::makeCode(ASTCreator creator) {
     std::shared_ptr<ASTNode> node = creator.getParentNode();
     makeCodePROG(node->getSubtree());
 }
-
-
-
-
-
-//enum TokenType {
-//    SignToken = 0,
-//    DigitToken = 1,
-//    IdentifierToken = 2,
-//    ErrorToken = 3,
-//    IfToken = 4,
-//    WhileToken = 5,
-//    ElseToken = 6,
-//    IntToken = 7,
-//    ReadToken = 8,
-//    WriteToken = 9
-//};

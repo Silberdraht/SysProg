@@ -54,8 +54,8 @@ T Link_List<T>::pop_front() {
         last = nullptr;
         first = nullptr;
     } else{
-        first = first->predecessor;
-        first->successor = nullptr;
+        first = first->successor;
+        first->predecessor = nullptr;
     }
     i_size--;
     return s_first;
@@ -69,8 +69,8 @@ T Link_List<T>::pop_back() {
         first = nullptr;
     }
     else {
-        last  = last->successor;
-        last->predecessor = nullptr;
+        last = last->predecessor;
+        last->successor = nullptr;
     }
     i_size--;
     return s_last;
@@ -84,10 +84,10 @@ void Link_List<T>::push_front(T add_obj) {
         first = elm;
         last = elm;
     } else {
-        first->successor = elm;
-        elm->predecessor = first;
+        first->predecessor = elm;
+        elm->successor = first;
         first = elm;
-        elm->successor = nullptr;
+        elm->predecessor = nullptr;
     }
     i_size++;
 }
@@ -100,10 +100,9 @@ void Link_List<T>::push_back(T add_obj) {
         first = elm;
         last = elm;
     } else {
-        last->predecessor = elm;
-        elm->successor = last;
+        last->successor = elm;
+        elm->predecessor = last;
         last = elm;
-        last->predecessor = nullptr;
     }
     i_size++;
 }

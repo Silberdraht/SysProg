@@ -30,7 +30,7 @@ void ASTNode::setParent(std::shared_ptr<ASTNode> newparent){
     parent = newparent;
 }
 void ASTNode::addChild(std::shared_ptr<ASTNode> child){
-    children.push_front(child);
+    children.push_back(child);
 }
 
 //ASTNode* ASTNode::fullAddChild(NodeType newtype) {

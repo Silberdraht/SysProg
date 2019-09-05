@@ -23,10 +23,10 @@ enum state{
 };
 
 class ASTCreator {
-	//erstellen  von countern f�r klammern? fehlermeldung werfen, wenn klammern nicht eingehalten werden?
-	//wo �berprfen?:
-	//f�r {}:
-	//f�r (): die () sind um expressions, daher: wenn man expressions verl�sst m�ssen diese abgeschlossen sein:
+	//erstellen  von countern fuer klammern? fehlermeldung werfen, wenn klammern nicht eingehalten werden?
+	//wo ueberprfen?:
+	//fuer {}:
+	//fuer (): die () sind um expressions, daher: wenn man expressions verlaesst muessen diese abgeschlossen sein:
 	//passende delimiter sind ";"
 	//runde klammern kommen vor bei: funktionsaufrufen, statements wie if(...), evtl casten
 public:
@@ -34,15 +34,15 @@ public:
 	int computeToken(Token token);
 	void init();
 	void buildPROG();
-	void buildDECLS(Token token);
+	void buildDECLS(Token token, std::shared_ptr<ASTNode> newNode);
 	void buildDECL();
-	void buildARRAY(Token token);
+	void buildARRAY(Token token, std::shared_ptr<ASTNode> newNode);
 	void buildSTATEMENTS(Token token);
 	void buildSTATEMENT(Token token);
 	void buildEXP();
 	void buildEXP2(Token token);
-	void buildINDEX(Token token);
-	void buildOP_EXP(Token token);
+	void buildINDEX(Token token, std::shared_ptr<ASTNode> newNode);
+	void buildOP_EXP(Token token, std::shared_ptr<ASTNode> newNode);
 	void buildOP(Token token);
 	int hasError();
 	void setScanner(Scanner newscanner);
@@ -63,7 +63,7 @@ private:
 	NodeType getTokenType(Token token);
 	Token getToken();
 	int checkForChar(char c);
-	void buildNode(NodeType tpye);
+	void buildNode(NodeType type);
 	int checkCalcSign(Token token);
 	int error = 0;
 	int needsNewToken{};
