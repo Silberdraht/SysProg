@@ -40,7 +40,8 @@ Key Symtable::insert(char* lexem)
 			//int keyInt = calculateKey(entry);
 			result = result % this->prime;
 			key.key = result;
-			key.KeyNr = Listptrs[result].addInfo(infoToAdd);
+            Listptrs[result].push_front(infoToAdd);
+			key.KeyNr =  Listptrs[result].size();
 			return key;
 	} else {
 		return key;
@@ -49,7 +50,6 @@ Key Symtable::insert(char* lexem)
 }
 
 Information Symtable::lookup(Key key){
-	//Information info;
-	auto info = Listptrs[key.key].getInfo(key.KeyNr);
+	auto info = Listptrs[key.key].at(key.KeyNr);
 	return info;
 }

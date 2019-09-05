@@ -11,7 +11,6 @@ set(SOURCE_FILES_AUFGABE_1
         Symtable.cpp Symtable.h
         StringTable.cpp StringTable.h
         Information.cpp Information.h
-        InformationLinkedList.cpp InformationLinkedList.h
         Scanner.cpp Scanner.h
         tests/ScannerTest.cpp tests/ScannerTest.h)
 set(SOURCE_FILES_AUFGABE_2
@@ -22,7 +21,6 @@ set(SOURCE_FILES_AUFGABE_2
         Symtable.cpp Symtable.h
         StringTable.cpp StringTable.h
         Information.cpp Information.h
-        InformationLinkedList.cpp InformationLinkedList.h
         Scanner.cpp Scanner.h
         tests/ScannerTest.cpp tests/ScannerTest.h
         parser/CodeBuilder.h parser/CodeBuilder.cpp
