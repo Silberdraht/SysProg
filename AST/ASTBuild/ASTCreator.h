@@ -30,8 +30,7 @@ class ASTCreator {
 	//passende delimiter sind ";"
 	//runde klammern kommen vor bei: funktionsaufrufen, statements wie if(...), evtl casten
 public:
-	ASTCreator();
-	virtual ~ASTCreator();
+	explicit ASTCreator(Scanner scanner);
 	int computeToken(Token token);
 	void init();
 	void buildPROG();
@@ -49,24 +48,25 @@ public:
 	void setScanner(Scanner newscanner);
 	void finish();
 
-    ASTNode getParentNode();
-    ASTNode buildHead;
+    std::shared_ptr<ASTNode> getParentNode();
+    std::shared_ptr<ASTNode> buildHead;
+
 private:
 	ASTStack stack;
-	ASTNode head;
-	ASTNode current;
+	std::shared_ptr<ASTNode> head;
+    std::shared_ptr<ASTNode> current;
 	TokenType lastType;
 	Scanner scanner;
 	Symtable table;
 	state state;
-	int roundBracketsCounter;
+	int roundBracketsCounter{};
 	NodeType getTokenType(Token token);
 	Token getToken();
 	int checkForChar(char c);
 	void buildNode(NodeType tpye);
 	int checkCalcSign(Token token);
 	int error = 0;
-	int needsNewToken;
+	int needsNewToken{};
 
 };
 

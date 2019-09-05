@@ -27,16 +27,16 @@ private:
     std::fstream stream;
 
 
-    void makeCodePROG(Link_List<ASTNode> nodes);
-    void makeCodeDECL(Link_List<ASTNode> nodes);
-    void makeCodeDECLS(Link_List<ASTNode> nodes);
-    void makeCodeSTATEMENTS(Link_List<ASTNode> tokens);
-    void makeCodeSTATEMENT(Link_List<ASTNode> nodes);
-    void makeCodeEXP(Link_List<ASTNode> nodes);
-    void makeCodeEXP2(Link_List<ASTNode> nodes);
-    void makeCodeINDEX(Link_List<ASTNode> nodes);
-    void makeCodeOP_EXP(Link_List<ASTNode> nodes);
-    void makeCodeOP(ASTNode node);
+    void makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeDECLS(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeSTATEMENTS(Link_List<std::shared_ptr<ASTNode>> tokens);
+    void makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeEXP2(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeINDEX(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeOP_EXP(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeOP(std::shared_ptr<ASTNode> node);
 };
 
 

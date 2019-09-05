@@ -4,8 +4,7 @@
 
 #include "ScannerTest.h"
 
-ScannerTest::ScannerTest(const Scanner& scanner) {
-    this->scanner = scanner;
+ScannerTest::ScannerTest(Scanner scanner) : scanner{scanner} {
     outputTokensToFile();
 }
 

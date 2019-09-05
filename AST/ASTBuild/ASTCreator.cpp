@@ -28,7 +28,7 @@ void debugPrint(char* msg, NodeType tpye) {
 		cout << "STATEMENTS" << endl;
 		break;
 	case STATEMENT:
-		cout << "TATEMENT" << endl;
+		cout << "STATEMENT" << endl;
 		break;
 	case EXP:
 		cout << "EXP" << endl;
@@ -128,14 +128,10 @@ void ASTCreator::setScanner(Scanner newscanner) {
 	table = scanner.symtable;
 }
 
-ASTCreator::ASTCreator() : head(ASTNode()), current(ASTNode()), buildHead(ASTNode()) {
-	// TODO Auto-generated constructor stub
-
-}
-
-ASTCreator::~ASTCreator() {
-	// TODO Auto-generated destructor stub
-}
+//ASTCreator::ASTCreator() : head(ASTNode()), current(ASTNode()), buildHead(ASTNode()) {
+//	// TODO Auto-generated constructor stub
+//
+//}
 
 int ASTCreator::computeToken(Token token) {
 	needsNewToken = 1;
@@ -145,15 +141,13 @@ int ASTCreator::computeToken(Token token) {
 		}
 		NodeType type = getTokenType(token);
 //		ASTNode *newNode = new ASTNode(type);
-		ASTNode newNode(ASTNode());
+		std::shared_ptr<ASTNode> newNode;
 		debugPrint("BUILDNODE: ", type);
 		if (type != PROG) {
-//			head->addChild(*newNode);
-//			*newNode->parent = *head;
-			newNode = head.fullAddChild(type);
-
+			newNode = std::make_shared<ASTNode>(head, type);
+			head->addChild(newNode);
 		} else {
-			//*head = *newNode; //TODO ???
+		    newNode = std::make_shared<ASTNode>(nullptr, type);
 		}
 		switch (type) {
 		//Check non-terminals
@@ -342,7 +336,7 @@ int ASTCreator::computeToken(Token token) {
 		case IDENTIFIER:
 			if (token.tokenType == 2) {
 				needsNewToken = 0;
-				newNode.setKey(token.storage.key);
+				newNode->setKey(token.storage.key);
                 break;
 			}
 			error = 1;
@@ -350,7 +344,7 @@ int ASTCreator::computeToken(Token token) {
 		case INTEGER:
 			if (token.tokenType == 1) {
 				needsNewToken = 0;
-				newNode.setDigit(token.storage.number);
+				newNode->setDigit(token.storage.number);
                 break;
 			}
 			error = 1;
@@ -406,7 +400,7 @@ int ASTCreator::computeToken(Token token) {
 			}
 			while (stack.isTopLevelEmpty()) {
 				stack.removeTopLayer();
-				head = head.parent;
+				head = head->parent;
 			}
 		}
 	}
@@ -601,9 +595,9 @@ void ASTCreator::finish() {
 		ptoken ->tokenType = TokenType::ErrorToken;
 		NodeType type = stack.pullFromTop();
 		Token token = *ptoken;
-		ASTNode newNode(ASTNode());
+        std::shared_ptr<ASTNode> newNode = std::make_shared<ASTNode>(head, type);
+        head->addChild(newNode);
 		debugPrint("BUILDNODE: ", type);
-		newNode = head.fullAddChild(type);
 		switch (type) {
 		case DECLS:
 			head = newNode;
@@ -639,7 +633,15 @@ int ASTCreator::hasError() {
 	return error == 1;
 }
 
-ASTNode ASTCreator::getParentNode() {
+shared_ptr<ASTNode> ASTCreator::getParentNode() {
     //TODO return top level node (sollte wahrscheinlich vom typ PROG sein)
     return buildHead;
+}
+
+
+//STNode::ASTNode(std::shared_ptr<ASTNode> parent, NodeType newtype) : parent{parent}, type{newtype}{
+//
+//}
+ASTCreator::ASTCreator(Scanner scanner) : scanner{scanner} {
+    table = scanner.symtable;
 }

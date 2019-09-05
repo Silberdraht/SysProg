@@ -14,7 +14,7 @@
     	freeSpace = size;
     }
     StringTable::~StringTable() {
-//    	delete table;
+    	//delete table;
     }
 
 void memcpy(char* dest,char* lexem, int size) {

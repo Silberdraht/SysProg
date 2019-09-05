@@ -15,9 +15,8 @@
 
 class ASTNode{
 public:
-    explicit ASTNode(std::shared_ptr<ASTNode> parent);
-	explicit ASTNode(NodeType newtype);
-	Link_List<ASTNode> getSubtree();
+    ASTNode(std::shared_ptr<ASTNode> parent, NodeType newtype);
+	Link_List<std::shared_ptr<ASTNode>> getSubtree();
 	ASTNode getParent();
 	NodeType getType();
 	Key getKey();
@@ -26,10 +25,11 @@ public:
 	void setDigit(long newdigit);
 	void setType(NodeType newtype);
 	void setParent(std::shared_ptr<ASTNode> newparent);
-	void addChild(ASTNode child);
+	void addChild(std::shared_ptr<ASTNode> child);
+    ASTNode* fullAddChild(NodeType newtype);
 	std::shared_ptr<ASTNode> parent;
 private:
-	Link_List<ASTNode> children;
+	Link_List<std::shared_ptr<ASTNode>> children;
 	NodeType type;
 	Key key;
 	long digit;

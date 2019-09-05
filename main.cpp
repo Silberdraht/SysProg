@@ -9,16 +9,14 @@ using namespace std;
 
 
 
-int testTwo(Scanner* scanner) {
+int testTwo(Scanner scanner) {
 	cout << "scanner finished" << endl;
-	ASTCreator creator;
-	creator.setScanner(*scanner);
-    Token token;
-	while (scanner->hasTokens()) {
-		token = scanner->nextToken();
+	ASTCreator creator = ASTCreator(scanner);
+	while (scanner.hasTokens()) {
+        Token token = scanner.nextToken();
 		cout <<"neues Token:";
 		if(token.tokenType == 0| token.tokenType == 2) {
-		cout <<"neues Token:" << scanner->symtable.lookup(token.storage.key).getLexem();
+		cout <<"neues Token:" << scanner.symtable.lookup(token.storage.key).getLexem();
 		}
 		cout  <<endl;
 		if(creator.computeToken(token)) {
@@ -43,7 +41,7 @@ int main() {
     //Output to check correctness of generated tokens
     ScannerTest test(scanner);
 
-    testTwo(&scanner);
+    testTwo(scanner);
     return 0;
 }
 

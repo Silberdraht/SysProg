@@ -13,40 +13,59 @@ CodeBuilder::~CodeBuilder() {
     stream.close();
 }
 
-void CodeBuilder::makeCodeDECLS(Link_List<ASTNode> nodes) {
+void CodeBuilder::makeCodeDECLS(Link_List<std::shared_ptr<ASTNode>> nodes) {
     if (nodes.empty()) {
         return;
     }
     while (!nodes.empty()) {
-        ASTNode node = nodes.pop_front();
-        if (node.getType() == DECLS) {
-            makeCodeDECLS(node.getSubtree());
-        } else if (node.getType() == DECL) {
-            makeCodeDECL(node.getSubtree());
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == DECLS) {
+            makeCodeDECLS(node->getSubtree());
+        } else if (node->getType() == DECL) {
+            makeCodeDECL(node->getSubtree());
         }
     }
 
 }
 
 
-void CodeBuilder::makeCodeDECL(Link_List<ASTNode> nodes) {
-    if (nodes.size() == 3) {
-        nodes.pop_front();
-        Link_List<ASTNode> array = nodes.pop_front().getSubtree();
-        int size = -1;
-        while (!array.empty()) {
-            ASTNode child = array.pop_front();
-            if (child.getType() == INTEGER) {
-                size = child.getDigit();
+void CodeBuilder::makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    Link_List<std::shared_ptr<ASTNode>> array;
+    char* identifier;
+    int size = -1;
+    while(!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == IDENTIFIER) {
+            identifier = symtable.lookup(node->getKey()).getLexem();
+        } else if (node->getType() == ARRAY) {
+            Link_List<std::shared_ptr<ASTNode>> ARRAY = node->getSubtree();
+            while (!ARRAY.empty()) {
+                std::shared_ptr<ASTNode> arrayNode = ARRAY.pop_front();
+                if (arrayNode->getType() == INTEGER) {
+                    size = arrayNode->getDigit();
+                }
             }
         }
-        char* identifier = symtable.lookup(nodes.pop_front().getKey()).getLexem();
-        stream << "DS " << identifier << " " << size;
     }
+    stream << "DS " << identifier << " " << size;
+//
+//    if (nodes.size() == 4) { //==3
+//        nodes.pop_front();
+//        Link_List<std::shared_ptr<ASTNode>> array = nodes.pop_front()->getSubtree();
+//        int size = -1;
+//        while (!array.empty()) {
+//            std::shared_ptr<ASTNode> child = array.pop_front();
+//            if (child->getType() == INTEGER) {
+//                size = child->getDigit();
+//            }
+//        }
+//        char* identifier = symtable.lookup(nodes.pop_front()->getKey()).getLexem();
+//        stream << "DS " << identifier << " " << size;
+//    }
 
 }
 
-void CodeBuilder::makeCodeSTATEMENTS(Link_List<ASTNode> nodes) {
+void CodeBuilder::makeCodeSTATEMENTS(Link_List<std::shared_ptr<ASTNode>> nodes) {
     if (nodes.empty()) {
         return;
     }
@@ -54,35 +73,35 @@ void CodeBuilder::makeCodeSTATEMENTS(Link_List<ASTNode> nodes) {
         return;
     }
     while (!nodes.empty()) {
-        ASTNode node = nodes.pop_front();
-        if (node.getType() == STATEMENTS) {
-            makeCodeSTATEMENTS(node.getSubtree());
-        } else if (node.getType() == STATEMENT) {
-            makeCodeSTATEMENT(node.getSubtree());
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == STATEMENTS) {
+            makeCodeSTATEMENTS(node->getSubtree());
+        } else if (node->getType() == STATEMENT) {
+            makeCodeSTATEMENT(node->getSubtree());
         }
     }
 
 }
 
-void CodeBuilder::makeCodeSTATEMENT(Link_List<ASTNode> nodes) {
+void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
 
-    ASTNode node = nodes.pop_front();
+    std::shared_ptr<ASTNode> node = nodes.pop_front();
 
-    if (node.getType() == IFSIGN) {
-        Link_List<ASTNode> exp;
-        Link_List<ASTNode> statement1;
-        Link_List<ASTNode> statement2;
+    if (node->getType() == IFSIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp;
+        Link_List<std::shared_ptr<ASTNode>> statement1;
+        Link_List<std::shared_ptr<ASTNode>> statement2;
         bool stmt1Used = false;
         while (!nodes.empty()) {
             node = nodes.pop_front();
-            if (node.getType() == EXP) {
-                exp = node.getSubtree();
-            } else if (node.getType() == STATEMENT) {
+            if (node->getType() == EXP) {
+                exp = node->getSubtree();
+            } else if (node->getType() == STATEMENT) {
                 if (!stmt1Used) {
-                    statement2 = node.getSubtree();
+                    statement2 = node->getSubtree();
                     stmt1Used = true;
                 } else {
-                    statement1 = node.getSubtree();
+                    statement1 = node->getSubtree();
                 }
             }
         }
@@ -100,15 +119,15 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<ASTNode> nodes) {
 
     }
 
-    else if (node.getType() == WHILESIGN) {
-        Link_List<ASTNode> exp;
-        Link_List<ASTNode> statement;
+    else if (node->getType() == WHILESIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp;
+        Link_List<std::shared_ptr<ASTNode>> statement;
         while (!nodes.empty()) {
             node = nodes.pop_front();
-            if (node.getType() == EXP) {
-                exp = node.getSubtree();
-            } else if (node.getType() == STATEMENT) {
-                statement = node.getSubtree();
+            if (node->getType() == EXP) {
+                exp = node->getSubtree();
+            } else if (node->getType() == STATEMENT) {
+                statement = node->getSubtree();
             }
         }
 
@@ -124,29 +143,29 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<ASTNode> nodes) {
         stream << "#LABEL" << label2 << " NOP ";
     }
 
-    else if (node.getType() == WRITESIGN) {
-        Link_List<ASTNode> exp;
+    else if (node->getType() == WRITESIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp;
         while (!nodes.empty()) {
             node = nodes.pop_front();
-            if (node.getType() == EXP) {
-                exp = node.getSubtree();
+            if (node->getType() == EXP) {
+                exp = node->getSubtree();
             }
         }
         makeCodeEXP(exp);
         stream << "PRI ";
     }
 
-    else if (node.getType() == READSIGN) {
+    else if (node->getType() == READSIGN) {
         Key identifierKey{};
         bool visited = false;
-        Link_List<ASTNode> index;
+        Link_List<std::shared_ptr<ASTNode>> index;
         while (!nodes.empty()) {
             node = nodes.pop_front();
-            if (node.getType() == IDENTIFIER) {
-                identifierKey = node.getKey();
+            if (node->getType() == IDENTIFIER) {
+                identifierKey = node->getKey();
                 visited = true;
-            } else if (node.getType() == INDEX) {
-                index = node.getSubtree();
+            } else if (node->getType() == INDEX) {
+                index = node->getSubtree();
             }
         }
         if (visited) {
@@ -159,16 +178,16 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<ASTNode> nodes) {
 
     }
 
-    else if (node.getType() == IDENTIFIER) {
-        char* identifier = symtable.lookup(node.getKey()).getLexem();
-        Link_List<ASTNode> index;
-        Link_List<ASTNode> exp;
+    else if (node->getType() == IDENTIFIER) {
+        char* identifier = symtable.lookup(node->getKey()).getLexem();
+        Link_List<std::shared_ptr<ASTNode>> index;
+        Link_List<std::shared_ptr<ASTNode>> exp;
         while (!nodes.empty()) {
             node = nodes.pop_front();
-            if (node.getType() == INDEX) {
-                index = node.getSubtree();
-            } else if (node.getType() == EXP) {
-                exp = node.getSubtree();
+            if (node->getType() == INDEX) {
+                index = node->getSubtree();
+            } else if (node->getType() == EXP) {
+                exp = node->getSubtree();
             }
         }
         makeCodeEXP(exp);
@@ -177,12 +196,12 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<ASTNode> nodes) {
         stream << "STR ";
     }
 
-    else if (node.getType() == GKL_OPEN) { //{
-        Link_List<ASTNode> stmts;
+    else if (node->getType() == GKL_OPEN) { //{
+        Link_List<std::shared_ptr<ASTNode>> stmts;
         while (!nodes.empty()) {
             node = nodes.pop_front();
-            if (node.getType() == STATEMENTS) {
-                stmts = node.getSubtree();
+            if (node->getType() == STATEMENTS) {
+                stmts = node->getSubtree();
             }
         }
         makeCodeSTATEMENTS(stmts);
@@ -191,55 +210,55 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<ASTNode> nodes) {
 }
 
 
-void CodeBuilder::makeCodeEXP(Link_List<ASTNode> nodes) { //TODO check for idiocy
-    ASTNode exp2;
-    ASTNode op_exp;
+void CodeBuilder::makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes) { //TODO check for idiocy
+    std::shared_ptr<ASTNode> exp2;
+    std::shared_ptr<ASTNode> op_exp;
     while (!nodes.empty()) {
-        ASTNode node = nodes.pop_front();
-        if (node.getType() == EXP2) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == EXP2) {
             exp2 = node;
-        } else if (node.getType() == OP_EXP) {
+        } else if (node->getType() == OP_EXP) {
             op_exp = node;
         }
     }
-    NodeType opType = op_exp.getSubtree().front().getSubtree().front().getType();
+    NodeType opType = op_exp->getSubtree().front()->getSubtree().front()->getType();
     if (opType == GREATERSIGN) {
-        makeCodeEXP(op_exp.getSubtree().pop_back().getSubtree());
-        op_exp.getSubtree().push_back(exp2);
+        makeCodeEXP(op_exp->getSubtree().pop_back()->getSubtree());
+        op_exp->getSubtree().push_back(exp2);
     }
-    makeCodeEXP2(exp2.getSubtree());
-    makeCodeOP_EXP(op_exp.getSubtree());
+    makeCodeEXP2(exp2->getSubtree());
+    makeCodeOP_EXP(op_exp->getSubtree());
     if (opType == EQUPEQUSIGN) {
         stream << "NOT ";
     }
 
 }
 
-void CodeBuilder::makeCodeEXP2(Link_List<ASTNode> nodes) {
-    ASTNode node = nodes.pop_front();
-    if (node.getType() == IDENTIFIER) {
-        char* identifier = symtable.lookup(node.getKey()).getLexem();
-        Link_List<ASTNode> index;
+void CodeBuilder::makeCodeEXP2(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    std::shared_ptr<ASTNode> node = nodes.pop_front();
+    if (node->getType() == IDENTIFIER) {
+        char* identifier = symtable.lookup(node->getKey()).getLexem();
+        Link_List<std::shared_ptr<ASTNode>> index;
         while (!nodes.empty()) {
             node = nodes.pop_front();
-            if (node.getType() == INDEX) {
-                index = node.getSubtree();
+            if (node->getType() == INDEX) {
+                index = node->getSubtree();
             }
         }
         stream << "LA $" << identifier << " ";
         makeCodeINDEX(index);
         stream << "LV ";
     }
-    else if (node.getType() == INTSIGN) {
-        int integer = (int) node.getDigit();
+    else if (node->getType() == INTSIGN) {
+        int integer = (int) node->getDigit();
         stream << "LC " << integer << " ";
     }
-    else if (node.getType() == MINUSSIGN) {
-        Link_List<ASTNode> exp2;
+    else if (node->getType() == MINUSSIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp2;
         while (!nodes.empty()) {
             node = nodes.pop_front();
-            if (node.getType() == EXP2) {
-                exp2 = node.getSubtree();
+            if (node->getType() == EXP2) {
+                exp2 = node->getSubtree();
             }
         }
         stream << "LC 0 ";
@@ -247,15 +266,15 @@ void CodeBuilder::makeCodeEXP2(Link_List<ASTNode> nodes) {
         stream << "SUB ";
 
     }
-    else if (node.getType() == EXCLSIGN) {
+    else if (node->getType() == EXCLSIGN) {
         stream << "NOT ";
     }
-    else if (node.getType() == KL_OPEN) {
-        Link_List<ASTNode> exp;
+    else if (node->getType() == KL_OPEN) {
+        Link_List<std::shared_ptr<ASTNode>> exp;
         while (!nodes.empty()) {
             node = nodes.pop_front();
-            if (node.getType() == EXP) {
-                exp = node.getSubtree();
+            if (node->getType() == EXP) {
+                exp = node->getSubtree();
             }
         }
         makeCodeEXP(exp);
@@ -263,19 +282,19 @@ void CodeBuilder::makeCodeEXP2(Link_List<ASTNode> nodes) {
 
 }
 
-void CodeBuilder::makeCodeOP_EXP(Link_List<ASTNode> nodes) {
-    Link_List<ASTNode> op;
-    Link_List<ASTNode> exp;
+void CodeBuilder::makeCodeOP_EXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    Link_List<std::shared_ptr<ASTNode>> op;
+    Link_List<std::shared_ptr<ASTNode>> exp;
     bool isExp2 = false;
     while (!nodes.empty()) {
-        ASTNode node = nodes.pop_front();
-        if (node.getType() == OP) {
-            op = node.getSubtree();
-        } else if (node.getType() == EXP) {
-            exp = node.getSubtree();
-        } else if (node.getType() == EXP2) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == OP) {
+            op = node->getSubtree();
+        } else if (node->getType() == EXP) {
+            exp = node->getSubtree();
+        } else if (node->getType() == EXP2) {
             isExp2 = true;
-            exp = node.getSubtree();
+            exp = node->getSubtree();
         } else {
             op.push_front(node); //directly contained operand
 
@@ -289,7 +308,7 @@ void CodeBuilder::makeCodeOP_EXP(Link_List<ASTNode> nodes) {
     makeCodeOP(op.pop_front());
 }
 
-void CodeBuilder::makeCodeINDEX(Link_List<ASTNode> nodes) {
+void CodeBuilder::makeCodeINDEX(Link_List<std::shared_ptr<ASTNode>> nodes) {
     nodes.pop_front();
     nodes.pop_back();
     if (!nodes.empty()) {
@@ -303,9 +322,9 @@ void CodeBuilder::makeCodeINDEX(Link_List<ASTNode> nodes) {
 }
 
 
-void CodeBuilder::makeCodeOP(ASTNode node) {
+void CodeBuilder::makeCodeOP(std::shared_ptr<ASTNode> node) {
     char* result;
-    char *sign = symtable.lookup(node.getKey()).getLexem();
+    char *sign = symtable.lookup(node->getKey()).getLexem();
     char c = sign[0];
     if (c == '+') {
         result = (char *) "ADD ";
@@ -327,17 +346,24 @@ void CodeBuilder::makeCodeOP(ASTNode node) {
     stream << result;
 }
 
-void CodeBuilder::makeCodePROG(Link_List<ASTNode> nodes) {
-    if (nodes.size() != 2) {
-        return; //ERROR
+void CodeBuilder::makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    Link_List<std::shared_ptr<ASTNode>> decls;
+    Link_List<std::shared_ptr<ASTNode>> stmts;
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == DECLS) {
+            decls = node->getSubtree();
+        } else if (node->getType() == STATEMENTS) {
+            stmts = node->getSubtree();
+        }
     }
-    makeCodeDECLS(nodes.pop_front().getSubtree());
-    makeCodeSTATEMENTS(nodes.pop_front().getSubtree());
+    makeCodeDECLS(decls);
+    makeCodeSTATEMENTS(stmts);
 }
 
 void CodeBuilder::makeCode(ASTCreator creator) {
-    ASTNode node = creator.getParentNode();
-    makeCodePROG(node.getSubtree());
+    std::shared_ptr<ASTNode> node = creator.getParentNode();
+    makeCodePROG(node->getSubtree());
 }
 
 
