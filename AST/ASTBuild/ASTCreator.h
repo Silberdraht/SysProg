@@ -50,10 +50,10 @@ public:
 	void finish();
 
     ASTNode getParentNode();
-
+    ASTNode buildHead;
 private:
 	ASTStack stack;
-	ASTNode *head;
+	ASTNode head;
 	ASTNode current;
 	TokenType lastType;
 	Scanner scanner;

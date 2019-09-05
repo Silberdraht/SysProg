@@ -1,8 +1,12 @@
 #include "Scanner.h"
 #include "AST/ASTBuild/ASTCreator.h"
 #include <iostream>
-using namespace std;
 #include "tests/ScannerTest.h"
+#include "parser/CodeBuilder.h"
+
+using namespace std;
+
+
 
 
 int testTwo(Scanner* scanner) {
@@ -24,7 +28,8 @@ int testTwo(Scanner* scanner) {
 	creator.finish();
 	creator.hasError();
 
-
+    CodeBuilder builder;
+    builder.makeCode(creator);
 
 	return 0;
 }

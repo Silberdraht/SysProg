@@ -17,9 +17,8 @@ class ASTNode{
 
 
 public:
-	ASTNode();
-	ASTNode(NodeType newtype);
-	virtual ~ASTNode();
+    explicit ASTNode(ASTNode parent);
+	ASTNode(NodeType newtype, ASTNode parent);
 	Link_List<ASTNode> getSubtree();
 	ASTNode getParent();
 	NodeType getType();
@@ -31,7 +30,7 @@ public:
 	void setParent(ASTNode* newparent);
 	void addChild(ASTNode child);
 	ASTNode fullAddChild(NodeType newtype);
-	ASTNode* parent;
+	ASTNode parent;
 private:
 	Link_List<ASTNode> children;
 	NodeType type;

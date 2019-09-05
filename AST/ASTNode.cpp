@@ -7,18 +7,16 @@
 
 #include "ASTNode.h"
 
-ASTNode::ASTNode() {
-	// TODO Auto-generated constructor stub
+
+
+ASTNode::ASTNode(ASTNode parent) : parent{parent}{
 
 }
 
-ASTNode::ASTNode(NodeType newtype){
+ASTNode::ASTNode(NodeType newtype, ASTNode parent) : parent{parent}) {
     type = newtype;
 }
 
-ASTNode::~ASTNode() {
-	// TODO Auto-generated destructor stub
-}
 
 
 Link_List<ASTNode> ASTNode::getSubtree() {
@@ -41,7 +39,7 @@ void ASTNode::addChild(ASTNode child){
 }
 
 ASTNode ASTNode::fullAddChild(NodeType newtype) {
-	ASTNode newNode = ASTNode(newtype);
+	ASTNode newNode = ASTNode(newtype)(<#initializer#>, ASTNode(ASTNode(ASTNode())));
 	children.push_front(newNode);
 	newNode.parent = this;
 	return newNode;

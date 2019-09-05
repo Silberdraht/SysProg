@@ -128,7 +128,7 @@ void ASTCreator::setScanner(Scanner newscanner) {
 	table = scanner.symtable;
 }
 
-ASTCreator::ASTCreator() {
+ASTCreator::ASTCreator() : head(ASTNode()), current(ASTNode()), buildHead(ASTNode()) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -145,12 +145,12 @@ int ASTCreator::computeToken(Token token) {
 		}
 		NodeType type = getTokenType(token);
 //		ASTNode *newNode = new ASTNode(type);
-		ASTNode newNode;
+		ASTNode newNode(ASTNode());
 		debugPrint("BUILDNODE: ", type);
 		if (type != PROG) {
 //			head->addChild(*newNode);
 //			*newNode->parent = *head;
-			newNode = head->fullAddChild(type);
+			newNode = head.fullAddChild(type);
 
 		} else {
 			//*head = *newNode; //TODO ???
@@ -158,54 +158,55 @@ int ASTCreator::computeToken(Token token) {
 		switch (type) {
 		//Check non-terminals
 		case PROG:
-			head = &newNode;
+			head = newNode;
+            buildHead = newNode;
 			stack.addNewLayer();
 			buildPROG();
 			break;
 		case DECLS:
-			head = &newNode;
+			head = newNode;
 			buildDECLS(token);
 			break;
 		case DECL:
-			head = &newNode;
+			head = newNode;
 			stack.addNewLayer();
 			buildDECL();
 			break;
 		case ARRAY:
-			head = &newNode;
+			head = newNode;
 			buildARRAY(token);
 			break;
 		case STATEMENTS:
-			head = &newNode;
+			head = newNode;
 			stack.addNewLayer();
 			buildSTATEMENTS(token);
 			break;
 		case STATEMENT:
-			head = &newNode;
+			head = newNode;
 			stack.addNewLayer();
 			buildSTATEMENT(token);
 			break;
 		case EXP:
-			head = &newNode;
+			head = newNode;
 			stack.addNewLayer();
 			buildEXP();
 			break;
 		case EXP2:
-			head = &newNode;
+			head = newNode;
 			stack.addNewLayer();
 			buildEXP2(token);
 			break;
 		case INDEX:
-			head = &newNode;
+			head = newNode;
 			buildINDEX(token);
 			break;
 		case OP_EXP:
-			head = &newNode;
+			head = newNode;
 			stack.addNewLayer();
 			buildOP_EXP(token);
 			break;
 		case OP:
-			head = &newNode;
+			head = newNode;
 			stack.addNewLayer();
 			buildOP(token);
 			break;
@@ -405,7 +406,7 @@ int ASTCreator::computeToken(Token token) {
 			}
 			while (stack.isTopLevelEmpty()) {
 				stack.removeTopLayer();
-				head = head->parent;
+				head = head.parent;
 			}
 		}
 	}
@@ -600,29 +601,29 @@ void ASTCreator::finish() {
 		ptoken ->tokenType = TokenType::ErrorToken;
 		NodeType type = stack.pullFromTop();
 		Token token = *ptoken;
-		ASTNode newNode;
+		ASTNode newNode(ASTNode());
 		debugPrint("BUILDNODE: ", type);
-		newNode = head->fullAddChild(type);
+		newNode = head.fullAddChild(type);
 		switch (type) {
 		case DECLS:
-			head = &newNode;
+			head = newNode;
 			buildDECLS(token);
 			break;
 		case ARRAY:
-			head = &newNode;
+			head = newNode;
 			buildARRAY(token);
 			break;
 		case STATEMENTS:
-			head = &newNode;
+			head = newNode;
 			stack.addNewLayer();
 			buildSTATEMENTS(token);
 			break;
 		case INDEX:
-			head = &newNode;
+			head = newNode;
 			buildINDEX(token);
 			break;
 		case OP_EXP:
-			head = &newNode;
+			head = newNode;
 			stack.addNewLayer();
 			buildOP_EXP(token);
 			break;
@@ -640,5 +641,5 @@ int ASTCreator::hasError() {
 
 ASTNode ASTCreator::getParentNode() {
     //TODO return top level node (sollte wahrscheinlich vom typ PROG sein)
-    return ASTNode();
+    return buildHead;
 }
