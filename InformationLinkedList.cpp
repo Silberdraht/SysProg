@@ -7,9 +7,7 @@
 
 #include "InformationLinkedList.h"
 
-InformationLinkedList::InformationLinkedList() {
-    head = nullptr;
-    this->countSymbol = 0;
+InformationLinkedList::InformationLinkedList() : head{nullptr}, countSymbol{0}{
 }
 
 InformationLinkedList::~InformationLinkedList() {

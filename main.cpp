@@ -34,6 +34,13 @@ int testTwo(Scanner scanner) {
 
 
 int main() {
+
+
+    std::string input{};
+    cout << "Please enter a valid sentence (with spaces):\n>" << std::endl;
+    getline(cin, input);
+
+
     Scanner scanner;
 	scanner.initializeSymtable();
 	scanner.startScanner();

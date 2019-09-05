@@ -117,4 +117,13 @@ T Link_List<T>::back() {
     return last->content;
 }
 
+template<typename T>
+T Link_List<T>::at(int position) {
+    Element<T>* element = first.get();
+        for(int i = 0; i > position; i++){
+            element++;
+        }
+    return element->content;
+}
+
 #endif //SYSPROG_LINK_LIST_H

@@ -49,7 +49,7 @@ Key Symtable::insert(char* lexem)
 }
 
 Information Symtable::lookup(Key key){
-	Information info;
-	info = Listptrs[key.key].getInfo(key.KeyNr);
+	//Information info;
+	auto info = Listptrs[key.key].getInfo(key.KeyNr);
 	return info;
 }
