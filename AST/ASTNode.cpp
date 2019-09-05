@@ -9,12 +9,11 @@
 
 
 
-ASTNode::ASTNode(ASTNode parent) : parent{parent}{
+ASTNode::ASTNode(std::shared_ptr<ASTNode> parent) : parent{parent}{
 
 }
 
-ASTNode::ASTNode(NodeType newtype, ASTNode parent) : parent{parent}) {
-    type = newtype;
+ASTNode::ASTNode(NodeType newtype) : parent{nullptr} , type{newtype}{
 }
 
 
@@ -31,19 +30,13 @@ NodeType ASTNode::getType(){
 void ASTNode::setType(NodeType newtype){
     type = newtype;
 }
-void ASTNode::setParent(ASTNode* newparent){
+void ASTNode::setParent(std::shared_ptr<ASTNode> newparent){
     parent = newparent;
 }
 void ASTNode::addChild(ASTNode child){
     children.push_front(child);
 }
 
-ASTNode ASTNode::fullAddChild(NodeType newtype) {
-	ASTNode newNode = ASTNode(newtype)(<#initializer#>, ASTNode(ASTNode(ASTNode())));
-	children.push_front(newNode);
-	newNode.parent = this;
-	return newNode;
-}
 Key ASTNode::getKey() {
 	return key;
 }

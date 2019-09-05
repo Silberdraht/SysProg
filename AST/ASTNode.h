@@ -14,11 +14,9 @@
 #include "../lib/Link_List.h"
 
 class ASTNode{
-
-
 public:
-    explicit ASTNode(ASTNode parent);
-	ASTNode(NodeType newtype, ASTNode parent);
+    explicit ASTNode(std::shared_ptr<ASTNode> parent);
+	explicit ASTNode(NodeType newtype);
 	Link_List<ASTNode> getSubtree();
 	ASTNode getParent();
 	NodeType getType();
@@ -27,10 +25,9 @@ public:
 	void setKey(Key newkey);
 	void setDigit(long newdigit);
 	void setType(NodeType newtype);
-	void setParent(ASTNode* newparent);
+	void setParent(std::shared_ptr<ASTNode> newparent);
 	void addChild(ASTNode child);
-	ASTNode fullAddChild(NodeType newtype);
-	ASTNode parent;
+	std::shared_ptr<ASTNode> parent;
 private:
 	Link_List<ASTNode> children;
 	NodeType type;
