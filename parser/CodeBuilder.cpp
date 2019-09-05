@@ -7,7 +7,7 @@
 #include "CodeBuilder.h"
 
 CodeBuilder::CodeBuilder(){
-    stream.open(R"(../xxx.code)");
+    stream.open(R"(../code.txt)");
 }
 CodeBuilder::~CodeBuilder() {
     stream.close();
