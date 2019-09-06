@@ -37,7 +37,7 @@ public:
 	void buildDECLS(Token token, std::shared_ptr<ASTNode> newNode);
 	void buildDECL();
 	void buildARRAY(Token token, std::shared_ptr<ASTNode> newNode);
-	void buildSTATEMENTS(Token token);
+	void buildSTATEMENTS(Token token, std::shared_ptr<ASTNode> newNode);
 	void buildSTATEMENT(Token token);
 	void buildEXP();
 	void buildEXP2(Token token);

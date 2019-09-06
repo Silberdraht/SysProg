@@ -46,7 +46,7 @@ int main() {
 	scanner.startScanner();
 
     //Output to check correctness of generated tokens
-    //ScannerTest test(scanner);
+    ScannerTest test(scanner);
 
     testTwo(scanner);
     return 0;

@@ -169,9 +169,7 @@ int ASTCreator::computeToken(Token token) {
 			buildARRAY(token, newNode);
 			break;
 		case STATEMENTS:
-			head = newNode;
-			stack.addNewLayer();
-			buildSTATEMENTS(token);
+			buildSTATEMENTS(token, newNode);
 			break;
 		case STATEMENT:
 			head = newNode;
@@ -192,7 +190,6 @@ int ASTCreator::computeToken(Token token) {
 			buildINDEX(token, newNode);
 			break;
 		case OP_EXP:
-			stack.addNewLayer();
 			buildOP_EXP(token, newNode);
 			break;
 		case OP:
@@ -448,15 +445,16 @@ void ASTCreator::buildARRAY(Token token, shared_ptr<ASTNode> newNode) {
 
 }
 
-void ASTCreator::buildSTATEMENTS(Token token) {
+void ASTCreator::buildSTATEMENTS(Token token, std::shared_ptr<ASTNode> newNode) {
 	//Teste, ob zeichen leer sind
 	//TODO wenn zeichenkette leer is tritt dieser Fall ein
-	if (token.tokenType == 3) {
+	if (token.tokenType == 2 || token.tokenType == 9 || token.tokenType == 8 || token.tokenType == 4 || token.tokenType == 5 || compare(token.storage.key, scanner.curlyBracketOpen)) {
+        head = newNode;
+	    stack.addNewLayer();
+	    buildNode(STATEMENT);
+        buildNode(COLONSIGN);
+        buildNode(STATEMENTS);
 		return;
-	} else {
-		buildNode(STATEMENT);
-		buildNode(COLONSIGN);
-		buildNode(STATEMENTS);
 	}
 
 }
@@ -490,7 +488,14 @@ void ASTCreator::buildSTATEMENT(Token token) {
 		buildNode(STATEMENT);
 		buildNode(ELSESIGN);
 		buildNode(STATEMENT);
-	} else {
+	} else if (token.tokenType == 5) {
+	    buildNode(WHILESIGN);
+        buildNode(KL_OPEN);
+        buildNode(EXP);
+        buildNode(KL_CLOSE);
+        buildNode(STATEMENT);
+	}
+	else {
 		error = 1;
 	}
 }
@@ -613,9 +618,7 @@ void ASTCreator::finish() {
                 buildARRAY(token, head);
                 break;
             case STATEMENTS:
-                head = newNode;
-                stack.addNewLayer();
-                buildSTATEMENTS(token);
+                buildSTATEMENTS(token, newNode);
                 break;
             case INDEX:
                 buildINDEX(token, newNode);

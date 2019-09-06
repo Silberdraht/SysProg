@@ -224,18 +224,28 @@ void CodeBuilder::makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
             op_exp = node;
         }
     }
-    NodeType opType = op_exp->getSubtree().front()->getSubtree().front()->getType(); //SEGFAULT
-    if (opType == GREATERSIGN) {
-        makeCodeEXP(op_exp->getSubtree().pop_back()->getSubtree());
-        op_exp->getSubtree().push_back(exp2);
+    Link_List<std::shared_ptr<ASTNode>> opExpSubtree = op_exp->getSubtree();
+    Link_List<std::shared_ptr<ASTNode>> opSubTree;
+    if (opExpSubtree.size() > 0) {
+        opSubTree = op_exp->getSubtree().front()->getSubtree();
+        if (opSubTree.size() > 0) {
+            NodeType opType = opSubTree.front()->getType();
+            if (opType == GREATERSIGN) {
+                makeCodeEXP(op_exp->getSubtree().pop_back()->getSubtree());
+                op_exp->getSubtree().push_back(exp2);
+            }
+            makeCodeEXP2(exp2->getSubtree());
+            makeCodeOP_EXP(op_exp->getSubtree());
+            if (opType == EQUPEQUSIGN) {
+                stream.open(file_out, std::fstream::app);
+                stream << "NOT ";
+                stream.close();
+            }
+        }
+    } else {
+        makeCodeEXP2(exp2->getSubtree());
     }
-    makeCodeEXP2(exp2->getSubtree());
-    makeCodeOP_EXP(op_exp->getSubtree());
-    if (opType == EQUPEQUSIGN) {
-        stream.open(file_out, std::fstream::app);
-        stream << "NOT ";
-        stream.close();
-    }
+
 
 }
 
@@ -342,21 +352,22 @@ void CodeBuilder::makeCodeINDEX(Link_List<std::shared_ptr<ASTNode>> nodes) {
 
 void CodeBuilder::makeCodeOP(std::shared_ptr<ASTNode> node) {
     char* result;
-    char *sign = symtable.lookup(node->getKey()).getLexem();
-    char c = sign[0];
-    if (c == '+') {
+    NodeType type = node->getType();
+//    char *sign = symtable.lookup(node->getKey()).getLexem();
+//    char c = sign[0];
+    if (type == PLUSSIGN) {
         result = (char *) "ADD ";
-    } else if (c == '-') {
+    } else if (type == MINUSSIGN) {
         result = (char *) "SUB ";
-    } else if (c == '*') {
+    } else if (type == STARSIGN) {
         result = (char *) "MUL ";
-    } else if (c == ':') {
+    } else if (type == DOUBLESIGN) {
         result = (char *) "DIV ";
-    } else if (c == '=') {
+    } else if (type == EQUALSSIGN) {
         result = (char *) "EQU ";
-    } else if (c == '<') {
+    } else if (type == LESSSIGN) {
         result = (char *) "LES ";
-    } else if (c == '&' ) {
+    } else if (type == ANDSIGN) {
         result = (char *) "AND ";
     } else {
         result = (char *) "NOP "; //should never be reached by valid code
@@ -367,18 +378,14 @@ void CodeBuilder::makeCodeOP(std::shared_ptr<ASTNode> node) {
 }
 
 void CodeBuilder::makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes) {
-    Link_List<std::shared_ptr<ASTNode>> decls;
-    Link_List<std::shared_ptr<ASTNode>> stmts;
     while (!nodes.empty()) {
         std::shared_ptr<ASTNode> node = nodes.pop_front();
         if (node->getType() == DECLS) {
-            decls = node->getSubtree();
+            makeCodeDECLS(node->getSubtree());
         } else if (node->getType() == STATEMENTS) {
-            stmts = node->getSubtree();
+            makeCodeSTATEMENTS(node->getSubtree());
         }
     }
-    makeCodeDECLS(decls);
-    makeCodeSTATEMENTS(stmts);
 }
 
 void CodeBuilder::makeCode() {

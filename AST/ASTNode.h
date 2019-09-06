@@ -26,7 +26,6 @@ public:
 	void setType(NodeType newtype);
 	void setParent(std::shared_ptr<ASTNode> newparent);
 	void addChild(std::shared_ptr<ASTNode> child);
-    ASTNode* fullAddChild(NodeType newtype);
 	std::shared_ptr<ASTNode> parent;
 private:
 	Link_List<std::shared_ptr<ASTNode>> children;
