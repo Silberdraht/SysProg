@@ -90,7 +90,9 @@ int ASTCreator::checkCalcSign(Token token) {
 	if (compare(token.storage.key, scanner.plus)) {
 		return 1;
 	}
-
+    else if (compare(token.storage.key, scanner.colon)) {
+        return 1;
+    }
 	else if (compare(token.storage.key, scanner.minus)) {
 		return 1;
 	}
@@ -120,6 +122,7 @@ int ASTCreator::checkCalcSign(Token token) {
 	else if (compare(token.storage.key, scanner.andAnd)) {
 		return 1;
 	}
+
 	return 0;
 }
 
