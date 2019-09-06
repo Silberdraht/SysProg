@@ -6,11 +6,9 @@
 #include "../lib/Link_List.h"
 #include "CodeBuilder.h"
 
-CodeBuilder::CodeBuilder(){
-    stream.open(file_out, std::ios_base::out);
+CodeBuilder::CodeBuilder(ASTCreator astCreator, Symtable symTable) : astCreator(astCreator), symtable(symTable) {
 }
 CodeBuilder::~CodeBuilder() {
-    stream.close();
 }
 
 void CodeBuilder::makeCodeDECLS(Link_List<std::shared_ptr<ASTNode>> nodes) {
@@ -37,7 +35,9 @@ void CodeBuilder::makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes) {
             array = node->getSubtree();
         }
     }
+    stream.open(file_out, std::fstream::app);
     stream << "DS " << identifier << " ";
+    stream.close();
     makeCodeARRAY(array);
 }
 
@@ -49,10 +49,12 @@ void CodeBuilder::makeCodeARRAY(Link_List<std::shared_ptr<ASTNode>> nodes) {
             size = arrayNode->getDigit();
         }
     }
-    if (size != -1) {
+    if (size == -1) {
         size = 1;
     }
+    stream.open(file_out, std::fstream::app);
     stream << size << " ";
+    stream.close();
 }
 
 void CodeBuilder::makeCodeSTATEMENTS(Link_List<std::shared_ptr<ASTNode>> nodes) {
@@ -95,10 +97,14 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
         int label2 = label_counter;
         label_counter++;
         makeCodeEXP(exp);
+        stream.open(file_out, std::fstream::app);
         stream << "JIN #LABEL" << label1 << " ";
+        stream.close();
         makeCodeSTATEMENT(statement1);
+        stream.open(file_out, std::fstream::app);
         stream << "JMP #LABEL" << label2 << " ";
         stream << "#LABEL" << label1 << " NOP ";
+        stream.close();
         makeCodeSTATEMENT(statement2);
     }
 
@@ -118,12 +124,18 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
         label_counter++;
         int label2 = label_counter;
         label_counter++;
+        stream.open(file_out, std::fstream::app);
         stream << "#LABEL" << label1 << " NOP ";
+        stream.close();
         makeCodeEXP(exp);
+        stream.open(file_out, std::fstream::app);
         stream << "JIN #LABEL" << label2 << " ";
+        stream.close();
         makeCodeSTATEMENT(statement);
+        stream.open(file_out, std::fstream::app);
         stream << "JMP #LABEL" << label1 << " ";
         stream << "#LABEL" << label2 << " NOP ";
+        stream.close();
     }
 
     else if (node->getType() == WRITESIGN) {
@@ -135,7 +147,9 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
             }
         }
         makeCodeEXP(exp);
+        stream.open(file_out, std::fstream::app);
         stream << "PRI ";
+        stream.close();
     }
 
     else if (node->getType() == READSIGN) {
@@ -153,10 +167,14 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
         }
         if (visited) {
             char* identifier = symtable.lookup(identifierKey).getLexem();
+            stream.open(file_out, std::fstream::app);
             stream << "REA ";
             stream << "LA $" << identifier << " ";
+            stream.close();
             makeCodeINDEX(index);
+            stream.open(file_out, std::fstream::app);
             stream << "STR ";
+            stream.close();
         }
     }
 
@@ -173,9 +191,13 @@ void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
             }
         }
         makeCodeEXP(exp);
+        stream.open(file_out, std::fstream::app);
         stream << "LA $" << identifier << " ";
+        stream.close();
         makeCodeINDEX(index);
+        stream.open(file_out, std::fstream::app);
         stream << "STR ";
+        stream.close();
     }
 
     else if (node->getType() == GKL_OPEN) { //{
@@ -202,7 +224,7 @@ void CodeBuilder::makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
             op_exp = node;
         }
     }
-    NodeType opType = op_exp->getSubtree().front()->getSubtree().front()->getType();
+    NodeType opType = op_exp->getSubtree().front()->getSubtree().front()->getType(); //SEGFAULT
     if (opType == GREATERSIGN) {
         makeCodeEXP(op_exp->getSubtree().pop_back()->getSubtree());
         op_exp->getSubtree().push_back(exp2);
@@ -210,7 +232,9 @@ void CodeBuilder::makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
     makeCodeEXP2(exp2->getSubtree());
     makeCodeOP_EXP(op_exp->getSubtree());
     if (opType == EQUPEQUSIGN) {
+        stream.open(file_out, std::fstream::app);
         stream << "NOT ";
+        stream.close();
     }
 
 }
@@ -226,13 +250,19 @@ void CodeBuilder::makeCodeEXP2(Link_List<std::shared_ptr<ASTNode>> nodes) {
                 index = node->getSubtree();
             }
         }
+        stream.open(file_out, std::fstream::app);
         stream << "LA $" << identifier << " ";
+        stream.close();
         makeCodeINDEX(index);
+        stream.open(file_out, std::fstream::app);
         stream << "LV ";
+        stream.close();
     }
-    else if (node->getType() == INTSIGN) {
+    else if (node->getType() == INTEGER) {
         int integer = (int) node->getDigit();
+        stream.open(file_out, std::fstream::app);
         stream << "LC " << integer << " ";
+        stream.close();
     }
     else if (node->getType() == MINUSSIGN) {
         Link_List<std::shared_ptr<ASTNode>> exp2;
@@ -242,13 +272,19 @@ void CodeBuilder::makeCodeEXP2(Link_List<std::shared_ptr<ASTNode>> nodes) {
                 exp2 = node->getSubtree();
             }
         }
+        stream.open(file_out, std::fstream::app);
         stream << "LC 0 ";
+        stream.close();
         makeCodeEXP2(exp2);
+        stream.open(file_out, std::fstream::app);
         stream << "SUB ";
+        stream.close();
 
     }
     else if (node->getType() == EXCLSIGN) {
+        stream.open(file_out, std::fstream::app);
         stream << "NOT ";
+        stream.close();
     }
     else if (node->getType() == KL_OPEN) {
         Link_List<std::shared_ptr<ASTNode>> exp;
@@ -290,15 +326,17 @@ void CodeBuilder::makeCodeOP_EXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
 }
 
 void CodeBuilder::makeCodeINDEX(Link_List<std::shared_ptr<ASTNode>> nodes) {
-    Link_List<std::shared_ptr<ASTNode>> index;
+    Link_List<std::shared_ptr<ASTNode>> exp;
     while (!nodes.empty()) {
         std::shared_ptr<ASTNode> node = nodes.pop_front();
-        if (node->getType() == INDEX) {
-            index = node->getSubtree();
+        if (node->getType() == EXP) {
+            exp = node->getSubtree();
         }
     }
-    makeCodeEXP(index);
+    makeCodeEXP(exp);
+    stream.open(file_out, std::fstream::app);
     stream << "ADD ";
+    stream.close();
 }
 
 
@@ -323,7 +361,9 @@ void CodeBuilder::makeCodeOP(std::shared_ptr<ASTNode> node) {
     } else {
         result = (char *) "NOP "; //should never be reached by valid code
     }
+    stream.open(file_out, std::fstream::app);
     stream << result;
+    stream.close();
 }
 
 void CodeBuilder::makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes) {
@@ -341,7 +381,7 @@ void CodeBuilder::makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes) {
     makeCodeSTATEMENTS(stmts);
 }
 
-void CodeBuilder::makeCode(ASTCreator creator) {
-    std::shared_ptr<ASTNode> node = creator.getParentNode();
+void CodeBuilder::makeCode() {
+    std::shared_ptr<ASTNode> node = astCreator.getParentNode();
     makeCodePROG(node->getSubtree());
 }

@@ -26,8 +26,8 @@ int testTwo(Scanner scanner) {
 	creator.finish();
 	creator.hasError();
 
-    CodeBuilder builder;
-    builder.makeCode(creator);
+    CodeBuilder builder(creator, scanner.symtable);
+    builder.makeCode();
 
 	return 0;
 }
@@ -35,10 +35,10 @@ int testTwo(Scanner scanner) {
 
 int main() {
 
-
-    std::string input{};
-    cout << "Please enter a valid sentence (with spaces):\n>" << std::endl;
-    getline(cin, input);
+//
+//    std::string input{};
+//    cout << "Please enter a valid sentence (with spaces):\n>" << std::endl;
+//    getline(cin, input);
 
 
     Scanner scanner;
@@ -46,7 +46,7 @@ int main() {
 	scanner.startScanner();
 
     //Output to check correctness of generated tokens
-    ScannerTest test(scanner);
+    //ScannerTest test(scanner);
 
     testTwo(scanner);
     return 0;

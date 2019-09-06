@@ -13,16 +13,16 @@
 
 	    }
 
-int Symtable::calculateKey(char* lexem) {
-	int size = 0;
-	int result = 0;
-	while(*(lexem + size)) {
-		result ^= (*(lexem + size)) * size;
-		size++;
-	}
-	result = result % this->prime;
-	return result;
-}
+//int Symtable::calculateKey(char* lexem) {
+//	int size = 0;
+//	int result = 0;
+//	while(*(lexem + size)) {
+//		result ^= (*(lexem + size)) * size;
+//		size++;
+//	}
+//	result = result % this->prime;
+//	return result;
+//}
 
 Key Symtable::insert(char* lexem)
 {

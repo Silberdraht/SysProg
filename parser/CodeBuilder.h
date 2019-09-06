@@ -16,17 +16,20 @@ class CodeBuilder {
 
 public:
 
-    CodeBuilder();
+    CodeBuilder(ASTCreator astCreator, Symtable symTable);
     ~CodeBuilder();
 
-    void makeCode(ASTCreator creator);
+    void makeCode();
 
 private:
-    Symtable symtable;
     int label_counter = 1;
-    std::fstream stream;
+    std::ofstream stream;
 
-    const char *file_out = (char *) R"(../parser/output.code)";
+    ASTCreator astCreator;
+    Symtable symtable;
+
+    //const char* spaceOrLineBreak = " ";
+    const char* file_out = (char*) R"(../parser/output.txt)";
 
     void makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes);
     void makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes);
