@@ -4,14 +4,10 @@
 
 #include "Scanner.h"
 
-Scanner::Scanner() {
-
-}
+Scanner::Scanner() = default;
 
 
-Scanner::~Scanner() {
-
-}
+Scanner::~Scanner() = default;
 
 
 void Scanner::startScanner() {
@@ -130,12 +126,11 @@ Token Scanner::createToken() {
                 }
                 break;
             default:
-                //token.tokenType = Automat::TokenType(3);
-                //token.storage.error = (char) token.storage.sign;
-                break;
-
+                token.tokenType = TokenType(3);
+                token.storage.error = (char*) "UNKNOWN";
         }
     }
+
     return token;
 }
 

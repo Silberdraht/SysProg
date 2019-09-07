@@ -111,7 +111,7 @@
                     }
                 }
 
-                else if (isError(c)) {
+                else if (isInvalidCharacter(c)) {
                     precedingCR = false;
                     currentColumn++;
                     if (useBufferedStartColumn) {
@@ -130,15 +130,16 @@
             case digistate:
                 //std::cout << "digit: " << std::endl;
                 if (isDigit(c)) {
-                    listAutomat.addSymbol(c);
-                    currentColumn++;
+                        listAutomat.addSymbol(c);
+                        currentColumn++;
+
                 } else {
-                    //wenn char kein Digit, gehe wieder in
-                    // initzustand baue ein DigitToken und rufe checkSymbol mit c neu auf.
-                    prepareTokenDigit();
-                    stateActive = init;
-                    useBufferedStartColumn = true;
-                    checkSymbol(c);
+                        //wenn char kein Digit, gehe wieder in
+                        // initzustand baue ein DigitToken und rufe checkSymbol mit c neu auf.
+                        prepareTokenDigit();
+                        stateActive = init;
+                        useBufferedStartColumn = true;
+                        checkSymbol(c);
                 }
                 break;
 
@@ -148,7 +149,13 @@
                 if(isLetter(c) || (isDigit(c))) {
                     currentColumn++;
                     listAutomat.addSymbol(c);
-                } else {
+                }
+//                else if (isInvalidCharacter(c)) {
+//                    currentColumn++;
+//                    listAutomat.addSymbol(c);
+//                    stateActive = errorstate;
+//                }
+                else {
                     prepareTokenLetter();
                     stateActive = init;
                     useBufferedStartColumn = true;
@@ -163,13 +170,12 @@
                     listAutomat.addSymbol(c);
                     prepareTokenSign();
                     stateActive = init;
-                } else {
-                    prepareTokenSign();
-                    stateActive = init;
-                    useBufferedStartColumn = true;
-                    useBufferedSign = true;
-                    checkSymbol(c);
+                } else{
+                    listAutomat.addSymbol(c);
+                    currentColumn++;
+                    stateActive = errorstate;
                 }
+
                 break;
 
 
@@ -194,13 +200,11 @@
                     prepareTokenSign();
                     stateActive = init;
                 }
-
                 else if (isStar(c)) {
                     currentColumn++;
                     listAutomat.popSymbol();
                     stateActive = commentstate;
                 }
-
                 else {
                     prepareTokenSign();
                     stateActive = init;
@@ -256,6 +260,16 @@
                     stateActive = init;
                 }
                 break;
+
+            case errorstate:
+                if (isNewLine(c) || isBlank(c)) {
+                    prepareTokenError();
+                    stateActive = init;
+                    checkSymbol(c);
+                } else {
+                    currentColumn++;
+                    listAutomat.addSymbol(c);
+                }
         }
     }
 
@@ -278,7 +292,7 @@
                 break;
 
             case ErrorToken:
-                token.storage.error = listAutomat.popSymbol();
+                token.storage.error = copyChar(error);
                 break;
 
             case SignToken:
@@ -300,6 +314,21 @@
 
 
     void Automat::prepareTokenError() {
+        int amount = listAutomat.listLength();
+        char *string = new char[amount + 1];
+
+        for (int i = amount; i >= 0; i--) {
+            //token.lexem[i-1] = listAutomat.popSymbol();
+            char symbol = listAutomat.popSymbol();
+            if (symbol == ' ' && i == 0) {
+                string++;
+            }
+            else {
+                string[i] = symbol;
+            }
+        }
+        string[amount] = '\0';
+        error = string;
         tokenQueue.addSymbolAsLast('3'); //Errortoken
     }
 
@@ -544,7 +573,7 @@
 
 
     bool Automat::isBlank(char c) {
-        return c == ' ' || c == '\t';
+        return c == ' ' || c == '\t'; // ||c != '\000';
     }
 
 
@@ -581,9 +610,9 @@
     }
 
 
-    bool Automat::isError(char c) {
+    bool Automat::isInvalidCharacter(char c) {
         return (!isStar(c) && (!isNewLine(c)) && (!isBlank(c)) && (!isLetter(c)) && (!isDigit(c))
-                && (!isSignColon(c)) && (!isSignAnd(c)) && (!isSignEqual(c)) && (!isSign(c)) && c != '\000');
+                && (!isSignColon(c)) && (!isSignAnd(c)) && (!isSignEqual(c)) && (!isSign(c))); //&& c != '\000'
     }
 
 
@@ -689,4 +718,8 @@
     //Beendet den Automaten
     void Automat::endAutomat() {
         checkSymbol(' ');
+    }
+
+    bool Automat::isEOF(char c) {
+        return c == '\000';
     }

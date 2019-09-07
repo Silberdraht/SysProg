@@ -31,7 +31,7 @@ struct Token {
         long number;
         char* lexem;
         char* sign;
-        char error;
+        char* error;
     } storage;
 
 };
@@ -55,6 +55,7 @@ public:
     bool useBufferedSign = false;
 
     char *identifier = nullptr;
+    char *error = nullptr;
 
 
     char* copyChar(const char *string);
@@ -71,7 +72,8 @@ private:
         equalcolonstate,
         letterstate,
         commentstate,
-        commentstate2
+        commentstate2,
+        errorstate
     };
 
     unsigned int currentLine = 1;
@@ -113,9 +115,11 @@ private:
 
     bool isNewLine(char c);
 
+    bool isEOF(char c);
+
     bool isStar(char c);
 
-    bool isError(char c);
+    bool isInvalidCharacter(char c);
 
     bool isArrayEqual(char ar1[], char ar2[], int length);
 
