@@ -25,7 +25,8 @@ class Symtable {
 	int prime = 97;
 	StringTable table;
 	Link_List<Information> Listptrs[97];
-	int calculateKey(char* lexem);
+	Link_List<int> usedKeys;
+	//int calculateKey(char* lexem);
 
 public:
 
@@ -33,7 +34,8 @@ public:
 	~Symtable();
 	Key insert(char* lexem);
 	Information lookup(Key key);
-	bool hasLexem(char* lexem);
+	Key lookupLexem(char *lexem);
+    bool compare(const char* lex1, const char* lex2);
 
 };
 

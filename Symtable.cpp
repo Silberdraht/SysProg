@@ -6,12 +6,8 @@
  */
 
 #include "Symtable.h"
-	Symtable::Symtable() {
-
-	    }
-	Symtable::~Symtable() {
-
-	    }
+	Symtable::Symtable() = default;
+	Symtable::~Symtable() = default;
 
 //int Symtable::calculateKey(char* lexem) {
 //	int size = 0;
@@ -26,7 +22,10 @@
 
 Key Symtable::insert(char* lexem)
 {
-	Key key;
+    Key alreadyExists = lookupLexem(lexem);
+    if (alreadyExists.key != -1 && alreadyExists.KeyNr != -1) {
+        return alreadyExists;
+    }
 	int size = 0;
 	int result = 0;
 	while(*(lexem + size)) {
@@ -35,15 +34,14 @@ Key Symtable::insert(char* lexem)
 	}
 	if(size > 0) {
 		char* entry = table.insert(lexem,size);
-		Information infoToAdd;
+		Information infoToAdd{};
         infoToAdd.setLexem(entry);
         result = result % this->prime;
-        key.key = result;
+        usedKeys.push_back(result); //for lookup -> runtimeoptimization
         Listptrs[result].push_back(infoToAdd);
-        key.KeyNr =  Listptrs[result].size();
-        return key;
+        return Key{result, Listptrs[result].size()};
 	} else {
-		return key;
+		return Key{-1,-1}; //empty lexem
 	}
 
 }
@@ -51,4 +49,35 @@ Key Symtable::insert(char* lexem)
 Information Symtable::lookup(Key key){
 	auto info = Listptrs[key.key].at(key.KeyNr);
 	return info;
+}
+
+Key Symtable::lookupLexem(char *lexem) {
+
+    auto keyElem =  usedKeys.getFirst();
+    for (int index=1; index <= usedKeys.size(); index++) {
+        int key = keyElem->getContent();
+        auto element = Listptrs[key].getFirst();
+        int size = Listptrs[key].size();
+        for (int keyNr=1; keyNr <= size; keyNr++) {
+            if (compare(element->getContent().getLexem(), lexem)) {
+                return Key{key,keyNr};
+            } else {
+                element = element->getSuccessor();
+                keyNr++;
+            }
+        }
+        keyElem = keyElem->getSuccessor();
+    }
+    return Key{-1,-1};
+}
+
+bool Symtable::compare(const char *lex1, const char *lex2) {
+    int index = 0;
+    while (lex1[index] != '\0' && lex2[index] != '\0') {
+        if (lex1[index] != lex2[index]) {
+            return false;
+        }
+        index++;
+    }
+    return (lex1[index] == '\0' && lex2[index] == '\0');
 }

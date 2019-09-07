@@ -13,6 +13,10 @@ public:
     T content;
     std::shared_ptr<Element<T>> predecessor = nullptr;
     std::shared_ptr<Element<T>> successor = nullptr;
+    std::shared_ptr<Element<T>> getPredecessor();
+    std::shared_ptr<Element<T>> getSuccessor();
+    T getContent();
+
 };
 
 template <typename T>
@@ -29,6 +33,8 @@ public:
     T end();
     T begin();
     T at(int position);
+    std::shared_ptr<Element<T>> getFirst();
+    std::shared_ptr<Element<T>> getLast();
 
 
 private:
@@ -124,6 +130,31 @@ T Link_List<T>::at(int position) {
             element = (element->successor).get();
         }
     return element->content;
+}
+
+template<typename T>
+std::shared_ptr<Element<T>> Element<T>::getPredecessor() {
+    return this->predecessor;
+}
+
+template<typename T>
+std::shared_ptr<Element<T>> Element<T>::getSuccessor() {
+    return this->successor;
+}
+
+template<typename T>
+T Element<T>::getContent() {
+    return content;
+}
+
+template<typename T>
+std::shared_ptr<Element<T>> Link_List<T>::getFirst() {
+    return first;
+}
+
+template<typename T>
+std::shared_ptr<Element<T>> Link_List<T>::getLast() {
+    return last;
 }
 
 #endif //SYSPROG_LINK_LIST_H
