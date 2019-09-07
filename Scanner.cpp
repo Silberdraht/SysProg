@@ -79,10 +79,10 @@ Token Scanner::createToken() {
                 token.storage.key = star;
                 break;
             case '<':
-                token.storage.key = greater;
+                token.storage.key = lesser;
                 break;
             case '>':
-                token.storage.key = lesser;
+                token.storage.key = greater;
                 break;
             case '&':
                 if (*(token.storage.sign+1) == '&') {

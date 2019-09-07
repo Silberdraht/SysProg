@@ -120,8 +120,8 @@ T Link_List<T>::back() {
 template<typename T>
 T Link_List<T>::at(int position) {
     Element<T>* element = first.get();
-        for(int i = 0; i > position; i++){
-            element++;
+        for(int i = 0; i < position-1; i++){
+            element = (element->successor).get();
         }
     return element->content;
 }

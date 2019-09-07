@@ -36,13 +36,12 @@ Key Symtable::insert(char* lexem)
 	if(size > 0) {
 		char* entry = table.insert(lexem,size);
 		Information infoToAdd;
-			infoToAdd.setLexem(entry);
-			//int keyInt = calculateKey(entry);
-			result = result % this->prime;
-			key.key = result;
-            Listptrs[result].push_front(infoToAdd);
-			key.KeyNr =  Listptrs[result].size();
-			return key;
+        infoToAdd.setLexem(entry);
+        result = result % this->prime;
+        key.key = result;
+        Listptrs[result].push_back(infoToAdd);
+        key.KeyNr =  Listptrs[result].size();
+        return key;
 	} else {
 		return key;
 	}
