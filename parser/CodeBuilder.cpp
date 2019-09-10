@@ -42,7 +42,7 @@ void CodeBuilder::makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes) {
         return;
     }
     stream.open(file_out, std::fstream::app);
-    stream << "DS " << identifier << " "; // no spaceOrLineBreak
+    stream << "DS $" << identifier << " "; // no spaceOrLineBreak
     stream.close();
     makeCodeARRAY(array);
 }
