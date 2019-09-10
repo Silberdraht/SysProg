@@ -1,6 +1,7 @@
 #include "Scanner.h"
 #include "AST/ASTBuild/ASTCreator.h"
 #include <iostream>
+#include <chrono>
 #include "tests/ScannerTest.h"
 #include "parser/CodeBuilder.h"
 
@@ -40,15 +41,24 @@ int main() {
 //    cout << "Please enter a valid sentence (with spaces):\n>" << std::endl;
 //    getline(cin, input);
 
-
+    auto starttime = chrono::steady_clock::now();
     Scanner scanner;
-	scanner.initializeSymtable();
 	scanner.startScanner();
 
     //Output to check correctness of generated tokens
     ScannerTest test(scanner);
+    //testTwo(scanner);
 
-    testTwo(scanner);
+    ASTCreator creator = ASTCreator(scanner);
+    creator.buildTree();
+
+    CodeBuilder builder(creator, scanner.symtable);
+    builder.makeCode();
+
+    auto endtime = chrono::steady_clock::now();
+    std::cout << "Elapsed time in seconds: " << chrono::duration_cast<chrono::seconds>(endtime - starttime).count() << std::endl;
+    std::cout << "Elapsed time in milliseconds: " << chrono::duration_cast<chrono::milliseconds>(endtime - starttime).count() << std::endl;
+
     return 0;
 }
 

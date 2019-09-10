@@ -68,7 +68,7 @@ public:
 	void addNewSign(NodeType);
 	int hasLayers();
 private:
-	const int stackSize = 30;
+	const int stackSize = 50; //30
 	const int stackDepth = 10;
 	int **stack;
 	int currentLevel = 0;

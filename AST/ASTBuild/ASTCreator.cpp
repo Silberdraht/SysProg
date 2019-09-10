@@ -96,33 +96,27 @@ int ASTCreator::checkCalcSign(Token token) {
 	else if (compare(token.storage.key, scanner.minus)) {
 		return 1;
 	}
-
 	else if (compare(token.storage.key, scanner.star)) {
 		return 1;
-	} else if (compare(token.storage.key, scanner.lesser)) {
+	}
+	else if (compare(token.storage.key, scanner.lesser)) {
 		return 1;
 	}
-
 	else if (compare(token.storage.key, scanner.greater)) {
 		return 1;
 	}
-
 	else if (compare(token.storage.key, scanner.equals)) {
 		return 1;
 	}
-
 	else if (compare(token.storage.key, scanner.colonEquals)) {
 		return 1;
 	}
-
 	else if (compare(token.storage.key, scanner.equalsColonEquals)) {
 		return 1;
 	}
-
 	else if (compare(token.storage.key, scanner.andAnd)) {
 		return 1;
 	}
-
 	return 0;
 }
 
@@ -131,10 +125,6 @@ void ASTCreator::setScanner(Scanner newscanner) {
 	table = scanner.symtable;
 }
 
-//ASTCreator::ASTCreator() : head(ASTNode()), current(ASTNode()), buildHead(ASTNode()) {
-//	// TODO Auto-generated constructor stub
-//
-//}
 
 int ASTCreator::computeToken(Token token) {
 	needsNewToken = 1;
@@ -143,7 +133,6 @@ int ASTCreator::computeToken(Token token) {
 			return 1;
 		}
 		NodeType type = getTokenType(token);
-//		ASTNode *newNode = new ASTNode(type);
 		std::shared_ptr<ASTNode> newNode;
 		debugPrint("BUILDNODE: ", type);
 		if (type != PROG) {
@@ -201,7 +190,6 @@ int ASTCreator::computeToken(Token token) {
 			buildOP(token);
 			break;
 
-			//TODO Terminale behandeln, die hier sind ALLE falsch, sind nur placeholder
 			//man muss ein token einlesen und bestimmen, ob es dem Terminal entspricht
 		case PLUSSIGN:	//+
 			if (compare(token.storage.key, scanner.plus)) {
@@ -412,8 +400,6 @@ void ASTCreator::buildPROG() {
 	buildNode(STATEMENTS);
 }
 void ASTCreator::buildDECLS(Token token, shared_ptr<ASTNode> newNode) {
-	//Teste, ob zeichen leer sind
-	//TODO int einprogrammieren
 	if (token.tokenType == 7 /*int*/) {
 	    head = newNode;
 		stack.addNewLayer();
@@ -450,7 +436,6 @@ void ASTCreator::buildARRAY(Token token, shared_ptr<ASTNode> newNode) {
 
 void ASTCreator::buildSTATEMENTS(Token token, std::shared_ptr<ASTNode> newNode) {
 	//Teste, ob zeichen leer sind
-	//TODO wenn zeichenkette leer is tritt dieser Fall ein
 	if (token.tokenType == 2 || token.tokenType == 9 || token.tokenType == 8 || token.tokenType == 4 || token.tokenType == 5 || compare(token.storage.key, scanner.curlyBracketOpen)) {
         head = newNode;
 	    stack.addNewLayer();
@@ -545,56 +530,44 @@ void ASTCreator::buildOP_EXP(Token token, shared_ptr<ASTNode> newNode) {
 	}
 }
 void ASTCreator::buildOP(Token token) {
-	//TODO add different signs
-
 	if (compare(token.storage.key, scanner.plus)) {
 		buildNode(PLUSSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.minus)) {
 		buildNode(MINUSSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.star)) {
 		buildNode(STARSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.colon)) {
 		buildNode(DOUBLESIGN);
-	} else if (compare(token.storage.key, scanner.lesser)) {
+	}
+	else if (compare(token.storage.key, scanner.lesser)) {
 		buildNode(LESSSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.greater)) {
 		buildNode(GREATERSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.equals)) {
 		buildNode(EQUALSSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.colonEquals)) {
 		buildNode(OTHEREQUALSSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.equalsColonEquals)) {
 		buildNode(EQUPEQUSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.andAnd)) {
 		buildNode(ANDSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.semicolon)) {
 		buildNode(COLONSIGN);
 	}
-
 	else if (compare(token.storage.key, scanner.exclamationMark)) {
 		buildNode(EXCLSIGN);
 	} else {
 		error = 1;
 	}
-
 }
 
 void ASTCreator::buildNode(NodeType type) {
@@ -651,4 +624,13 @@ shared_ptr<ASTNode> ASTCreator::getParentNode() {
 //}
 ASTCreator::ASTCreator(Scanner scanner) : scanner{scanner} {
     table = scanner.symtable;
+}
+
+void ASTCreator::buildTree() {
+    while (scanner.hasTokens()) {
+        computeToken(scanner.nextToken());
+    }
+    finish();
+    hasError();
+
 }

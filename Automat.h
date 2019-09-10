@@ -65,7 +65,7 @@ private:
 
     enum state {
         init,
-        digistate,
+        digitstate,
         equalstate,
         colonstate,
         andstate,

@@ -33,6 +33,7 @@ public:
 	explicit ASTCreator(Scanner scanner);
 	int computeToken(Token token);
 	void init();
+	void buildTree();
 	void buildPROG();
 	void buildDECLS(Token token, std::shared_ptr<ASTNode> newNode);
 	void buildDECL();

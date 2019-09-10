@@ -28,7 +28,7 @@ private:
     ASTCreator astCreator;
     Symtable symtable;
 
-    //const char* spaceOrLineBreak = " ";
+    const char* spaceOrLineBreak = "\n";
     const char* file_out = (char*) R"(../parser/output.txt)";
 
     void makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes);
@@ -37,11 +37,11 @@ private:
     void makeCodeARRAY(Link_List<std::shared_ptr<ASTNode>> nodes);
     void makeCodeSTATEMENTS(Link_List<std::shared_ptr<ASTNode>> tokens);
     void makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes);
-    void makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes);
-    void makeCodeEXP2(Link_List<std::shared_ptr<ASTNode>> nodes);
+    bool makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes);
+    bool makeCodeEXP2(Link_List<std::shared_ptr<ASTNode>> nodes);
     void makeCodeINDEX(Link_List<std::shared_ptr<ASTNode>> nodes);
     void makeCodeOP_EXP(Link_List<std::shared_ptr<ASTNode>> nodes);
-    void makeCodeOP(std::shared_ptr<ASTNode> node);
+    void makeCodeOP(const std::shared_ptr<ASTNode>& node);
 };
 
 

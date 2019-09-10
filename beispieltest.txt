@@ -1,5 +1,39 @@
- int b;
- int a;
- write (1+2);
- write (a);
- a := 2 + 3;
+int[10] foo;
+int foobar;
+int bar;
+
+
+foo[0] := 42; 			:*42*:
+foo[(-10 + -foo[0] + 53)] := 21; :*21*:
+foobar := !(foobar); 		:*1*:
+bar := !!--!bar; 		:*1*:
+foo[!!-(--bar) + 1] := 4711;	:*4711*:
+
+write(foo[0]);
+write(foo[1]);
+write(foo[2]);
+write(foobar);
+write(bar);
+
+{bar:=10;{
+while(bar =:= 0) {
+	write(foo[bar - !0]);
+	bar := bar - -1 + 2;
+};
+};};
+
+
+read(foo[9]);
+if(foo[0] = 42) write(foo[9]) else {};
+read(foobar);
+if(bar > 0){while(1){};} else write(foobar);
+write(foo[0] + 1);
+write(foo[0] - 1);
+write(foo[0] * 2);
+write(foo[0] : 2);
+write(foo[0] < 42);
+write(foo[0] > 21);
+write(foo[0] = 42);
+write(foo[0] =:= 42);
+write(bar && 1);
+if(1 && !bar) write(1337) else { write(foo[9]); while(42){};};

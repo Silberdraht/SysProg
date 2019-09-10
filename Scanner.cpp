@@ -11,6 +11,7 @@ Scanner::~Scanner() = default;
 
 
 void Scanner::startScanner() {
+    initializeSymtable();
 
     char c = ' ';
     while (c != '\0') {

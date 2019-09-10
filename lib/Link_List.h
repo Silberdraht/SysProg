@@ -93,7 +93,6 @@ void Link_List<T>::push_front(T add_obj) {
         first->predecessor = elm;
         elm->successor = first;
         first = elm;
-        elm->predecessor = nullptr;
     }
     i_size++;
 }

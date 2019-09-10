@@ -13,7 +13,7 @@
                 if (isDigit(c)) {
                     precedingCR = false; //Carriage Return not followed by a \n;
                     currentColumn++;
-                    stateActive = digistate;
+                    stateActive = digitstate;
                     listAutomat.addSymbol(c);
 
                     //Speichert den Anfang des Tokens
@@ -110,6 +110,9 @@
                         currentLine++;
                     }
                 }
+                else if (isEOF(c)) {
+                    break;
+                }
 
                 else if (isInvalidCharacter(c)) {
                     precedingCR = false;
@@ -127,7 +130,7 @@
                 break;
 
 
-            case digistate:
+            case digitstate:
                 //std::cout << "digit: " << std::endl;
                 if (isDigit(c)) {
                         listAutomat.addSymbol(c);
