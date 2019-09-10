@@ -322,6 +322,14 @@ bool CodeBuilder::makeCodeEXP2(Link_List<std::shared_ptr<ASTNode>> nodes) {
 
     }
     else if (node->getType() == EXCLSIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp2;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == EXP2) {
+                exp2 = node->getSubtree();
+            }
+        }
+        makeCodeEXP2(exp2);
         stream.open(file_out, std::fstream::app);
         stream << "NOT" << spaceOrLineBreak;
         stream.close();
