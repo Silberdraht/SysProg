@@ -9,7 +9,6 @@
 #define AST_ASTNODE_H_
 
 #include "ASTBuild/ASTStack.h"
-#include "ASTLinkedList.h"
 #include "../Symtable.h"
 #include "../lib/Link_List.h"
 

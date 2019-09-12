@@ -254,7 +254,7 @@ bool CodeBuilder::makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
                     newOP_EXP->addChild(newEXP); //->getSubtree().push_back(newExp);
                     newEXP->addChild(exp2);
                     //newExp->parent = op_exp;
-                    makeCodeOP_EXP(op_exp->getSubtree());
+                    makeCodeOP_EXP(newOP_EXP->getSubtree());
                 } else {
                     makeCodeEXP2(exp2->getSubtree());
                     makeCodeOP_EXP(op_exp->getSubtree());
@@ -399,7 +399,7 @@ void CodeBuilder::makeCodeOP(const std::shared_ptr<ASTNode>& node) {
         stream << "DIV" << spaceOrLineBreak;
     } else if (type == EQUALSSIGN || type == EQUPEQUSIGN) {
         stream << "EQU" << spaceOrLineBreak;
-    } else if (type == LESSSIGN) {
+    } else if (type == LESSSIGN || type == GREATERSIGN) {
         stream << "LES" << spaceOrLineBreak;
     } else if (type == ANDSIGN) {
         stream << "AND" << spaceOrLineBreak;

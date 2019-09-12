@@ -25,7 +25,6 @@ set(SOURCE_FILES_AUFGABE_2
         tests/ScannerTest.cpp tests/ScannerTest.h
         parser/CodeBuilder.h parser/CodeBuilder.cpp
         lib/Link_List.h
-        AST/ASTLinkedList.h
         AST/ASTNode.h AST/ASTNode.cpp
         AST/ASTBuild/ASTCreator.h AST/ASTBuild/ASTCreator.cpp
         AST/ASTBuild/ASTStack.h AST/ASTBuild/ASTStack.cpp)
