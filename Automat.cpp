@@ -3,7 +3,8 @@
     //
 
 
-    #include "Automat.h"
+#include <tgmath.h>
+#include "Automat.h"
 
 
     void Automat::checkSymbol(char c) {
@@ -286,8 +287,8 @@
 
         switch (tokenType) {
             case IdentifierToken:
-                token.storage.lexem = copyChar(identifier);
-                this->clearIdentifier();
+                //token.storage.lexem = copyChar(identifier);
+                //this->clearIdentifier();
                 break;
 
             case DigitToken:
@@ -299,11 +300,11 @@
                 break;
 
             case SignToken:
-                token.storage.sign = sign;
-                if (useBufferedSign) {
-                    sign = bufferedSign;
-                    useBufferedSign = false;
-                }
+//                token.storage.sign = sign;
+//                if (useBufferedSign) {
+//                    sign = bufferedSign;
+//                    useBufferedSign = false;
+//                }
                 //token.storage.sign = temp; //copyChar(sign);
                 //this->clearSign();
                 break;
@@ -335,28 +336,27 @@
         tokenQueue.addSymbolAsLast('3'); //Errortoken
     }
 
-    //TO FIX return value and token creation
+
     void Automat::prepareTokenDigit() {
 
-        int ca[listAutomat.listLength()];
-        int counter = listAutomat.listLength();
-        int counter2 = counter;
+        int power = 0;
+        int value = 0;
+        bool overflow = false;
         while (!listAutomat.isEmpty()) {
-            //Fügt Inhalte der Verkettenen Liste in ein Char Array
-            ca[counter-1] = convertCharToInt(listAutomat.popSymbol());
-            counter--;
+            value += pow(10,power)*convertCharToInt(listAutomat.popSymbol());
+            if (value < 0) {
+                overflow = true;
+                break;
+            }
+            power++;
         }
-
-        int digitValue = 0;
-        int power = 1;
-        while (counter2 > 0) {
-            digitValue += ((ca[counter2-1]) * power);
-            power *= 10;
-            counter2--;
+        if (!overflow) {
+            this->number = value;
+            tokenQueue.addSymbolAsLast('1'); //Digittoken
+        } else {
+            this->error = (char*)"Integer overflow";
+            tokenQueue.addSymbolAsLast('3'); //Errortoken
         }
-
-        this->number = digitValue;
-        tokenQueue.addSymbolAsLast('1'); //Digittoken
     }
 
 
@@ -672,11 +672,6 @@
     }
 
 
-    long Automat::getNumber() {
-        return this->number;
-    }
-
-
     bool Automat::isArrayEqual(char ar1[], char ar2[], int length) {
         for (int i = length -1; i > -1; i--) {
             if (ar1[i] != ar2[i]) {
@@ -694,6 +689,10 @@
             identifier[i] = '\0';
             i++;
         }
+    }
+
+    char* Automat::getIdentifer() {
+        return copyChar(identifier);
     }
 
 

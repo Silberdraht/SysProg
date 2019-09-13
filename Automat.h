@@ -28,9 +28,9 @@ struct Token {
     TokenType tokenType;
     union Storage {
         Key key; //Insert Key für Hash
-        long number;
-        char* lexem;
-        char* sign;
+        int number;
+        //char* lexem;
+        //char* sign;
         char* error;
     } storage;
 
@@ -40,7 +40,6 @@ class Automat {
 
 
 public:
-
     LinkedList listAutomat;
     LinkedList tokenQueue;
 
@@ -50,18 +49,20 @@ public:
 
     void endAutomat();
 
+    static char* copyChar(const char *string);
+    int convertCharToInt(char c);
+
+    char *getIdentifer();
+    void clearIdentifier();
+    void clearSign();
+
     char *sign = nullptr;
     char *bufferedSign = nullptr;
     bool useBufferedSign = false;
 
+private:
     char *identifier = nullptr;
     char *error = nullptr;
-
-
-    char* copyChar(const char *string);
-    int convertCharToInt(char c);
-
-private:
 
     enum state {
         init,
@@ -82,14 +83,10 @@ private:
     unsigned int bufferedStartColumn;
     bool useBufferedStartColumn = false;
     unsigned int startLine;
-    long number;
-
+    int number;
     bool precedingCR = false;  //avoiding duplicate new line count on a windows machine
 
     state stateActive = init;
-
-    void clearIdentifier();
-    void clearSign();
 
     void prepareTokenDigit();
 
@@ -130,8 +127,6 @@ private:
     unsigned int getStartLine();
 
     unsigned int getStartColumn();
-
-    long getNumber();
 
 };
 

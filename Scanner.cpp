@@ -60,12 +60,12 @@ Token Scanner::createToken() {
     Token token = automat.createToken(tokentype);
 
     if (tokentype == IdentifierToken) {
-        char *str = token.storage.lexem;
-        token.storage.key = symtable.insert(str);
+        //char *str = token.storage.lexem;
+        token.storage.key = symtable.insert(automat.getIdentifer());
+        automat.clearIdentifier();
     }
     else if (tokentype == SignToken) {
-        switch(*token.storage.sign) {
-
+        switch(*automat.sign) {
             case '+':
                 token.storage.key = plus;
                 break;
@@ -82,7 +82,7 @@ Token Scanner::createToken() {
                 token.storage.key = greater;
                 break;
             case '&':
-                if (*(token.storage.sign+1) == '&') {
+                if (*(automat.sign+1) == '&') {
                     token.storage.key = andAnd;
                 } else {
                     token.storage.key = sAnd;
@@ -113,14 +113,14 @@ Token Scanner::createToken() {
                 token.storage.key = squareBracketClose;
                 break;
             case '=':
-                if (*(token.storage.sign+1) == ':' && *(token.storage.sign+2) == '=') {
+                if (*(automat.sign+1) == ':' && *(automat.sign+2) == '=') {
                     token.storage.key = equalsColonEquals;
                 } else {
                     token.storage.key = equals;
                 }
                 break;
             case ':':
-                if (*(token.storage.sign+1) == '=') {
+                if (*(automat.sign+1) == '=') {
                     token.storage.key = colonEquals;
                 } else {
                     token.storage.key = colon;
@@ -130,6 +130,11 @@ Token Scanner::createToken() {
                 token.tokenType = TokenType(3);
                 token.storage.error = (char*) "UNKNOWN";
         }
+        if (automat.useBufferedSign) {
+            automat.sign = automat.bufferedSign;
+            automat.useBufferedSign = false;
+        }
+        automat.clearSign();
     }
 
     return token;
