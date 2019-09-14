@@ -14,7 +14,7 @@ class ScannerTest {
 
 public:
 
-    explicit ScannerTest(const Scanner& scanner);
+    explicit ScannerTest(Scanner scanner);
 
     void outputTokensToFile();
 

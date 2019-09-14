@@ -11,8 +11,7 @@ set(SOURCE_FILES_AUFGABE_1
         Symtable.cpp Symtable.h
         StringTable.cpp StringTable.h
         Information.cpp Information.h
-        InformationLinkedList.cpp InformationLinkedList.h
-        Scanner.cpp Scanner.h TokenList.cpp TokenList.h
+        Scanner.cpp Scanner.h
         tests/ScannerTest.cpp tests/ScannerTest.h)
 set(SOURCE_FILES_AUFGABE_2
         main.cpp
@@ -22,10 +21,13 @@ set(SOURCE_FILES_AUFGABE_2
         Symtable.cpp Symtable.h
         StringTable.cpp StringTable.h
         Information.cpp Information.h
-        InformationLinkedList.cpp InformationLinkedList.h
-        Scanner.cpp Scanner.h TokenList.cpp TokenList.h
+        Scanner.cpp Scanner.h
+        tests/ScannerTest.cpp tests/ScannerTest.h
         parser/CodeBuilder.h parser/CodeBuilder.cpp
-        lib/Link_List.h)
+        lib/Link_List.h
+        AST/ASTNode.h AST/ASTNode.cpp
+        AST/ASTBuild/ASTCreator.h AST/ASTBuild/ASTCreator.cpp
+        AST/ASTBuild/ASTStack.h AST/ASTBuild/ASTStack.cpp)
 set(SOURCE_FILES_PHILIPPS_TESTS
         lib/Link_List.h tests/Link_List_Test.cpp tests/Link_List_Test.h)
 

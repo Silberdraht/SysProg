@@ -14,7 +14,7 @@
     	freeSpace = size;
     }
     StringTable::~StringTable() {
-    	delete table;
+    	//delete table;
     }
 
 void memcpy(char* dest,char* lexem, int size) {
@@ -40,16 +40,14 @@ void StringTable::resize() {
 char* StringTable::insert(char* lexem, int size)
 {
 	char* tmp = this->freeP;
-	if (size < this->freeSpace)
-	{
-		memcpy(this->freeP,lexem,size+1);
-		this->freeP[size] = '\0';
-		this->freeP += size+1;
-		this->freeSpace -= size+1;
-	} else
+	if (!(size < this->freeSpace))
 	{
 		resize();
 	}
+		memcpy(this->freeP,lexem,size+1);
+				this->freeP[size] = '\0';
+				this->freeP += size+1;
+				this->freeSpace -= size+1;
 	return tmp;
 }
 

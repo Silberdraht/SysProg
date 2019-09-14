@@ -28,10 +28,10 @@ struct Token {
     TokenType tokenType;
     union Storage {
         Key key; //Insert Key für Hash
-        long number;
-        char* lexem;
-        char* sign;
-        char error;
+        int number;
+        //char* lexem;
+        //char* sign;
+        char* error;
     } storage;
 
 };
@@ -40,7 +40,6 @@ class Automat {
 
 
 public:
-
     LinkedList listAutomat;
     LinkedList tokenQueue;
 
@@ -50,44 +49,44 @@ public:
 
     void endAutomat();
 
+    static char* copyChar(const char *string);
+    int convertCharToInt(char c);
+
+    char *getIdentifer();
+    void clearIdentifier();
+    void clearSign();
+
     char *sign = nullptr;
     char *bufferedSign = nullptr;
     bool useBufferedSign = false;
 
-    char *identifier = nullptr;
-
-
-    char* copyChar(const char *string);
-    int convertCharToInt(char c);
-
 private:
+    char *identifier = nullptr;
+    char *error = nullptr;
 
     enum state {
         init,
-        digistate,
+        digitstate,
         equalstate,
         colonstate,
         andstate,
         equalcolonstate,
         letterstate,
         commentstate,
-        commentstate2
+        commentstate2,
+        errorstate
     };
 
     unsigned int currentLine = 1;
     unsigned int currentColumn = 0;
-    unsigned int startColumn;
+    unsigned int startColumn = 0;
     unsigned int bufferedStartColumn;
-    bool useBufferedStartColumn;
+    bool useBufferedStartColumn = false;
     unsigned int startLine;
-    long number;
-
+    int number;
     bool precedingCR = false;  //avoiding duplicate new line count on a windows machine
 
     state stateActive = init;
-
-    void clearIdentifier();
-    void clearSign();
 
     void prepareTokenDigit();
 
@@ -113,9 +112,11 @@ private:
 
     bool isNewLine(char c);
 
+    bool isEOF(char c);
+
     bool isStar(char c);
 
-    bool isError(char c);
+    bool isInvalidCharacter(char c);
 
     bool isArrayEqual(char ar1[], char ar2[], int length);
 
@@ -126,8 +127,6 @@ private:
     unsigned int getStartLine();
 
     unsigned int getStartColumn();
-
-    long getNumber();
 
 };
 

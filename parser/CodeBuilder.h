@@ -9,34 +9,39 @@
 #include "../Symtable.h"
 #include "../Automat.h"
 #include "../lib/Link_List.h"
+#include "../AST/ASTNode.h"
+#include "../AST/ASTBuild/ASTCreator.h"
 
 class CodeBuilder {
 
 public:
 
-    CodeBuilder();
+    CodeBuilder(ASTCreator astCreator, Symtable symTable);
     ~CodeBuilder();
 
     void makeCode();
 
-
 private:
-    Symtable symtable;
     int label_counter = 1;
-    std::fstream stream;
+    std::ofstream stream;
 
-    int size_of(const char *identifier);
-    Link_List<Token> getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose);
+    ASTCreator astCreator;
+    Symtable symtable;
 
-    void makeCodeDECL(Link_List<Token> tokens);
-    void makeCodeDECLS(Link_List<Token> tokens);
-    void makeCodeSTATEMENTS(Link_List<Token> tokens);
-    void makeCodeSTATEMENT(Link_List<Token> tokens);
-    void makeCodeEXP(Link_List<Token> tokens);
-    void makeCodeEXP2(Link_List<Token> tokens);
-    void makeCodeINDEX(Link_List<Token> tokens);
-    void makeCodeOP_EXP(Link_List<Token> tokens);
-    void makeCodeOP(Token token);
+    const char* spaceOrLineBreak = "\n";
+    const char* file_out = (char*) R"(../parser/output.txt)";
+
+    void makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeDECLS(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeARRAY(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeSTATEMENTS(Link_List<std::shared_ptr<ASTNode>> tokens);
+    void makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes);
+    bool makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes);
+    bool makeCodeEXP2(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeINDEX(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeOP_EXP(Link_List<std::shared_ptr<ASTNode>> nodes);
+    void makeCodeOP(const std::shared_ptr<ASTNode>& node);
 };
 
 

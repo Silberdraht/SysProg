@@ -6,336 +6,426 @@
 #include "../lib/Link_List.h"
 #include "CodeBuilder.h"
 
-CodeBuilder::CodeBuilder(){
-    stream.open(R"(../xxx.code)");
+CodeBuilder::CodeBuilder(ASTCreator astCreator, Symtable symTable) : astCreator(astCreator), symtable(symTable) {
 }
-CodeBuilder::~CodeBuilder() {
+CodeBuilder::~CodeBuilder() = default;
+
+void CodeBuilder::makeCodeDECLS(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == DECLS) {
+            makeCodeDECLS(node->getSubtree());
+        } else if (node->getType() == DECL) {
+            makeCodeDECL(node->getSubtree());
+        }
+    }
+
+}
+
+
+void CodeBuilder::makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    Link_List<std::shared_ptr<ASTNode>> array;
+    char* identifier;
+    bool identifierFound = false;
+    while(!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == IDENTIFIER) {
+            identifier = symtable.lookup(node->getKey()).getLexem();
+            identifierFound = true;
+        } else if (node->getType() == ARRAY) {
+            array = node->getSubtree();
+        }
+    }
+
+    if (!identifierFound) {
+        std::cout << "Identifier expected in declaration";
+        return;
+    }
+    stream.open(file_out, std::fstream::app);
+    stream << "DS $" << identifier << " "; // no spaceOrLineBreak
+    stream.close();
+    makeCodeARRAY(array);
+}
+
+void CodeBuilder::makeCodeARRAY(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    int size = -1;
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> arrayNode = nodes.pop_front();
+        if (arrayNode->getType() == INTEGER) {
+            size = arrayNode->getDigit();
+        }
+    }
+    if (size == -1) {
+        size = 1;
+    }
+    stream.open(file_out, std::fstream::app);
+    stream << size << spaceOrLineBreak;
     stream.close();
 }
 
-void CodeBuilder::makeCodeDECLS(Link_List<Token> tokens) {
-    if (tokens.empty()) {
-        return;
-        //return (char *) "";
-    }
-    Token token = tokens.pop_front();
-    Link_List<Token> declaration;
-    while (token.tokenType != SignToken && symtable.lookup(token.storage.key).getLexem()[0] != ';') {
-        declaration.push_back(token);
-        token = tokens.pop_front();
-    }
-    makeCodeDECL(declaration);
-    makeCodeDECLS(tokens);
-}
-
-
-void CodeBuilder::makeCodeDECL(Link_List<Token> tokens) {
-    int size = 1;
-    char* identifier;
-    while (!tokens.empty()) {
-        Token token = tokens.pop_front();
-        switch (token.tokenType) {
-            case IdentifierToken:
-                identifier = symtable.lookup(token.storage.key).getLexem();
-                break;
-            case DigitToken:
-                size = (int) token.storage.number;
-                break;
-            default: break;
-
+void CodeBuilder::makeCodeSTATEMENTS(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == STATEMENTS) {
+            makeCodeSTATEMENTS(node->getSubtree());
+        } else if (node->getType() == STATEMENT) {
+            makeCodeSTATEMENT(node->getSubtree());
         }
     }
 
-    stream << "DS " << identifier << " " << size;
 }
 
-void CodeBuilder::makeCodeSTATEMENTS(Link_List<Token> tokens) {
-    if (tokens.empty()) {
-        return;
-        //return (char *) "";
-    }
-    Token token = tokens.pop_front();
-    Link_List<Token> statement;
-    while (token.tokenType != SignToken && symtable.lookup(token.storage.key).getLexem()[0] != ';') {
-        statement.push_back(token);
-        token = tokens.pop_front();
-    }
-    makeCodeSTATEMENT(statement);
-    makeCodeSTATEMENTS(tokens);
-}
+void CodeBuilder::makeCodeSTATEMENT(Link_List<std::shared_ptr<ASTNode>> nodes) {
 
-void CodeBuilder::makeCodeSTATEMENT(Link_List<Token> tokens) {
+    std::shared_ptr<ASTNode> node = nodes.pop_front();
 
-    Token token = tokens.pop_front();
-    if (token.tokenType == IfToken) {
-        Link_List<Token> exp = getTokensFromWithinBrackets(tokens, '(', ')');
-
-        Link_List<Token> statement1;
-        while (token.tokenType != ElseToken) {
-            token = tokens.pop_front();
-            statement1.push_back(token);
-        }
-        statement1.pop_back();
-
-        Link_List<Token> statement2;
-        while (!tokens.empty()) {
-            statement2.push_back(tokens.pop_front());
+    if (node->getType() == IFSIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp;
+        Link_List<std::shared_ptr<ASTNode>> statement1;
+        Link_List<std::shared_ptr<ASTNode>> statement2;
+        bool stmt1Used = false;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == EXP) {
+                exp = node->getSubtree();
+            } else if (node->getType() == STATEMENT) {
+                if (!stmt1Used) {
+                    statement2 = node->getSubtree();
+                    stmt1Used = true;
+                } else {
+                    statement1 = node->getSubtree();
+                }
+            }
         }
 
-        makeCodeEXP(exp);
         int label1 = label_counter;
         label_counter++;
         int label2 = label_counter;
         label_counter++;
-        //JIN #LABEL + label1
-        stream << "JIN #LABEL" << label1 << " ";
+        makeCodeEXP(exp);
+        stream.open(file_out, std::fstream::app);
+        stream << "JIN #LABEL" << label1 << spaceOrLineBreak;
+        stream.close();
         makeCodeSTATEMENT(statement1);
-        stream << "JMP #LABEL" << label2 << " ";
-        stream << "#LABEL" << label1 << " NOP ";
-        //JMP #LABEL + label2
-        //#LABEL + label1 NOP
+        stream.open(file_out, std::fstream::app);
+        stream << "JMP #LABEL" << label2 << spaceOrLineBreak;
+        stream << "#LABEL" << label1 << " NOP" << spaceOrLineBreak;
+        stream.close();
         makeCodeSTATEMENT(statement2);
-
-        //#LABEL + label2 NOP
+        stream.open(file_out, std::fstream::app);
+        stream << "#LABEL" << label2 << " NOP" << spaceOrLineBreak;
+        stream.close();
     }
 
-    else if (token.tokenType == WhileToken) {
-        Link_List<Token> exp = getTokensFromWithinBrackets(tokens, '(', ')');
-
-        Link_List<Token> statement;
-        while (token.tokenType != ElseToken) {
-            token = tokens.pop_front();
-            statement.push_back(token);
+    else if (node->getType() == WHILESIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp;
+        Link_List<std::shared_ptr<ASTNode>> statement;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == EXP) {
+                exp = node->getSubtree();
+            } else if (node->getType() == STATEMENT) {
+                statement = node->getSubtree();
+            }
         }
-        statement.pop_back();
 
         int label1 = label_counter;
         label_counter++;
         int label2 = label_counter;
         label_counter++;
-        //#LABEL1 NOP
-        stream << "#LABEL" << label1 << " NOP ";
+        stream.open(file_out, std::fstream::app);
+        stream << "#LABEL" << label1 << " NOP" << spaceOrLineBreak;
+        stream.close();
         makeCodeEXP(exp);
-        //JIN #LABEL2
-        stream << "JIN #LABEL" << label2 << " ";
+        stream.open(file_out, std::fstream::app);
+        stream << "JIN #LABEL" << label2 << spaceOrLineBreak;
+        stream.close();
         makeCodeSTATEMENT(statement);
-        stream << "JMP #LABEL" << label1 << " ";
-        stream << "#LABEL" << label2 << " NOP ";
-        //JMP #LABEL1
-        //#LABEL2 NOP
+        stream.open(file_out, std::fstream::app);
+        stream << "JMP #LABEL" << label1 << spaceOrLineBreak;
+        stream << "#LABEL" << label2 << " NOP" << spaceOrLineBreak;
+        stream.close();
     }
 
-    else if (token.tokenType == WriteToken) {
-        //Token token = tokens.get_front();
-        //if (token.tokenType == SignToken && symtable.lookup(token.storage.key).getLexem()[0] == '('){
-        tokens.pop_front();
-        tokens.pop_back();
-        makeCodeEXP(tokens);
-        stream << "PRI ";
-        //PRI
-    }
-
-    else if (token.tokenType == ReadToken) {
-        tokens.pop_front();
-        tokens.pop_back();
-        //REA
-        stream << "REA ";
-        Token identifierToken = tokens.pop_front();
-        char* identifier = symtable.lookup(identifierToken.storage.key).getLexem();
-        //LA $identifier
-        stream << "LA $" << identifier << " ";
-        makeCodeINDEX(tokens);
-        stream << "STR ";
-        //STR
-    }
-
-    else if (token.tokenType == IdentifierToken) {
-        char* identifier = symtable.lookup(token.storage.key).getLexem();
-        //LA $identifier
-        stream << "LA $" << identifier << " ";
-        Link_List<Token> index = getTokensFromWithinBrackets(tokens, '[', ']');
-        tokens.pop_front(); //:=
-        makeCodeINDEX(tokens);
-        stream << "STR ";
-        //STR
-    }
-
-    else if (token.tokenType == SignToken) { //getLexem() == {
-        tokens.pop_back();
-        makeCodeSTATEMENTS(tokens);
-    }
-
-    else {
-        //NOP oder STP (incorrect syntax)
-    }
-
-}
-
-
-
-void CodeBuilder::makeCodeEXP(Link_List<Token> tokens) {
-    Link_List<Token> exp2;
-    Token token = tokens.pop_front();
-    int bracketsOpen = 0;
-    int bracketsClose = 0;
-    while ((token.tokenType != IdentifierToken && token.tokenType != IntToken) || bracketsOpen != bracketsClose) {
-        if (token.tokenType == SignToken) {
-            if (symtable.lookup(token.storage.key).getLexem()[0] == '(') {
-                bracketsOpen++;
-            } else if (symtable.lookup(token.storage.key).getLexem()[0] == ')') {
-                bracketsClose++;
+    else if (node->getType() == WRITESIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == EXP) {
+                exp = node->getSubtree();
             }
         }
-        exp2.push_back(token);
-        token = tokens.pop_front();
-    }
-    Token operand = tokens.pop_front();
-    char* lexem = symtable.lookup(operand.storage.key).getLexem();
-    if (lexem[0] == '>') {
-        exp2.push_front(operand);
-        makeCodeEXP2(tokens);
-        makeCodeOP_EXP(exp2);
-    } else if (lexem[0] == '=' && lexem[1] == ':') {
-        tokens.push_front(operand);
-        makeCodeEXP2(exp2);
-        makeCodeOP_EXP(tokens);
-        stream << "NOT ";
-        //NOT
-    }
-    else {
-        makeCodeEXP2(exp2);
-        makeCodeOP_EXP(tokens);
+        makeCodeEXP(exp);
+        stream.open(file_out, std::fstream::app);
+        stream << "PRI" << spaceOrLineBreak;
+        stream.close();
     }
 
-}
-
-void CodeBuilder::makeCodeEXP2(Link_List<Token> tokens) {
-    Token token = tokens.pop_front();
-    if (token.tokenType == IdentifierToken) {
-        char* identifier = symtable.lookup(token.storage.key).getLexem();
-        //LA $identifier
-        stream << "LA $" << identifier << " ";
-        makeCodeINDEX(tokens);
-        stream << "LV ";
-        //LV
-    }
-    else if (token.tokenType == IntToken) {
-        int integer = (int) token.storage.number;
-        stream << "LC " << integer << " ";
-        //LC integer
-    }
-    else if (token.tokenType == SignToken) {
-        char c = symtable.lookup(token.storage.key).getLexem()[0];
-        if (c == '-') {
-            //LC 0
-            stream << "LC 0 ";
-            makeCodeEXP2(tokens);
-            stream << "SUB ";
-            //SUB
-        }
-        else if (c == '!') {
-            stream << "NOT ";
-            //NOT
-        }
-        else if (c == '(') {
-            tokens.pop_back();
-            makeCodeEXP(tokens);
-        }
-    }
-
-}
-
-void CodeBuilder::makeCodeOP_EXP(Link_List<Token> tokens) {
-    Token operand = tokens.pop_front();
-    makeCodeEXP(tokens);
-    makeCodeOP(operand);
-}
-
-void CodeBuilder::makeCodeINDEX(Link_List<Token> tokens) {
-    tokens.pop_front();
-    tokens.pop_back();
-    if (!tokens.empty()) {
-        makeCodeEXP(tokens);
-        stream << "ADD ";
-        //ADD
-    } else {
-        //return (char *) "";
-    }
-
-}
-
-
-void CodeBuilder::makeCodeOP(Token token) {
-    char* result;
-    char *sign = symtable.lookup(token.storage.key).getLexem();
-    char c = sign[0];
-    if (c == '+') {
-        result = (char *) "ADD ";
-    } else if (c == '-') {
-        result = (char *) "SUB ";
-    } else if (c == '*') {
-        result = (char *) "MUL ";
-    } else if (c == ':') {
-        result = (char *) "DIV ";
-    } else if (c == '=') {
-        result = (char *) "EQU ";
-    } else if (c == '<') {
-        result = (char *) "LES ";
-    } else if (c == '&' ) {
-        result = (char *) "AND ";
-    } else {
-        result = (char *) "NOP "; //should never be reached by valid code
-    }
-    stream << result;
-}
-
-
-Link_List<Token> CodeBuilder::getTokensFromWithinBrackets(Link_List<Token> tokens, char bracketOpen, char bracketClose) { //iput Link_List "tokens" should be modified in place
-    Link_List<Token> withinBrackets;
-    tokens.pop_front();
-    int bracketsOpen = 1;
-    int bracketsClose = 0;
-    while (bracketsOpen > bracketsClose) {
-        Token token = tokens.pop_front();
-        if (token.tokenType == SignToken) {
-            if (symtable.lookup(token.storage.key).getLexem()[0] == bracketOpen) {
-                bracketsOpen++;
-            } else if (symtable.lookup(token.storage.key).getLexem()[0] == bracketClose) {
-                bracketsClose++;
+    else if (node->getType() == READSIGN) {
+        Key identifierKey{};
+        bool visited = false;
+        Link_List<std::shared_ptr<ASTNode>> index;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == IDENTIFIER) {
+                identifierKey = node->getKey();
+                visited = true;
+            } else if (node->getType() == INDEX) {
+                index = node->getSubtree();
             }
         }
-        withinBrackets.push_back(token);
+        if (visited) {
+            char* identifier = symtable.lookup(identifierKey).getLexem();
+            stream.open(file_out, std::fstream::app);
+            stream << "REA" << spaceOrLineBreak;
+            stream << "LA $" << identifier << spaceOrLineBreak;
+            stream.close();
+            makeCodeINDEX(index);
+            stream.open(file_out, std::fstream::app);
+            stream << "STR" << spaceOrLineBreak;
+            stream.close();
+        }
     }
-    withinBrackets.pop_back();
-    return withinBrackets;
+
+    else if (node->getType() == IDENTIFIER) {
+        char* identifier = symtable.lookup(node->getKey()).getLexem();
+        Link_List<std::shared_ptr<ASTNode>> index;
+        Link_List<std::shared_ptr<ASTNode>> exp;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == INDEX) {
+                index = node->getSubtree();
+            } else if (node->getType() == EXP) {
+                exp = node->getSubtree();
+            }
+        }
+        makeCodeEXP(exp);
+        stream.open(file_out, std::fstream::app);
+        stream << "LA $" << identifier << spaceOrLineBreak;
+        stream.close();
+        makeCodeINDEX(index);
+        stream.open(file_out, std::fstream::app);
+        stream << "STR" << spaceOrLineBreak;
+        stream.close();
+    }
+
+    else if (node->getType() == GKL_OPEN) { //{
+        Link_List<std::shared_ptr<ASTNode>> stmts;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == STATEMENTS) {
+                stmts = node->getSubtree();
+            }
+        }
+        makeCodeSTATEMENTS(stmts);
+    }
 }
 
 
-int CodeBuilder::size_of(const char *identifier) {
-    int index = 0;
-    while (identifier[index] != '\0') {
-        index++;
+bool CodeBuilder::makeCodeEXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    bool hasExp2 = false; bool hasOpExp = false;
+    std::shared_ptr<ASTNode> exp2;
+    std::shared_ptr<ASTNode> op_exp;
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == EXP2) {
+            hasExp2 = true;
+            exp2 = node;
+        } else if (node->getType() == OP_EXP) {
+            hasOpExp = true;
+            op_exp = node;
+        }
     }
-    return index;
+
+    if (hasOpExp && hasExp2) {
+        Link_List<std::shared_ptr<ASTNode>> opExpSubtree = op_exp->getSubtree();
+        Link_List<std::shared_ptr<ASTNode>> opSubTree;
+        if (opExpSubtree.size() > 0) {
+            opSubTree = op_exp->getSubtree().front()->getSubtree();
+            if (opSubTree.size() > 0) {
+                NodeType opType = opSubTree.front()->getType();
+                if (opType == GREATERSIGN) {
+                    std::shared_ptr<ASTNode> opOfOp_exp = op_exp->getSubtree().front();
+                    std::shared_ptr<ASTNode> expOfOp_exp = op_exp->getSubtree().back();
+                    makeCodeEXP(expOfOp_exp->getSubtree());
+                    std::shared_ptr<ASTNode> newOP_EXP = std::make_shared<ASTNode>(nullptr, OP_EXP);
+                    std::shared_ptr<ASTNode> newEXP = std::make_shared<ASTNode>(newOP_EXP, EXP);
+                    newOP_EXP->addChild(opOfOp_exp);
+                    newOP_EXP->addChild(newEXP); //->getSubtree().push_back(newExp);
+                    newEXP->addChild(exp2);
+                    //newExp->parent = op_exp;
+                    makeCodeOP_EXP(newOP_EXP->getSubtree());
+                } else {
+                    makeCodeEXP2(exp2->getSubtree());
+                    makeCodeOP_EXP(op_exp->getSubtree());
+                    if (opType == EQUPEQUSIGN) {
+                        stream.open(file_out, std::fstream::app);
+                        stream << "NOT" << spaceOrLineBreak;
+                        stream.close();
+                    }
+                }
+                return true;
+            }
+        }
+    }
+    if (hasExp2) { // and above code did not reach return
+        return makeCodeEXP2(exp2->getSubtree());
+    } else {
+        return false;
+    }
+}
+
+
+bool CodeBuilder::makeCodeEXP2(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    if(nodes.empty()) {
+        return false;
+    }
+    std::shared_ptr<ASTNode> node = nodes.pop_front();
+    if (node->getType() == IDENTIFIER) {
+        char* identifier = symtable.lookup(node->getKey()).getLexem();
+        Link_List<std::shared_ptr<ASTNode>> index;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == INDEX) {
+                index = node->getSubtree();
+            }
+        }
+        stream.open(file_out, std::fstream::app);
+        stream << "LA $" << identifier << spaceOrLineBreak;
+        stream.close();
+        makeCodeINDEX(index);
+        stream.open(file_out, std::fstream::app);
+        stream << "LV" << spaceOrLineBreak;
+        stream.close();
+    }
+    else if (node->getType() == INTEGER) {
+        int integer = (int) node->getDigit();
+        stream.open(file_out, std::fstream::app);
+        stream << "LC " << integer << spaceOrLineBreak;
+        stream.close();
+    }
+    else if (node->getType() == MINUSSIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp2;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == EXP2) {
+                exp2 = node->getSubtree();
+            }
+        }
+        stream.open(file_out, std::fstream::app);
+        stream << "LC 0" << spaceOrLineBreak;
+        stream.close();
+        makeCodeEXP2(exp2);
+        stream.open(file_out, std::fstream::app);
+        stream << "SUB" << spaceOrLineBreak;
+        stream.close();
+
+    }
+    else if (node->getType() == EXCLSIGN) {
+        Link_List<std::shared_ptr<ASTNode>> exp2;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == EXP2) {
+                exp2 = node->getSubtree();
+            }
+        }
+        makeCodeEXP2(exp2);
+        stream.open(file_out, std::fstream::app);
+        stream << "NOT" << spaceOrLineBreak;
+        stream.close();
+    }
+    else if (node->getType() == KL_OPEN) {
+        Link_List<std::shared_ptr<ASTNode>> exp;
+        while (!nodes.empty()) {
+            node = nodes.pop_front();
+            if (node->getType() == EXP) {
+                exp = node->getSubtree();
+            }
+        }
+        makeCodeEXP(exp);
+    }
+    return true;
+}
+
+void CodeBuilder::makeCodeOP_EXP(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    Link_List<std::shared_ptr<ASTNode>> op;
+    Link_List<std::shared_ptr<ASTNode>> exp;
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == OP) {
+            op = node->getSubtree();
+        } else if (node->getType() == EXP) {
+            exp = node->getSubtree();
+        } else {
+            op.push_front(node); //directly contained operand
+
+        }
+    }
+    makeCodeEXP(exp);
+    makeCodeOP(op.pop_front());
+}
+
+void CodeBuilder::makeCodeINDEX(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    Link_List<std::shared_ptr<ASTNode>> exp;
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == EXP) {
+            exp = node->getSubtree();
+        }
+    }
+    bool hasIndex = makeCodeEXP(exp);
+    if (hasIndex) {
+        stream.open(file_out, std::fstream::app);
+        stream << "ADD" << spaceOrLineBreak;
+        stream.close();
+    }
+
+}
+
+
+void CodeBuilder::makeCodeOP(const std::shared_ptr<ASTNode>& node) {
+    //char* result;
+    NodeType type = node->getType();
+//    char *sign = symtable.lookup(node->getKey()).getLexem();
+//    char c = sign[0];
+    stream.open(file_out, std::fstream::app);
+    if (type == PLUSSIGN) {
+        stream << "ADD" << spaceOrLineBreak;
+    } else if (type == MINUSSIGN) {
+        stream << "SUB" << spaceOrLineBreak;
+    } else if (type == STARSIGN) {
+        stream << "MUL" << spaceOrLineBreak;
+    } else if (type == DOUBLESIGN) {
+        stream << "DIV" << spaceOrLineBreak;
+    } else if (type == EQUALSSIGN || type == EQUPEQUSIGN) {
+        stream << "EQU" << spaceOrLineBreak;
+    } else if (type == LESSSIGN || type == GREATERSIGN) {
+        stream << "LES" << spaceOrLineBreak;
+    } else if (type == ANDSIGN) {
+        stream << "AND" << spaceOrLineBreak;
+    } else {
+        stream << "NOP" << spaceOrLineBreak; //should never be reached by valid code
+    }
+    stream.close();
+}
+
+void CodeBuilder::makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes) {
+    while (!nodes.empty()) {
+        std::shared_ptr<ASTNode> node = nodes.pop_front();
+        if (node->getType() == DECLS) {
+            makeCodeDECLS(node->getSubtree());
+        } else if (node->getType() == STATEMENTS) {
+            makeCodeSTATEMENTS(node->getSubtree());
+        }
+    }
+    stream.open(file_out, std::fstream::app);
+    stream << "STP" << spaceOrLineBreak;
+    stream.close();
 }
 
 void CodeBuilder::makeCode() {
-
+    stream.open(file_out, std::ofstream::out | std::ofstream::trunc);
+    stream.close();
+    std::shared_ptr<ASTNode> node = astCreator.getParentNode();
+    makeCodePROG(node->getSubtree());
 }
-
-
-
-
-
-//enum TokenType {
-//    SignToken = 0,
-//    DigitToken = 1,
-//    IdentifierToken = 2,
-//    ErrorToken = 3,
-//    IfToken = 4,
-//    WhileToken = 5,
-//    ElseToken = 6,
-//    IntToken = 7,
-//    ReadToken = 8,
-//    WriteToken = 9
-//};

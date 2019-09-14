@@ -4,16 +4,15 @@
 
 #include "ScannerTest.h"
 
-ScannerTest::ScannerTest(const Scanner& scanner) {
-    this->scanner = scanner;
+ScannerTest::ScannerTest(Scanner scanner) : scanner{scanner} {
     outputTokensToFile();
 }
 
 void ScannerTest::outputTokensToFile() {
 
     std::fstream stream;
-    stream.open(R"(../out.txt)");
-    //stream.open("F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\out.txt");
+    stream.open(R"(../tests/ScannerOutput.txt)", std::ofstream::out | std::ofstream::trunc);
+    //stream.open("F:\\\\Studium\\\\Compilerbau2019\\\\SysProg\\\\ScannerOutput.txt");
     //stream.open("C:\\\\Users\\\\Silberdraht\\\\Desktop\\\\beispieltest.txt");
 
     while (scanner.hasTokens()) {

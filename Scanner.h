@@ -8,7 +8,6 @@
 #include "Buffer.h"
 #include "Automat.h"
 #include "Symtable.h"
-#include "TokenList.h"
 #include "lib/Link_List.h"
 
 
@@ -18,41 +17,38 @@ private:
     Buffer buffer;
     Automat automat;
     Token createToken();
-    //TokenList tokens;
     Link_List<Token> tokens;
-
-    Key plus;
-    Key minus;
-    Key equals;
-    Key star;
-    Key greater;
-    Key lesser;
-    Key sAnd;
-    Key semicolon;
-    Key exclamationMark;
-    Key bracketOpen;
-    Key bracketClose;
-    Key curlyBracketOpen;
-    Key curlyBracketClose;
-    Key squareBracketOpen;
-    Key squareBracketClose;
-    Key colonEquals;
-    Key colon;
-    Key equalsColonEquals;
-    Key andAnd;
-
-public:
-    Scanner();
-    ~Scanner();
-
-    Symtable symtable;
     void initializeSymtable();
 
-    void startScanner();
-    Token nextToken();
-    int hasTokens();
+public:
+	Key plus;
+	Key minus;
+	Key equals;
+	Key star;
+	Key greater;
+	Key lesser;
+	Key sAnd;
+	Key semicolon;
+	Key exclamationMark;
+	Key bracketOpen;
+	Key bracketClose;
+	Key curlyBracketOpen;
+	Key curlyBracketClose;
+	Key squareBracketOpen;
+	Key squareBracketClose;
+	Key colonEquals;
+	Key colon;
+	Key equalsColonEquals;
+	Key andAnd;
+	Scanner();
+	~Scanner();
+
+	Symtable symtable;
+
+	void startScanner();
+	Token nextToken();
+	int hasTokens();
 
 };
-
 
 #endif //SYSPROG_SCANNER_H

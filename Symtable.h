@@ -9,9 +9,9 @@
 #define SYMTABLE_H_
 
 
-
-#include "InformationLinkedList.h"
 #include "StringTable.h"
+#include "lib/Link_List.h"
+#include "Information.h"
 
 struct Key{
 	int key;
@@ -21,11 +21,12 @@ struct Key{
 class Symtable {
 
 
-
-	int prime = 997;
+	//997
+	int prime = 97;
 	StringTable table;
-	InformationLinkedList Listptrs[997];
-	int calculateKey(char* lexem);
+	Link_List<Information> Listptrs[97];
+	Link_List<int> usedKeys;
+	//int calculateKey(char* lexem);
 
 public:
 
@@ -33,7 +34,8 @@ public:
 	~Symtable();
 	Key insert(char* lexem);
 	Information lookup(Key key);
-	bool hasLexem(char* lexem);
+	Key lookupLexem(char *lexem);
+    bool compare(const char* lex1, const char* lex2);
 
 };
 
