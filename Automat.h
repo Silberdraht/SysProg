@@ -7,7 +7,6 @@
 #define SYSPROG_AUTOMATA_H
 
 #include <iostream>
-#include "LinkedList.h"
 #include "Symtable.h"
 
 enum TokenType {
@@ -29,8 +28,6 @@ struct Token {
     union Storage {
         Key key; //Insert Key für Hash
         int number;
-        //char* lexem;
-        //char* sign;
         char* error;
     } storage;
 
@@ -40,8 +37,8 @@ class Automat {
 
 
 public:
-    LinkedList listAutomat;
-    LinkedList tokenQueue;
+    Link_List<char> listAutomat;
+    Link_List<char> tokenQueue;
 
     void checkSymbol(char c);
 
@@ -61,8 +58,7 @@ public:
     bool useBufferedSign = false;
 
 private:
-    char *identifier = nullptr;
-    char *error = nullptr;
+    char *lexeme = nullptr;
 
     enum state {
         init,
@@ -120,13 +116,11 @@ private:
 
     bool isArrayEqual(char ar1[], char ar2[], int length);
 
-    unsigned int getLine();
-
-    unsigned int getColumn();
-
     unsigned int getStartLine();
 
     unsigned int getStartColumn();
+
+    char* getContentsOfAutomat();
 
 };
 

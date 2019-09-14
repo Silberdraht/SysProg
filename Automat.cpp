@@ -154,11 +154,6 @@
                     currentColumn++;
                     listAutomat.push_front(c);
                 }
-//                else if (isInvalidCharacter(c)) {
-//                    currentColumn++;
-//                    listAutomat.push_front(c);
-//                    stateActive = errorstate;
-//                }
                 else {
                     prepareTokenLetter();
                     stateActive = init;
@@ -287,8 +282,6 @@
 
         switch (tokenType) {
             case IdentifierToken:
-                //token.storage.lexem = copyChar(identifier);
-                //this->clearIdentifier();
                 break;
 
             case DigitToken:
@@ -296,17 +289,10 @@
                 break;
 
             case ErrorToken:
-                token.storage.error = copyChar(error);
+                token.storage.error = copyChar(lexeme);
                 break;
 
             case SignToken:
-//                token.storage.sign = sign;
-//                if (useBufferedSign) {
-//                    sign = bufferedSign;
-//                    useBufferedSign = false;
-//                }
-                //token.storage.sign = temp; //copyChar(sign);
-                //this->clearSign();
                 break;
 
             default:
@@ -332,7 +318,8 @@
             }
         }
         string[amount] = '\0';
-        error = string;
+        lexeme = string;
+        //error = string;
         tokenQueue.push_back('3'); //Errortoken
     }
 
@@ -354,7 +341,7 @@
             this->number = value;
             tokenQueue.push_back('1'); //Digittoken
         } else {
-            this->error = (char*)"Integer overflow";
+            this->lexeme = (char*)"Integer overflow";
             tokenQueue.push_back('3'); //Errortoken
         }
     }
@@ -362,24 +349,12 @@
 
     void Automat::prepareTokenSign() {
 
-        int amount = listAutomat.size();
-        char *string = new char[amount + 1];
-
-        for (int i = amount; i >= 0; i--) {
-            char symbol = listAutomat.pop_front();
-            if (symbol == ' ' && i == 0) {
-                string++;
-            } else {
-                string[i] = symbol;
-            }
-        }
-        string[amount] = '\0';
+        char* string = getContentsOfAutomat();
         if (useBufferedSign) {
             bufferedSign = string;
         } else {
             sign = string;
         }
-       // delete []string;
 
         tokenQueue.push_back('0'); //Signtoken
     }
@@ -482,23 +457,7 @@
             listAutomat.push_front(toTest[4]);
         }
 
-
-        int amount = listAutomat.size();
-        char *string = new char[amount + 1];
-
-        for (int i = amount; i >= 0; i--) {
-            //token.lexem[i-1] = listAutomat.pop_front();
-            char symbol = listAutomat.pop_front();
-            if (symbol == ' ' && i == 0) {
-                string++;
-            }
-            else {
-                string[i] = symbol;
-            }
-        }
-        string[amount] = '\0';
-        identifier = string;
-        //delete []string;
+        lexeme = getContentsOfAutomat();
         tokenQueue.push_back('2'); //Identifiertoken
     }
 
@@ -647,16 +606,6 @@
     }
 
 
-    unsigned int Automat::getLine() {
-        return this->currentLine;
-    }
-
-
-    unsigned int Automat::getColumn() {
-        return this->currentColumn;
-    }
-
-
     unsigned int Automat::getStartColumn() {
         unsigned int returnValue = startColumn;
         if (useBufferedStartColumn) {
@@ -685,16 +634,16 @@
 
     void Automat::clearIdentifier() {
         int i = 0;
-        while (identifier[i] != '\0') {
+        while (lexeme[i] != '\0') {
             i++;
         }
         for (int j=i-1;j>=0;j--) {
-            identifier[j] = '\0';
+            lexeme[j] = '\0';
         }
     }
 
     char* Automat::getIdentifer() {
-        return copyChar(identifier);
+        return copyChar(lexeme);
     }
 
 
@@ -728,4 +677,14 @@
 
     bool Automat::isEOF(char c) {
         return c == '\000';
+    }
+
+    char *Automat::getContentsOfAutomat() {
+        int amount = listAutomat.size();
+        char *string = new char[amount + 1];
+        for (int i=0;i<amount;i++) {
+            string[i] = listAutomat.pop_back();
+        }
+        string[amount] = '\0';
+        return string;
     }

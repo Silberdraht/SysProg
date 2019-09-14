@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(SOURCE_FILES_AUFGABE_1
         main.cpp
         Automat.cpp Automat.h
-        LinkedList.cpp LinkedList.h
         Buffer.cpp Buffer.h
         Symtable.cpp Symtable.h
         StringTable.cpp StringTable.h
@@ -16,7 +15,6 @@ set(SOURCE_FILES_AUFGABE_1
 set(SOURCE_FILES_AUFGABE_2
         main.cpp
         Automat.cpp Automat.h
-        LinkedList.cpp LinkedList.h
         Buffer.cpp Buffer.h
         Symtable.cpp Symtable.h
         StringTable.cpp StringTable.h
@@ -24,7 +22,7 @@ set(SOURCE_FILES_AUFGABE_2
         Scanner.cpp Scanner.h
         tests/ScannerTest.cpp tests/ScannerTest.h
         parser/CodeBuilder.h parser/CodeBuilder.cpp
-        lib/Link_List.h
+        lib/Link_List.h lib/Stack.h
         AST/ASTNode.h AST/ASTNode.cpp
         AST/ASTBuild/ASTCreator.h AST/ASTBuild/ASTCreator.cpp
         AST/ASTBuild/ASTStack.h AST/ASTBuild/ASTStack.cpp)
