@@ -18,6 +18,7 @@ private:
     Automat automat;
     Token createToken();
     Link_List<Token> tokens;
+    void initializeSymtable();
 
 public:
 	Key plus;
@@ -43,7 +44,6 @@ public:
 	~Scanner();
 
 	Symtable symtable;
-	void initializeSymtable();
 
 	void startScanner();
 	Token nextToken();

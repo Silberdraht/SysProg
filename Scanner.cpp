@@ -15,7 +15,7 @@ void Scanner::startScanner() {
 
     char c = ' ';
     while (c != '\0') {
-        while (!automat.tokenQueue.isEmpty()) {
+        while (!automat.tokenQueue.empty()) {
             tokens.push_back(createToken());
         }
         c = buffer.getChar();
@@ -23,7 +23,7 @@ void Scanner::startScanner() {
 
     }
 
-    if (!automat.tokenQueue.isEmpty()) {
+    if (!automat.tokenQueue.empty()) {
         tokens.push_back(createToken());
     }
 
@@ -55,7 +55,7 @@ void Scanner::initializeSymtable() {
 
 
 Token Scanner::createToken() {
-    int typeNumber = automat.convertCharToInt(automat.tokenQueue.popSymbol());
+    int typeNumber = automat.convertCharToInt(automat.tokenQueue.pop_front());
     auto tokentype = TokenType(typeNumber);
     Token token = automat.createToken(tokentype);
 

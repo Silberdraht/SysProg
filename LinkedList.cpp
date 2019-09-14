@@ -21,7 +21,7 @@ LinkedList::~LinkedList() {
 
 }
 
-void LinkedList::addSymbol(char c) {
+void LinkedList::push_front(char c) {
     countSymbol++;
     Symbol *s = new Symbol();
     s->c = c;
@@ -32,7 +32,7 @@ void LinkedList::addSymbol(char c) {
 }
 
 //needed to use as list as "Last In Last Out" (add at end, pop at front)
-void LinkedList::addSymbolAsLast(char c) {
+void LinkedList::push_back(char c) {
     if (head == nullptr) {
         head = new Symbol();
         head->c = c;
@@ -52,7 +52,7 @@ void LinkedList::addSymbolAsLast(char c) {
 
 
 //Fix else
-char LinkedList::popSymbol() {
+char LinkedList::pop_front() {
     if (countSymbol > 0) {
 
         countSymbol--;
@@ -69,11 +69,11 @@ char LinkedList::popSymbol() {
 
 }
 
-bool LinkedList::isEmpty() {
+bool LinkedList::empty() {
     return countSymbol <= 0;
 }
 
-int LinkedList::listLength() {
+int LinkedList::size() {
 
     return countSymbol;
 }

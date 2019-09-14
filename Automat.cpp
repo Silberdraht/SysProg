@@ -15,7 +15,7 @@
                     precedingCR = false; //Carriage Return not followed by a \n;
                     currentColumn++;
                     stateActive = digitstate;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
 
                     //Speichert den Anfang des Tokens
                     if (useBufferedStartColumn) {
@@ -31,7 +31,7 @@
                 else if (isSign(c)) {
                     precedingCR = false;
                     currentColumn++;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                     if (useBufferedStartColumn) {
                         bufferedStartColumn = currentColumn;
                     } else {
@@ -53,7 +53,7 @@
                         startColumn = currentColumn;
                     }
                     startLine = currentLine;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                 }
 
                 else if(isSignAnd(c)) {
@@ -67,7 +67,7 @@
                         startColumn = currentColumn;
                     }
                     startLine = currentLine;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                 }
 
                 else if (isSignColon(c)) {
@@ -81,7 +81,7 @@
                         startColumn = currentColumn;
                     }
                     startLine = currentLine;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                 }
 
                 else if (isLetter(c)) {
@@ -95,7 +95,7 @@
                         startColumn = currentColumn;
                     }
                     startLine = currentLine;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                 }
 
                 else if (isBlank(c)) {
@@ -125,7 +125,7 @@
                     }
                     startLine = currentLine;
 
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                     prepareTokenError();
                 }
                 break;
@@ -134,7 +134,7 @@
             case digitstate:
                 //std::cout << "digit: " << std::endl;
                 if (isDigit(c)) {
-                        listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                         currentColumn++;
 
                 } else {
@@ -152,11 +152,11 @@
                 //std::cout << "Letterstate: " << std::endl;
                 if(isLetter(c) || (isDigit(c))) {
                     currentColumn++;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                 }
 //                else if (isInvalidCharacter(c)) {
 //                    currentColumn++;
-//                    listAutomat.addSymbol(c);
+//                    listAutomat.push_front(c);
 //                    stateActive = errorstate;
 //                }
                 else {
@@ -171,11 +171,11 @@
             case andstate:
                 if (isSignAnd(c)) {
                     currentColumn++;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                     prepareTokenSign();
                     stateActive = init;
                 } else{
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                     currentColumn++;
                     stateActive = errorstate;
                 }
@@ -186,7 +186,7 @@
             case equalstate:
                 if (isSignColon(c)) {
                     currentColumn++;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                     stateActive = equalcolonstate;
                 } else {
                     prepareTokenSign();
@@ -200,13 +200,13 @@
             case colonstate:
                 if (isSignEqual(c)) {
                     currentColumn++;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                     prepareTokenSign();
                     stateActive = init;
                 }
                 else if (isStar(c)) {
                     currentColumn++;
-                    listAutomat.popSymbol();
+                    listAutomat.pop_front();
                     stateActive = commentstate;
                 }
                 else {
@@ -222,15 +222,15 @@
                 //std::cout << "equalstate: " << std::endl;
                 if (isSignEqual(c)) {
                     currentColumn++;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                     prepareTokenSign();
                     stateActive = init;
                 } else {
                     //Erzeugt ein Token '=' und ein Token ':'
-                    char temp = listAutomat.popSymbol();
+                    char temp = listAutomat.pop_front();
                     prepareTokenSign();
                     useBufferedSign = true;
-                    listAutomat.addSymbol(temp);
+                    listAutomat.push_front(temp);
                     //Passt die Startposition für das zweite Token an.
                     currentColumn++; //startColumn++;
                     prepareTokenSign();
@@ -272,7 +272,7 @@
                     checkSymbol(c);
                 } else {
                     currentColumn++;
-                    listAutomat.addSymbol(c);
+                    listAutomat.push_front(c);
                 }
         }
     }
@@ -318,12 +318,12 @@
 
 
     void Automat::prepareTokenError() {
-        int amount = listAutomat.listLength();
+        int amount = listAutomat.size();
         char *string = new char[amount + 1];
 
         for (int i = amount; i >= 0; i--) {
-            //token.lexem[i-1] = listAutomat.popSymbol();
-            char symbol = listAutomat.popSymbol();
+            //token.lexem[i-1] = listAutomat.pop_front();
+            char symbol = listAutomat.pop_front();
             if (symbol == ' ' && i == 0) {
                 string++;
             }
@@ -333,40 +333,40 @@
         }
         string[amount] = '\0';
         error = string;
-        tokenQueue.addSymbolAsLast('3'); //Errortoken
+        tokenQueue.push_back('3'); //Errortoken
     }
 
 
     void Automat::prepareTokenDigit() {
 
-        int power = 0;
+        int power = 1;
         int value = 0;
         bool overflow = false;
-        while (!listAutomat.isEmpty()) {
-            value += pow(10,power)*convertCharToInt(listAutomat.popSymbol());
+        while (!listAutomat.empty()) {
+            value += power*convertCharToInt(listAutomat.pop_front());
             if (value < 0) {
                 overflow = true;
                 break;
             }
-            power++;
+            power*=10;
         }
         if (!overflow) {
             this->number = value;
-            tokenQueue.addSymbolAsLast('1'); //Digittoken
+            tokenQueue.push_back('1'); //Digittoken
         } else {
             this->error = (char*)"Integer overflow";
-            tokenQueue.addSymbolAsLast('3'); //Errortoken
+            tokenQueue.push_back('3'); //Errortoken
         }
     }
 
 
     void Automat::prepareTokenSign() {
 
-        int amount = listAutomat.listLength();
+        int amount = listAutomat.size();
         char *string = new char[amount + 1];
 
         for (int i = amount; i >= 0; i--) {
-            char symbol = listAutomat.popSymbol();
+            char symbol = listAutomat.pop_front();
             if (symbol == ' ' && i == 0) {
                 string++;
             } else {
@@ -381,114 +381,114 @@
         }
        // delete []string;
 
-        tokenQueue.addSymbolAsLast('0'); //Signtoken
+        tokenQueue.push_back('0'); //Signtoken
     }
 
 
 
     void Automat::prepareTokenLetter() {
 
-        if (listAutomat.listLength() == 2) {
+        if (listAutomat.size() == 2) {
 
             char toTest[2];
             char arIf[2] = {'i', 'f'};
             char arIf2[2] = {'I', 'F'};
 
-            toTest[1] = listAutomat.popSymbol();
-            toTest[0] = listAutomat.popSymbol();
+            toTest[1] = listAutomat.pop_front();
+            toTest[0] = listAutomat.pop_front();
 
             if (Automat::isArrayEqual(arIf, toTest, 2) || Automat::isArrayEqual(arIf2, toTest, 2)) {
 
-                tokenQueue.addSymbolAsLast('4'); //Iftoken
+                tokenQueue.push_back('4'); //Iftoken
                 return;
             }
-                listAutomat.addSymbol(toTest[0]);
-                listAutomat.addSymbol(toTest[1]);
+            listAutomat.push_front(toTest[0]);
+            listAutomat.push_front(toTest[1]);
         }
 
-        else if (listAutomat.listLength() == 3) {
+        else if (listAutomat.size() == 3) {
 
             char toTest[3];
             char arInt[3] = {'i', 'n', 't'};
 
-            toTest[2] = listAutomat.popSymbol();
-            toTest[1] = listAutomat.popSymbol();
-            toTest[0] = listAutomat.popSymbol();
+            toTest[2] = listAutomat.pop_front();
+            toTest[1] = listAutomat.pop_front();
+            toTest[0] = listAutomat.pop_front();
 
             if (Automat::isArrayEqual(arInt, toTest, 3)) {
 
-                tokenQueue.addSymbolAsLast('7'); //int token
+                tokenQueue.push_back('7'); //int token
                 return;
             }
-            listAutomat.addSymbol(toTest[0]);
-            listAutomat.addSymbol(toTest[1]);
-            listAutomat.addSymbol(toTest[2]);
+            listAutomat.push_front(toTest[0]);
+            listAutomat.push_front(toTest[1]);
+            listAutomat.push_front(toTest[2]);
         }
 
-        else if (listAutomat.listLength() == 4) {
+        else if (listAutomat.size() == 4) {
 
             char toTest[4];
             char arElse[4] = {'e', 'l', 's', 'e'};
             char arElse2[4] = {'E', 'L', 'S', 'E'};
             char arRead[4] = {'r', 'e', 'a', 'd'};
 
-            toTest[3] = listAutomat.popSymbol();
-            toTest[2] = listAutomat.popSymbol();
-            toTest[1] = listAutomat.popSymbol();
-            toTest[0] = listAutomat.popSymbol();
+            toTest[3] = listAutomat.pop_front();
+            toTest[2] = listAutomat.pop_front();
+            toTest[1] = listAutomat.pop_front();
+            toTest[0] = listAutomat.pop_front();
 
             if (Automat::isArrayEqual(arElse, toTest, 4) || Automat::isArrayEqual(arElse2, toTest, 4)) {
 
-                tokenQueue.addSymbol('6'); //Else Token
+                tokenQueue.push_front('6'); //Else Token
                 return;
             }
             else if (Automat::isArrayEqual(arRead, toTest, 4)) {
-                tokenQueue.addSymbol('8'); //Read Token
+                tokenQueue.push_front('8'); //Read Token
                 return;
             }
-            listAutomat.addSymbol(toTest[0]);
-            listAutomat.addSymbol(toTest[1]);
-            listAutomat.addSymbol(toTest[2]);
-            listAutomat.addSymbol(toTest[3]);
+            listAutomat.push_front(toTest[0]);
+            listAutomat.push_front(toTest[1]);
+            listAutomat.push_front(toTest[2]);
+            listAutomat.push_front(toTest[3]);
         }
 
-        else if (listAutomat.listLength() == 5) {
+        else if (listAutomat.size() == 5) {
 
             char toTest[5];
             char arIf[5] = {'w', 'h', 'i', 'l', 'e'};
             char arIf2[5] = {'W', 'H', 'I', 'L', 'E'};
             char arWrite[5] = {'w', 'r', 'i', 't', 'e'};
 
-            toTest[4] = listAutomat.popSymbol();
-            toTest[3] = listAutomat.popSymbol();
-            toTest[2] = listAutomat.popSymbol();
-            toTest[1] = listAutomat.popSymbol();
-            toTest[0] = listAutomat.popSymbol();
+            toTest[4] = listAutomat.pop_front();
+            toTest[3] = listAutomat.pop_front();
+            toTest[2] = listAutomat.pop_front();
+            toTest[1] = listAutomat.pop_front();
+            toTest[0] = listAutomat.pop_front();
 
             if (Automat::isArrayEqual(arIf, toTest, 5) || Automat::isArrayEqual(arIf2, toTest, 5)) {
 
-                tokenQueue.addSymbol('5'); //Whiletoken
+                tokenQueue.push_front('5'); //Whiletoken
                 return;
             }
             else if (Automat::isArrayEqual(arWrite, toTest, 5)) {
-                tokenQueue.addSymbol('9'); //Write Token
+                tokenQueue.push_front('9'); //Write Token
                 return;
             }
 
-            listAutomat.addSymbol(toTest[0]);
-            listAutomat.addSymbol(toTest[1]);
-            listAutomat.addSymbol(toTest[2]);
-            listAutomat.addSymbol(toTest[3]);
-            listAutomat.addSymbol(toTest[4]);
+            listAutomat.push_front(toTest[0]);
+            listAutomat.push_front(toTest[1]);
+            listAutomat.push_front(toTest[2]);
+            listAutomat.push_front(toTest[3]);
+            listAutomat.push_front(toTest[4]);
         }
 
 
-        int amount = listAutomat.listLength();
+        int amount = listAutomat.size();
         char *string = new char[amount + 1];
 
         for (int i = amount; i >= 0; i--) {
-            //token.lexem[i-1] = listAutomat.popSymbol();
-            char symbol = listAutomat.popSymbol();
+            //token.lexem[i-1] = listAutomat.pop_front();
+            char symbol = listAutomat.pop_front();
             if (symbol == ' ' && i == 0) {
                 string++;
             }
@@ -499,7 +499,7 @@
         string[amount] = '\0';
         identifier = string;
         //delete []string;
-        tokenQueue.addSymbolAsLast('2'); //Identifiertoken
+        tokenQueue.push_back('2'); //Identifiertoken
     }
 
 
@@ -686,8 +686,10 @@
     void Automat::clearIdentifier() {
         int i = 0;
         while (identifier[i] != '\0') {
-            identifier[i] = '\0';
             i++;
+        }
+        for (int j=i-1;j>=0;j--) {
+            identifier[j] = '\0';
         }
     }
 
@@ -699,8 +701,10 @@
     void Automat::clearSign() {
         int i = 0;
         while (sign[i] != '\0') {
-            sign[i] = '\0';
             i++;
+        }
+        for (int j=i-1;j>=0;j--) {
+            sign[j] = '\0';
         }
     }
 

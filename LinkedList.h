@@ -23,15 +23,15 @@ public:
 
     ~LinkedList();
 
-    void addSymbol(char c);
+    void push_front(char c);
 
-    void addSymbolAsLast(char c);
+    void push_back(char c);
 
-    char popSymbol();
+    char pop_front();
 
-    bool isEmpty();
+    bool empty();
 
-    int listLength();
+    int size();
 
 private:
     Symbol *head;
