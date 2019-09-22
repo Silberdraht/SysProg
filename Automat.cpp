@@ -2,8 +2,6 @@
     // Created by Silberdraht on 09.10.2018.
     //
 
-
-#include <tgmath.h>
 #include "Automat.h"
 
 
@@ -289,7 +287,7 @@
                 break;
 
             case ErrorToken:
-                token.storage.error = copyChar(lexeme);
+                token.storage.error = copyChar(error);
                 break;
 
             case SignToken:
@@ -304,21 +302,7 @@
 
 
     void Automat::prepareTokenError() {
-        int amount = listAutomat.size();
-        char *string = new char[amount + 1];
-
-        for (int i = amount; i >= 0; i--) {
-            //token.lexem[i-1] = listAutomat.pop_front();
-            char symbol = listAutomat.pop_front();
-            if (symbol == ' ' && i == 0) {
-                string++;
-            }
-            else {
-                string[i] = symbol;
-            }
-        }
-        string[amount] = '\0';
-        lexeme = string;
+        error = getContentsOfAutomat();
         //error = string;
         tokenQueue.push_back('3'); //Errortoken
     }
@@ -644,17 +628,6 @@
 
     char* Automat::getIdentifer() {
         return copyChar(lexeme);
-    }
-
-
-    void Automat::clearSign() {
-        int i = 0;
-        while (sign[i] != '\0') {
-            i++;
-        }
-        for (int j=i-1;j>=0;j--) {
-            sign[j] = '\0';
-        }
     }
 
 

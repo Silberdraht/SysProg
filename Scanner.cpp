@@ -11,6 +11,7 @@ Scanner::~Scanner() = default;
 
 
 void Scanner::startScanner() {
+    std::cout << "Scanner started..." << std::endl;
     initializeSymtable();
 
     char c = ' ';
@@ -23,7 +24,7 @@ void Scanner::startScanner() {
 
     }
 
-    if (!automat.tokenQueue.empty()) {
+    while (!automat.tokenQueue.empty()) {
         tokens.push_back(createToken());
     }
 
@@ -134,7 +135,10 @@ Token Scanner::createToken() {
             automat.sign = automat.bufferedSign;
             automat.useBufferedSign = false;
         }
-        automat.clearSign();
+    }
+    else if (tokentype == ErrorToken) {
+        std::cout << "Scanner found an error at (line/column): " << token.line << "/" << token.column << std::endl;
+        withoutErrors = false;
     }
 
     return token;
@@ -150,6 +154,10 @@ Token Scanner::nextToken() {
 int Scanner::hasTokens() {
 
     return !this->tokens.empty();
+}
+
+bool Scanner::isWithoutErrors() {
+    return withoutErrors;
 }
 
 

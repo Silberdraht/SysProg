@@ -29,7 +29,7 @@ private:
     Symtable symtable;
 
     const char* spaceOrLineBreak = "\n";
-    const char* file_out = (char*) R"(../parser/output.txt)";
+    const char* file_out = (char*) R"(../parser/output.code)";
 
     void makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes);
     void makeCodeDECL(Link_List<std::shared_ptr<ASTNode>> nodes);

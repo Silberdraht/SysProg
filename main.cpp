@@ -47,6 +47,9 @@ int main() {
 
     //Output to check correctness of generated tokens
     ScannerTest test(scanner);
+    if (!scanner.isWithoutErrors()) {
+        return 1;
+    }
     //testTwo(scanner);
 
     ASTCreator creator = ASTCreator(scanner);

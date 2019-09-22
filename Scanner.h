@@ -19,6 +19,7 @@ private:
     Token createToken();
     Link_List<Token> tokens;
     void initializeSymtable();
+    bool withoutErrors = true;
 
 public:
 	Key plus;
@@ -48,7 +49,7 @@ public:
 	void startScanner();
 	Token nextToken();
 	int hasTokens();
-
+	bool isWithoutErrors();
 };
 
 #endif //SYSPROG_SCANNER_H

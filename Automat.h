@@ -51,7 +51,6 @@ public:
 
     char *getIdentifer();
     void clearIdentifier();
-    void clearSign();
 
     char *sign = nullptr;
     char *bufferedSign = nullptr;
@@ -59,6 +58,7 @@ public:
 
 private:
     char *lexeme = nullptr;
+    char *error = nullptr;
 
     enum state {
         init,
