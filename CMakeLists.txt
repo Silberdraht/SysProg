@@ -4,13 +4,14 @@ project(SysProg)
 set(CMAKE_CXX_STANDARD 17)
 
 set(SOURCE_FILES_AUFGABE_1
-        main.cpp
+        main_ScannerOnly.cpp
         Automat.cpp Automat.h
         Buffer.cpp Buffer.h
         Symtable.cpp Symtable.h
         StringTable.cpp StringTable.h
         Information.cpp Information.h
         Scanner.cpp Scanner.h
+        lib/Link_List.h
         tests/ScannerTest.cpp tests/ScannerTest.h)
 set(SOURCE_FILES_AUFGABE_2
         main.cpp
@@ -22,7 +23,7 @@ set(SOURCE_FILES_AUFGABE_2
         Scanner.cpp Scanner.h
         tests/ScannerTest.cpp tests/ScannerTest.h
         parser/CodeBuilder.h parser/CodeBuilder.cpp
-        lib/Link_List.h lib/Stack.h
+        lib/Link_List.h
         AST/ASTNode.h AST/ASTNode.cpp
         AST/ASTBuild/ASTCreator.h AST/ASTBuild/ASTCreator.cpp
         AST/ASTBuild/ASTStack.h AST/ASTBuild/ASTStack.cpp)

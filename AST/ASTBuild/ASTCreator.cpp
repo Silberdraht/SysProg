@@ -8,74 +8,7 @@
 #include "ASTCreator.h"
 #include <iostream>
 using namespace std;
-void debugPrint(char* msg, NodeType tpye) {
-	cout << msg;
-	switch (tpye) {
-	// nichtterminale knoten
-	case PROG:
-		cout << "PROG" << endl;
-		break;
-	case DECLS:
-		cout << "DECLS" << endl;
-		break;
-	case DECL:
-		cout << "DECL" << endl;
-		break;
-	case ARRAY:
-		cout << "ARRAY" << endl;
-		break;
-	case STATEMENTS:
-		cout << "STATEMENTS" << endl;
-		break;
-	case STATEMENT:
-		cout << "STATEMENT" << endl;
-		break;
-	case EXP:
-		cout << "EXP" << endl;
-		break;
-	case EXP2:
-		cout << "EXP2" << endl;
-		break;
-	case INDEX:
-		cout << "INDEX" << endl;
-		break;
-	case OP_EXP:
-		cout << "OP_EXP" << endl;
-		break;
-	case OP:
-		cout << "OP" << endl;
-		break;
-		// terminale
-	case IFSIGN:
-		cout << "IFSIGN" << endl;
-		break;
-	case ELSESIGN:
-		cout << "ELSESIGN" << endl;
-		break;
-	case WHILESIGN:
-		cout << "WHILESIGN" << endl;
-		break;
-	case READSIGN:
-		cout << "READSIGN" << endl;
-		break;
-	case WRITESIGN:
-		cout << "WRITESIGN" << endl;
-		break;
-	case INTSIGN:
-		cout << "INTSIGN" << endl;
-		break;
-		// konstanten/ bezeichner
-	case IDENTIFIER:
-		cout << "IDENTIFIER" << endl;
-		break;
-	case INTEGER:
-		cout << "INTEGER" << endl;
-		break;
-	default:
-		cout << "SIGNTERMINAL" << endl;
-		break;
-	}
-}
+
 int compare(Key lex, Key comp) {
 	if (lex.key != comp.key) {
 		return 0;
@@ -130,11 +63,12 @@ int ASTCreator::computeToken(Token token) {
 	needsNewToken = 1;
 	while (needsNewToken) {
 		if (error == 1) {
+            cout << "Error: Unexpected token in line " << token.line << " column " << token.column << endl;
+            cout << "\t expected " << typeToString(type) << endl;
 			return 1;
 		}
-		NodeType type = getTokenType(token);
+		type = getTokenType(token);
 		std::shared_ptr<ASTNode> newNode;
-		debugPrint("BUILDNODE: ", type);
 		if (type != PROG) {
 			newNode = std::make_shared<ASTNode>(head, type);
 			head->addChild(newNode);
@@ -384,7 +318,12 @@ int ASTCreator::computeToken(Token token) {
 			}
 			while (stack.isTopLevelEmpty()) {
 				stack.removeTopLayer();
-				head = head->parent;
+				if (head->getType() == buildHead->getType()) {
+                    cout << "Error: Unexpected token in line " << token.line << " column " << token.column << endl;
+				    return 1;
+				} else {
+                    head = head->parent;
+				}
 			}
 		}
 	}
@@ -423,14 +362,7 @@ void ASTCreator::buildARRAY(Token token, shared_ptr<ASTNode> newNode) {
 		buildNode(EKL_OPEN);
 		buildNode(INTEGER);
 		buildNode(EKL_CLOSE);
-	} else {
-		//elypson
-
-//		shared_ptr<ASTNode> newHead = head->getParent().getSubtree().back();
-//		if (newHead->getType() != IDENTIFIER) {
-//		    error = 1;
-//		}
-	}
+	} //else epsilon
 
 }
 
@@ -446,6 +378,7 @@ void ASTCreator::buildSTATEMENTS(Token token, std::shared_ptr<ASTNode> newNode) 
 	}
 
 }
+
 void ASTCreator::buildSTATEMENT(Token token) {
 	// hier unterscheiden, wass passiert!
 	if (token.tokenType == 2/*IdentifierToken*/) {
@@ -508,8 +441,7 @@ void ASTCreator::buildEXP2(Token token) {
 		buildNode(EXCLSIGN);
 		buildNode(EXP2);
 	} else {
-		// wenns hier unten ankonnt is was schief gegangen!
-		error = 1;
+        error = 1;
 	}
 }
 void ASTCreator::buildINDEX(Token token, shared_ptr<ASTNode> newNode) {
@@ -572,9 +504,6 @@ void ASTCreator::buildOP(Token token) {
 
 void ASTCreator::buildNode(NodeType type) {
 	stack.addNewSign(type);
-//	ASTNode newOp = new ASTNode(type);
-//	head.addChild(newOp);
-	debugPrint("stack: ", type);
 }
 
 void ASTCreator::finish() {
@@ -585,7 +514,6 @@ void ASTCreator::finish() {
 		Token token = *ptoken;
         std::shared_ptr<ASTNode> newNode = std::make_shared<ASTNode>(head, type);
         head->addChild(newNode);
-		debugPrint("BUILDNODE: ", type);
 		switch (type) {
             case DECLS:
                 buildDECLS(token, newNode);
@@ -626,11 +554,67 @@ ASTCreator::ASTCreator(Scanner scanner) : scanner{scanner} {
     table = scanner.symtable;
 }
 
-void ASTCreator::buildTree() {
+int ASTCreator::buildTree() {
+    cout << "Parser started..." << endl;
     while (scanner.hasTokens()) {
-        computeToken(scanner.nextToken());
-    }
-    finish();
-    hasError();
+        if (computeToken(scanner.nextToken())) {
+            cout << "Test failed. Parser did not complete" << endl;
+            return 1;
+        }
 
+    }
+    //finish();
+    if (!hasError()) {
+     cout << "Parser completed without error" << endl;
+    } else {
+        cout << "Parser completed with error" << endl;
+    }
+
+}
+
+char *ASTCreator::typeToString(NodeType type) {
+    switch(type) {
+        case PROG: return (char*) "program";
+        case DECLS: return (char*) "declarations";
+        case DECL: return (char*) "declaration";
+        case ARRAY: return (char*) "array";
+        case STATEMENTS: return (char*) "statements";
+        case STATEMENT: return (char*) "statement";
+        case EXP: return (char*) "expression";
+        case EXP2: return (char*) "expression";
+        case INDEX: return (char*) "index";
+        case OP_EXP: return (char*) "operand expression";
+        case OP: return (char*) "operand";
+        // terminale zeichen
+        case PLUSSIGN: return (char*) "+";
+        case MINUSSIGN: return (char*) "-";
+        case STARSIGN: return (char*) "*";
+        case DOUBLESIGN: return (char*) ":";
+        case LESSSIGN: return (char*) "<";
+        case GREATERSIGN: return (char*) ">";
+        case EQUALSSIGN: return (char*) "=";
+        case OTHEREQUALSSIGN: return (char*) ":=";
+        case EQUPEQUSIGN: return (char*) "=:=";
+        case ANDSIGN: return (char*) "&&";
+        case COLONSIGN: return (char*) ";";
+        case EXCLSIGN: return (char*) "!";
+        // terminale
+        case IFSIGN: return (char*) "if";
+        case ELSESIGN: return (char*) "else";
+        case WHILESIGN: return (char*) "while";
+        case READSIGN: return (char*) "read";
+        case WRITESIGN: return (char*) "write";
+        case INTSIGN: return (char*) "int";
+        // konstanten/ bezeichner
+        case IDENTIFIER: return (char*) "identifier";
+        case INTEGER: return (char*) "integer";
+        // klammern
+        case KL_OPEN: return (char*) "(";
+        case KL_CLOSE: return (char*) ")";
+        case EKL_OPEN: return (char*) "[";
+        case EKL_CLOSE: return (char*) "]";
+        case GKL_OPEN: return (char*) "{";
+        case GKL_CLOSE: return (char*) "}";
+        default: return (char*) " ";
+    }
 }

@@ -22,26 +22,26 @@ private:
     bool withoutErrors = true;
 
 public:
-	Key plus;
-	Key minus;
-	Key equals;
-	Key star;
-	Key greater;
-	Key lesser;
-	Key sAnd;
-	Key semicolon;
-	Key exclamationMark;
-	Key bracketOpen;
-	Key bracketClose;
-	Key curlyBracketOpen;
-	Key curlyBracketClose;
-	Key squareBracketOpen;
-	Key squareBracketClose;
-	Key colonEquals;
-	Key colon;
-	Key equalsColonEquals;
-	Key andAnd;
-	Scanner();
+	Key plus = Key{};
+	Key minus = Key{};
+	Key equals = Key{};
+	Key star = Key{};
+	Key greater = Key{};
+	Key lesser = Key{};
+	Key sAnd = Key{};
+	Key semicolon = Key{};
+	Key exclamationMark = Key{};
+	Key bracketOpen = Key{};
+	Key bracketClose = Key{};
+	Key curlyBracketOpen = Key{};
+	Key curlyBracketClose = Key{};
+	Key squareBracketOpen = Key{};
+	Key squareBracketClose = Key{};
+	Key colonEquals = Key{};
+	Key colon = Key{};
+	Key equalsColonEquals = Key{};
+	Key andAnd = Key{};
+	Scanner(Buffer buffer);
 	~Scanner();
 
 	Symtable symtable;

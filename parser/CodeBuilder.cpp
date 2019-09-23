@@ -418,14 +418,18 @@ void CodeBuilder::makeCodePROG(Link_List<std::shared_ptr<ASTNode>> nodes) {
             makeCodeSTATEMENTS(node->getSubtree());
         }
     }
-    stream.open(file_out, std::fstream::app);
-    stream << "STP" << spaceOrLineBreak;
-    stream.close();
 }
 
 void CodeBuilder::makeCode() {
+    std::cout << "CodeBuilder started..." << std::endl;
     stream.open(file_out, std::ofstream::out | std::ofstream::trunc);
     stream.close();
     std::shared_ptr<ASTNode> node = astCreator.getParentNode();
-    makeCodePROG(node->getSubtree());
+    if (node != nullptr) {
+        makeCodePROG(node->getSubtree());
+    }
+    stream.open(file_out, std::fstream::app);
+    stream << "STP" << spaceOrLineBreak;
+    stream.close();
+    std::cout << "CodeBuilder completed" << std::endl;
 }

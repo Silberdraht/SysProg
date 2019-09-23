@@ -5,11 +5,12 @@
 #include <fstream>
 #include "Buffer.h"
 
-Buffer::Buffer() :
+Buffer::Buffer(char* file) :
 buffer1{std::shared_ptr<char[]> (new char[buffer_size +  1],  std::default_delete<char[]>())},
 buffer2{std::shared_ptr<char[]> (new char[buffer_size +  1],  std::default_delete<char[]>())},
 current{nullptr}
 {
+    this->file = file;
     current = buffer1;
     load(buffer1);
 }

@@ -4,7 +4,8 @@
 
 #include "Scanner.h"
 
-Scanner::Scanner() = default;
+Scanner::Scanner(Buffer buffer) : buffer(buffer) {
+}
 
 
 Scanner::~Scanner() = default;

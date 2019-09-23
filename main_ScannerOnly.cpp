@@ -1,11 +1,10 @@
 #include "Scanner.h"
-#include "AST/ASTBuild/ASTCreator.h"
+#include "tests/ScannerTest.h"
 #include <iostream>
 #include <chrono>
-#include "tests/ScannerTest.h"
-#include "parser/CodeBuilder.h"
 
 using namespace std;
+
 
 int main(int argc, char* argv[]) {
 
@@ -25,14 +24,8 @@ int main(int argc, char* argv[]) {
     if (!scanner.isWithoutErrors()) {
         return 1;
     } else {
-        cout << "Scanner completed without error" << endl;
+        cout << "Scanner finished without error" << endl;
     }
-
-    ASTCreator creator = ASTCreator(scanner);
-    creator.buildTree();
-
-    CodeBuilder builder(creator, scanner.symtable);
-    builder.makeCode();
 
     auto endtime = chrono::steady_clock::now();
     std::cout << "Elapsed time in seconds: " << chrono::duration_cast<chrono::seconds>(endtime - starttime).count() << std::endl;
