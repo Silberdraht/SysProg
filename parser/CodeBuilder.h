@@ -6,11 +6,11 @@
 
 #define SYSPROG_CODEBUILDER_H
 
-#include "../Symtable.h"
-#include "../Automat.h"
+#include "../Scanner/Symtable.h"
+#include "../Scanner/Automat.h"
 #include "../lib/Link_List.h"
-#include "../AST/ASTNode.h"
-#include "../AST/ASTBuild/ASTCreator.h"
+#include "../parser/AST/ASTNode.h"
+#include "../parser/AST/ASTBuild/ASTCreator.h"
 
 class CodeBuilder {
 

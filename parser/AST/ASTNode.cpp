@@ -33,12 +33,6 @@ void ASTNode::addChild(std::shared_ptr<ASTNode> child){
     children.push_back(child);
 }
 
-//ASTNode* ASTNode::fullAddChild(NodeType newtype) {
-//	ASTNode *newNode = new ASTNode(newtype);
-//	children.addNode(*newNode);
-//	newNode ->parent = this;
-//	return newNode;
-//}
 Key ASTNode::getKey() {
 	return key;
 }

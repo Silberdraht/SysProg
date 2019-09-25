@@ -20,7 +20,7 @@ class StringTable{
 public:
 	StringTable();
 	~StringTable();
-	char* insert(char*lexem ,int size);
+	char* insert(char*lexeme ,int lexemeSize);
 
 };
 

@@ -325,8 +325,7 @@
             this->number = value;
             tokenQueue.push_back('1'); //Digittoken
         } else {
-            this->lexeme = (char*)"Integer overflow";
-            tokenQueue.push_back('3'); //Errortoken
+            prepareTokenError();
         }
     }
 

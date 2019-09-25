@@ -23,9 +23,7 @@ ASTStack::ASTStack() {
 
 }
 
-ASTStack::~ASTStack() {
-	// TODO Auto-generated destructor stub
-}
+ASTStack::~ASTStack() = default;
 
 int ASTStack::isTopLevelEmpty() {
 	return currentLevelDepth[currentLevel] <= currentLevelDepthfront[currentLevel];
@@ -33,7 +31,7 @@ int ASTStack::isTopLevelEmpty() {
 
 NodeType ASTStack::pullFromTop() {
 	int depth = currentLevelDepthfront[currentLevel];
-	NodeType toReturn = (NodeType)stack[currentLevel][depth+1];
+	auto toReturn = (NodeType)stack[currentLevel][depth+1];
 		currentLevelDepthfront[currentLevel]++;
 		return toReturn;
 

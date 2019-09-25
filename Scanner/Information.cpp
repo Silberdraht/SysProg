@@ -6,7 +6,7 @@
  */
 
 
-#include "information.h"
+#include "Information.h"
 
 bool Information::compareLex(char* lexem2) {
 	bool identicalCharacters = true;
@@ -18,14 +18,14 @@ bool Information::compareLex(char* lexem2) {
 		index++;
 	}
 
-	return (identicalCharacters & lexem[index] == '\0' & lexem2[index] == '\0');
+	return (identicalCharacters && (lexem[index] == '\0') && lexem2[index] == '\0');
 }
 
 char* Information::getLexem() {
 	return this->lexem;
 }
 
-void Information::setLexem(char* lexem) {
-	this->lexem = lexem;
+void Information::setLexem(char* lexeme) {
+	this->lexem = lexeme;
 }
 

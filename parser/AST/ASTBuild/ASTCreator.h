@@ -10,8 +10,8 @@
 
 
 #include "ASTStack.h"
-#include "../../Scanner.h"
-#include "../../Automat.h"
+#include "../../../Scanner/Scanner.h"
+#include "../../../Scanner/Automat.h"
 #include "../ASTNode.h"
 
 class ASTCreator {
@@ -34,8 +34,8 @@ private:
 	std::shared_ptr<ASTNode> head;
     Scanner scanner;
 
-    NodeType getTokenType(Token token);
-	char* typeToString(NodeType type);
+    NodeType getTokenType();
+	char* typeToString(NodeType nodeType);
     void buildPROG();
     void buildDECLS(Token token, std::shared_ptr<ASTNode> newNode);
     void buildDECL();
@@ -47,7 +47,7 @@ private:
     void buildINDEX(Token token, std::shared_ptr<ASTNode> newNode);
     void buildOP_EXP(Token token, std::shared_ptr<ASTNode> newNode);
     void buildOP(Token token);
-	void buildNode(NodeType type);
+	void buildNode(NodeType nodeType);
 	int checkCalcSign(Token token);
     int computeToken(Token token);
 	int error = 0;

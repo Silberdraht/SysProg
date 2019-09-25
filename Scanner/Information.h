@@ -18,6 +18,6 @@ class Information {
 
 	public:
 		bool compareLex(char* lexem2);
-		void setLexem(char*lexem);
+		void setLexem(char*lexeme);
 		char* getLexem();
 };

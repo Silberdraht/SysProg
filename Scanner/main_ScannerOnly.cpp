@@ -1,5 +1,5 @@
 #include "Scanner.h"
-#include "tests/ScannerTest.h"
+#include "../tests/ScannerTest.h"
 #include <iostream>
 #include <chrono>
 
@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
     if (argc > 1) {
         file = argv[1];
     } else {
-        file = (char *) R"(../beispieltest.txt)";
+        file = (char *) R"(../input_code.txt)";
     }
     auto starttime = chrono::steady_clock::now();
     Scanner scanner = Scanner(Buffer(file));

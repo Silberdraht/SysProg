@@ -4,29 +4,29 @@ project(SysProg)
 set(CMAKE_CXX_STANDARD 17)
 
 set(SOURCE_FILES_AUFGABE_1
-        main_ScannerOnly.cpp
-        Automat.cpp Automat.h
-        Buffer.cpp Buffer.h
-        Symtable.cpp Symtable.h
-        StringTable.cpp StringTable.h
-        Information.cpp Information.h
-        Scanner.cpp Scanner.h
+        Scanner/main_ScannerOnly.cpp
+        Scanner/Automat.cpp Scanner/Automat.h
+        Scanner/Buffer.cpp Scanner/Buffer.h
+        Scanner/Symtable.cpp Scanner/Symtable.h
+        Scanner/StringTable.cpp Scanner/StringTable.h
+        Scanner/Information.cpp Scanner/Information.h
+        Scanner/Scanner.cpp Scanner/Scanner.h
         lib/Link_List.h
         tests/ScannerTest.cpp tests/ScannerTest.h)
 set(SOURCE_FILES_AUFGABE_2
         main.cpp
-        Automat.cpp Automat.h
-        Buffer.cpp Buffer.h
-        Symtable.cpp Symtable.h
-        StringTable.cpp StringTable.h
-        Information.cpp Information.h
-        Scanner.cpp Scanner.h
+        Scanner/Automat.cpp Scanner/Automat.h
+        Scanner/Buffer.cpp Scanner/Buffer.h
+        Scanner/Symtable.cpp Scanner/Symtable.h
+        Scanner/StringTable.cpp Scanner/StringTable.h
+        Scanner/Information.cpp Scanner/Information.h
+        Scanner/Scanner.cpp Scanner/Scanner.h
         tests/ScannerTest.cpp tests/ScannerTest.h
         parser/CodeBuilder.h parser/CodeBuilder.cpp
         lib/Link_List.h
-        AST/ASTNode.h AST/ASTNode.cpp
-        AST/ASTBuild/ASTCreator.h AST/ASTBuild/ASTCreator.cpp
-        AST/ASTBuild/ASTStack.h AST/ASTBuild/ASTStack.cpp)
+        parser/AST/ASTNode.h parser/AST/ASTNode.cpp
+        parser/AST/ASTBuild/ASTCreator.h parser/AST/ASTBuild/ASTCreator.cpp
+        parser/AST/ASTBuild/ASTStack.h parser/AST/ASTBuild/ASTStack.cpp)
 set(SOURCE_FILES_PHILIPPS_TESTS
         lib/Link_List.h tests/Link_List_Test.cpp tests/Link_List_Test.h)
 

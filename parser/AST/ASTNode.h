@@ -9,8 +9,8 @@
 #define AST_ASTNODE_H_
 
 #include "ASTBuild/ASTStack.h"
-#include "../Symtable.h"
-#include "../lib/Link_List.h"
+#include "../../Scanner/Symtable.h"
+#include "../../lib/Link_List.h"
 
 class ASTNode{
 public:

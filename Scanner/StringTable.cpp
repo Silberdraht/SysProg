@@ -8,19 +8,16 @@
 #include "StringTable.h"
 
     StringTable::StringTable() {
-//    	size = 64*4;
     	table = new char[size];
     	freeP = table;
     	freeSpace = size;
     }
-    StringTable::~StringTable() {
-    	//delete table;
-    }
+    StringTable::~StringTable() = default;
 
-void memcpy(char* dest,char* lexem, int size) {
+void memcpy(char* dest, char* lexeme, int size) {
 	int i;
 	for (i = 0;i < size; i++) {
-		*(dest + i) = *(lexem + i);
+		*(dest + i) = *(lexeme + i);
 	}
 }
 
@@ -37,18 +34,18 @@ void StringTable::resize() {
 	table = resized;
 }
 
-char* StringTable::insert(char* lexem, int size)
+char* StringTable::insert(char* lexeme, int lexemeSize)
 {
 
-	while (!(size < this->freeSpace))
+	while (lexemeSize >= this->freeSpace)
 	{
 		resize();
 	}
     char* tmp = this->freeP;
-		memcpy(this->freeP,lexem,size+1);
-				this->freeP[size] = '\0';
-				this->freeP += size+1;
-				this->freeSpace -= size+1;
+		memcpy(this->freeP,lexeme,lexemeSize+1);
+				this->freeP[lexemeSize] = '\0';
+				this->freeP += lexemeSize+1;
+				this->freeSpace -= lexemeSize+1;
 	return tmp;
 }
 

@@ -8,7 +8,7 @@
 #include "Buffer.h"
 #include "Automat.h"
 #include "Symtable.h"
-#include "lib/Link_List.h"
+#include "../lib/Link_List.h"
 
 
 class Scanner {
@@ -41,7 +41,7 @@ public:
 	Key colon = Key{};
 	Key equalsColonEquals = Key{};
 	Key andAnd = Key{};
-	Scanner(Buffer buffer);
+	explicit Scanner(Buffer buffer);
 	~Scanner();
 
 	Symtable symtable;

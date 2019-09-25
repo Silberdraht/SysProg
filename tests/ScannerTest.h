@@ -6,7 +6,7 @@
 #define SYSPROG_SCANNERTEST_H
 
 
-#include "../Scanner.h"
+#include "../Scanner/Scanner.h"
 
 class ScannerTest {
 

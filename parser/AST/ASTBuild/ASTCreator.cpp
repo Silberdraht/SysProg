@@ -62,7 +62,7 @@ int ASTCreator::computeToken(Token token) {
             cout << "\t expected " << typeToString(type) << endl;
 			return 1;
 		}
-		type = getTokenType(token);
+		type = getTokenType();
 		std::shared_ptr<ASTNode> newNode;
 		if (type != PROG) {
 			newNode = std::make_shared<ASTNode>(head, type);
@@ -322,7 +322,7 @@ int ASTCreator::computeToken(Token token) {
 	return 0;
 }
 
-NodeType ASTCreator::getTokenType(Token token) {
+NodeType ASTCreator::getTokenType() {
 	return stack.pullFromTop();
 }
 
@@ -494,19 +494,19 @@ void ASTCreator::buildOP(Token token) {
 	}
 }
 
-void ASTCreator::buildNode(NodeType type) {
-	stack.addNewSign(type);
+void ASTCreator::buildNode(NodeType nodeType) {
+	stack.addNewSign(nodeType);
 }
 
 void ASTCreator::finish() {
 	while (stack.hasLayers() && error == 0) {
 		Token *ptoken = new Token();
 		ptoken ->tokenType = TokenType::ErrorToken;
-		NodeType type = stack.pullFromTop();
+		NodeType nodeType = stack.pullFromTop();
 		Token token = *ptoken;
-        std::shared_ptr<ASTNode> newNode = std::make_shared<ASTNode>(head, type);
+        std::shared_ptr<ASTNode> newNode = std::make_shared<ASTNode>(head, nodeType);
         head->addChild(newNode);
-		switch (type) {
+		switch (nodeType) {
             case DECLS:
                 buildDECLS(token, newNode);
                 break;
@@ -574,8 +574,8 @@ int ASTCreator::buildTree() {
 
 }
 
-char *ASTCreator::typeToString(NodeType type) {
-    switch(type) {
+char *ASTCreator::typeToString(NodeType nodeType) {
+    switch(nodeType) {
         case PROG: return (char*) "program";
         case DECLS: return (char*) "declarations";
         case DECL: return (char*) "declaration";

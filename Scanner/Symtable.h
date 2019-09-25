@@ -10,7 +10,7 @@
 
 
 #include "StringTable.h"
-#include "lib/Link_List.h"
+#include "../lib/Link_List.h"
 #include "Information.h"
 
 struct Key{
@@ -21,12 +21,10 @@ struct Key{
 class Symtable {
 
 
-	//997
 	int prime = 97;
 	StringTable table;
 	Link_List<Information> Listptrs[97];
 	Link_List<int> usedKeys;
-	//int calculateKey(char* lexem);
 
 public:
 
