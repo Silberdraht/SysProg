@@ -59,21 +59,20 @@ class ASTStack {
 public:
 	ASTStack();
 	virtual ~ASTStack();
-	NodeType getTopSign();
-	int isTopLevelEmpty();
-	NodeType peekTop();
-	NodeType pullFromTop();
+    int isTopLevelEmpty();
+    NodeType pullFromTop();
 	void addNewLayer();
 	void removeTopLayer();
 	void addNewSign(NodeType);
 	int hasLayers();
 private:
-	const int stackSize = 50; //30
+	const int stackSize = 100; //30
 	const int stackDepth = 10;
 	int **stack;
 	int currentLevel = 0;
 	int *currentLevelDepth;
 	int *currentLevelDepthfront;
+
 };
 
 #endif /* AST_ASTBUILD_ASTSTACK_H_ */

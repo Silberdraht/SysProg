@@ -53,11 +53,6 @@ int ASTCreator::checkCalcSign(Token token) {
 	return 0;
 }
 
-void ASTCreator::setScanner(Scanner newscanner) {
-	scanner = newscanner;
-	table = scanner.symtable;
-}
-
 
 int ASTCreator::computeToken(Token token) {
 	needsNewToken = 1;
@@ -313,9 +308,6 @@ int ASTCreator::computeToken(Token token) {
 			error = 1;
 		}
 		if (stack.isTopLevelEmpty()) {
-			if (!stack.hasLayers() && !scanner.hasTokens()) {
-				return 0;
-			}
 			while (stack.isTopLevelEmpty()) {
 				stack.removeTopLayer();
 				if (head->getType() == buildHead->getType()) {
@@ -533,7 +525,18 @@ void ASTCreator::finish() {
                 break;
             default:
                 error = 1;
+                cout << "Error: Missing Token at end of file" << endl;
                 return;
+        }
+        if (stack.isTopLevelEmpty()) {
+            while (stack.isTopLevelEmpty()) {
+                stack.removeTopLayer();
+                if (!stack.hasLayers()) {
+                    return;
+                } else {
+                    head = head->parent;
+                }
+            }
         }
         //return;
 	}
@@ -551,7 +554,6 @@ shared_ptr<ASTNode> ASTCreator::getParentNode() {
 //
 //}
 ASTCreator::ASTCreator(Scanner scanner) : scanner{scanner} {
-    table = scanner.symtable;
 }
 
 int ASTCreator::buildTree() {
@@ -563,7 +565,7 @@ int ASTCreator::buildTree() {
         }
 
     }
-    //finish();
+    finish();
     if (!hasError()) {
      cout << "Parser completed without error" << endl;
     } else {

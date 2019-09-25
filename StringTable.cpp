@@ -39,11 +39,12 @@ void StringTable::resize() {
 
 char* StringTable::insert(char* lexem, int size)
 {
-	char* tmp = this->freeP;
-	if (!(size < this->freeSpace))
+
+	while (!(size < this->freeSpace))
 	{
 		resize();
 	}
+    char* tmp = this->freeP;
 		memcpy(this->freeP,lexem,size+1);
 				this->freeP[size] = '\0';
 				this->freeP += size+1;

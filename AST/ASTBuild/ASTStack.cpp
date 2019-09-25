@@ -27,15 +27,8 @@ ASTStack::~ASTStack() {
 	// TODO Auto-generated destructor stub
 }
 
-NodeType ASTStack::getTopSign() {
-	return (NodeType)stack[currentLevel][currentLevelDepth[currentLevel]];
-	currentLevelDepth[currentLevel]--;
-}
 int ASTStack::isTopLevelEmpty() {
 	return currentLevelDepth[currentLevel] <= currentLevelDepthfront[currentLevel];
-}
-NodeType ASTStack::peekTop() {
-	return (NodeType) stack[currentLevel][currentLevelDepthfront[currentLevel]];
 }
 
 NodeType ASTStack::pullFromTop() {
@@ -46,15 +39,15 @@ NodeType ASTStack::pullFromTop() {
 
 }
 void ASTStack::addNewLayer() {
-	currentLevel++;
-	currentLevelDepth[currentLevel] = 0;
-	currentLevelDepthfront[currentLevel] = 0;
+    currentLevel++;
+    currentLevelDepth[currentLevel] = 0;
+    currentLevelDepthfront[currentLevel] = 0;
 }
 void ASTStack::removeTopLayer() {
-	currentLevel--;
+    currentLevel--;
 }
 int ASTStack::hasLayers() {
-	return currentLevel > 0;
+	return currentLevel > 1;
 }
 void ASTStack::addNewSign(NodeType add) {
 	currentLevelDepth[currentLevel]++;
